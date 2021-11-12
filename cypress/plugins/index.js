@@ -4,7 +4,7 @@
 import dotenv from 'dotenv';
 import { oktaRequest } from './oktaRequest';
 
-dotenv.config({path: '.env.local'});
+dotenv.config({ path: '.env.local' });
 dotenv.config();
 
 /**
@@ -24,7 +24,7 @@ module.exports = (on, config) => {
   config.env.MAILOSAUR_API_KEY = process.env.MAILOSAUR_API_KEY;
   config.env.MAILOSAUR_UI_TESTS_SERVER_ID = process.env.MAILOSAUR_UI_TESTS_SERVER_ID;
   config.env.OKTA_TOKEN = process.env.OKTA_TOKEN;
-  config.env.OKTA_HOST = process.env.REACT_APP_OKTA_HOST;
+  config.env.OAUTH_HOST = process.env.REACT_APP_OAUTH_DEV_HOST;
 
   // This code executes before the browser launch
   on('before:browser:launch', (browser, launchOptions) => {
@@ -39,13 +39,12 @@ module.exports = (on, config) => {
   // https://github.com/cypress-io/cypress/issues/6562#issuecomment-595042151
   on('task', {
     // eslint-disable-next-line no-return-assign
-    setEmail: ( email ) => userEmail = email,
+    setEmail: (email) => (userEmail = email),
     // eslint-disable-next-line no-return-assign
-    setPassword: ( password ) => userPassword = password,
+    setPassword: (password) => (userPassword = password),
     getUser: () => ({ userEmail, userPassword }),
     oktaRequest,
   });
 
   return config;
 };
-

@@ -118,6 +118,5 @@
   },
   "bugs": {
     "url": "https://jira.percona.com/browse/SAAS"
-  },
-  "proxy": "https://platform-local.localhost"
+  }
 }

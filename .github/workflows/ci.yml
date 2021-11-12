@@ -56,7 +56,6 @@ jobs:
       #  if: ${{ failure() }}
       #  uses: percona-platform/action-tmate@v3
 
-
   docker:
     name: Build Docker image
     timeout-minutes: 10
@@ -66,6 +65,10 @@ jobs:
       docker_tag: ${{ env.DOCKER_TAG }}
 
     runs-on: ubuntu-18.04
+
+    permissions:
+      contents: read
+      packages: write
 
     strategy:
       matrix:
@@ -99,7 +102,7 @@ jobs:
         run: sudo .github/workflows/enable-docker-experimental.sh
 
       - name: Login to Docker registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u $GITHUB_ACTOR docker.pkg.github.com --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Extract Docker image tag
         uses: percona-platform/extract-docker-tag-action@v1

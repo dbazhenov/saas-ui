@@ -1,5 +1,5 @@
 DOCKER_TAG ?= latest
-DOCKER_IMAGE = docker.pkg.github.com/percona-platform/saas-ui/saas-ui:$(DOCKER_TAG)
+DOCKER_IMAGE = ghcr.io/percona-platform/saas-ui/saas-ui:$(DOCKER_TAG)
 
 default: help
 
