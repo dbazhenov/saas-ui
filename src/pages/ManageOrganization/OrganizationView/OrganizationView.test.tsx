@@ -10,7 +10,7 @@ const toastError = jest.spyOn(toast, 'error');
 
 let mockError: string | null = null;
 
-const testOrgId = 123;
+const testOrgId = '123';
 
 jest.mock('use-http', () => {
   const originalModule = jest.requireActual('@percona/platform-core');
@@ -32,7 +32,7 @@ jest.mock('use-http', () => {
   };
 });
 
-describe('Organization Tab', () => {
+describe('Organization View', () => {
   test('shows an error if the API call fails', async () => {
     mockError = 'Error';
 

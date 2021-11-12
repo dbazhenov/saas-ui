@@ -24,6 +24,14 @@ export const getStyles = (theme: GrafanaTheme) => {
         }
       }
     `,
+    disabledTab: css`
+      cursor: not-allowed;
+
+      > * {
+        color: ${colors.linkDisabled};
+        pointer-events: none;
+      }
+    `,
     tabsWrapper: css`
       background-color: ${colors.pageHeaderBg};
       border-radius: ${border.radius.lg};

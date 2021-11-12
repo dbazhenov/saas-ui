@@ -1,12 +1,9 @@
 import {
   all, put, call, takeLatest, StrictEffect,
 } from 'redux-saga/effects';
-import { AxiosResponse } from 'axios';
-import { signIn, getProfile, updateProfile } from 'core/api/auth';
+import { updateProfile } from 'core/api/auth';
 import {
-  GetProfileResponse,
   RequestError,
-  SignInResponse,
 } from 'core/api/types';
 import { Messages } from 'core/api/messages';
 import { toast } from 'react-toastify';
@@ -21,19 +18,6 @@ import {
 
 // Login
 
-type AuthLoginActionRequest = ReturnType<typeof authLoginAction.request>;
-type AuthLoginRequestGenerator = Generator<StrictEffect, void, SignInResponse>;
-
-export function* authLoginRequest(action: AuthLoginActionRequest): AuthLoginRequestGenerator {
-  try {
-    yield call(signIn, action.payload);
-
-    yield put(authLoginAction.success({ email: action.payload.email }));
-  } catch (e) {
-    yield put(authLoginAction.failure(e as RequestError));
-  }
-}
-
 type AuthLoginActionFailure = ReturnType<typeof authLoginAction.failure>;
 type AuthLoginFailureGenerator = Generator<StrictEffect, void, never>;
 
@@ -46,25 +30,14 @@ export function* authLoginFailure(action: AuthLoginActionFailure): AuthLoginFail
   }
 }
 
-type AuthLoginActionSuccess = ReturnType<typeof authLoginAction.success>;
 type AuthLoginSuccessGenerator = Generator<StrictEffect, void, never>;
 
-export function* authLoginSuccess(action: AuthLoginActionSuccess): AuthLoginSuccessGenerator {
-  yield call([toast, toast.success], `${Messages.signInSucceeded} ${action.payload.email}`);
+export function* authLoginSuccess(): AuthLoginSuccessGenerator {
+  yield call([toast, toast.success], `${Messages.signInSucceeded}`);
   history.replace(Routes.root);
 }
 
 // Logout
-
-type AuthLogoutRequestGenerator = Generator<StrictEffect, void, never>;
-
-export function* authLogoutRequest(): AuthLogoutRequestGenerator {
-  try {
-    yield put(authLogoutAction.success());
-  } catch (e) {
-    yield put(authLogoutAction.failure(e as RequestError));
-  }
-}
 
 type AuthLogoutActionFailure = ReturnType<typeof authLogoutAction.failure>;
 type AuthLogoutFailureGenerator = Generator<StrictEffect, void, never>;
@@ -79,24 +52,6 @@ type AuthLogoutSuccessGenerator = Generator<StrictEffect, void, never>;
 export function* authLogoutSuccess(): AuthLogoutSuccessGenerator {
   yield call([toast, toast.success], Messages.signOutSucceeded);
   history.replace(Routes.root);
-}
-
-// Get Profile
-
-type AuthGetProfileRequestGenerator = Generator<StrictEffect, void, AxiosResponse<GetProfileResponse>>;
-
-export function* authGetProfileRequest(): AuthGetProfileRequestGenerator {
-  try {
-    const { data } = yield call(getProfile);
-
-    yield put(authGetProfileAction.success({
-      email: data.email,
-      firstName: data.first_name,
-      lastName: data.last_name,
-    }));
-  } catch (e) {
-    yield put(authGetProfileAction.failure(e as RequestError));
-  }
 }
 
 type AuthGetProfileActionFailure = ReturnType<typeof authGetProfileAction.failure>;
@@ -119,7 +74,7 @@ export function* authUpdateProfileRequest(
   try {
     yield call(updateProfile, action.payload);
 
-    yield put(authUpdateProfileAction.success());
+    yield put(authUpdateProfileAction.success(action.payload));
   } catch (e) {
     yield put(authUpdateProfileAction.failure(e as RequestError));
   }
@@ -146,13 +101,10 @@ export function* authUpdateProfileSuccess(): AuthUpdateProfileSuccessGenerator {
 
 export function* authSagas() {
   yield all([
-    takeLatest(authLoginAction.request, authLoginRequest),
     takeLatest(authLoginAction.success, authLoginSuccess),
     takeLatest(authLoginAction.failure, authLoginFailure),
-    takeLatest(authLogoutAction.request, authLogoutRequest),
     takeLatest(authLogoutAction.success, authLogoutSuccess),
     takeLatest(authLogoutAction.failure, authLogoutFailure),
-    takeLatest(authGetProfileAction.request, authGetProfileRequest),
     takeLatest(authGetProfileAction.failure, authGetProfileFailure),
     takeLatest(authUpdateProfileAction.request, authUpdateProfileRequest),
     takeLatest(authUpdateProfileAction.failure, authUpdateProfileFailure),

@@ -13,7 +13,7 @@ let getItem: jest.SpyInstance;
 let setItem: jest.SpyInstance;
 let consoleError: jest.SpyInstance;
 
-describe('Persistence Engine', () => {
+xdescribe('Persistence Engine', () => {
   beforeEach(() => {
     getItem = jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => JSON.stringify(TEST_STATE));
     setItem = jest.spyOn(Storage.prototype, 'setItem');

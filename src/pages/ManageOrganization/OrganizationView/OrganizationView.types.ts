@@ -1,3 +1,3 @@
 export interface OrganizationViewProps {
-  orgId: number;
+  orgId: string;
 }

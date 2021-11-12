@@ -82,7 +82,8 @@
     ],
     "no-inline-styles/no-inline-styles": ["warn"],
     "max-classes-per-file": ["error"],
-    "no-shadow": ["error"],
+    "no-shadow": ["off"],
+    "@typescript-eslint/no-shadow": ["error"],
     "no-unused-expressions": ["error"],
     "arrow-parens": ["error"],
     "eol-last": ["error"]

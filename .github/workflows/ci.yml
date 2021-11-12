@@ -52,6 +52,11 @@ jobs:
       - name: Build platform-ui artifacts
         run: make build
 
+      #- name: Setup tmate session on failure
+      #  if: ${{ failure() }}
+      #  uses: percona-platform/action-tmate@v3
+
+
   docker:
     name: Build Docker image
     timeout-minutes: 10

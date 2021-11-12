@@ -12,5 +12,6 @@ export const ENDPOINTS = {
     getOrganization: '/v1/orgs',
     createOrganization: '/v1/orgs',
     getUserOganizations: '/v1/orgs:search',
+    searchOrgMember: (id: string) => `/v1/orgs/${id}/members:search`,
   },
 };

@@ -51,3 +51,27 @@ export type GetProfile = () => Promise<GetProfileResponse>;
 
 export type UpdateProfile = ({ firstName, lastName }: UpdateProfileRequest) =>
   Promise<Response>;
+
+export interface OrganizationResponse {
+  id: string;
+  name: string;
+  created_at: number;
+  updated_at: number;
+}
+
+export interface SearchOrganizationsResponse {
+  orgs: OrganizationResponse[],
+}
+
+export interface OrganizationMembersResponse {
+  member_id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  role: string;
+  status: string;
+}
+
+export interface SearchOrganizationMembersResponse {
+  members: OrganizationMembersResponse[];
+}

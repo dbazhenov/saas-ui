@@ -9,6 +9,8 @@ import { getCurrentTheme, themeChangeRequestAction } from 'store/theme';
 import { history } from 'core/history';
 import { ReactComponent as Profile } from 'assets/profile.svg';
 import logo from 'assets/percona-logo.svg';
+import { RequestError } from 'core/api/types';
+import { authLogoutAction } from '../../store/auth';
 import { getStyles } from './MenuBar.styles';
 import { Messages } from './MenuBar.messages';
 import { DropdownToggleProps } from './MenuBar.types';
@@ -26,9 +28,14 @@ export const MenuBar: FC = () => {
   };
 
   const logout = useCallback(async () => {
-
-    oktaAuth.signOut({ revokeAccessToken: true, revokeRefreshToken: true });
-  }, [oktaAuth]);
+    dispatch(authLogoutAction.request());
+    try {
+      await oktaAuth.signOut({ revokeAccessToken: true, revokeRefreshToken: true });
+      dispatch(authLogoutAction.success());
+    } catch (e) {
+      dispatch(authLogoutAction.failure(e as RequestError));
+    }
+  }, [oktaAuth, dispatch]);
 
   const changeTheme = useCallback(() => {
     dispatch(themeChangeRequestAction(currentTheme));

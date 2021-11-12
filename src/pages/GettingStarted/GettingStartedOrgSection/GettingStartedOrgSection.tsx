@@ -12,7 +12,7 @@ const { Org } = ENDPOINTS;
 export const GettingStartedOrgSection: FC = () => {
   const [hasOrgIds, setHasOrgIds] = useState(false);
 
-  const { error, data = {} } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }));
+  const { error, data = {} } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }, []));
 
   useEffect(() => {
     if (error) {

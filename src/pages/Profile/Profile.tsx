@@ -1,13 +1,12 @@
-import React, { FC, useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useCallback } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
 import { useStyles } from '@grafana/ui';
 import { LoaderButton, TextInputField, validators } from '@percona/platform-core';
 import { Routes } from 'core/routes';
 import { MAX_NAME_LENGTH } from 'core/constants';
-import { authGetProfileAction, authUpdateProfileAction, getAuth } from 'store/auth';
 import { UpdateProfilePayload } from 'store/types';
 import { PrivateLayout } from 'components/Layouts';
+import { useUserInfo } from 'core/hooks';
 import { getStyles } from './Profile.styles';
 import { Messages } from './Profile.messages';
 
@@ -16,18 +15,14 @@ const nameValidators = [required, maxLength(MAX_NAME_LENGTH)];
 
 export const ProfilePage: FC = () => {
   const styles = useStyles(getStyles);
-  const dispatch = useDispatch();
-  const { pending, email, firstName, lastName } = useSelector(getAuth);
-
-  useEffect(() => {
-    dispatch(authGetProfileAction.request());
-  }, [dispatch]);
+  const [user, setUser] = useUserInfo();
+  const { pending, email, firstName, lastName } = user;
 
   const handleUpdateProfileSubmit = useCallback(
     (payload: UpdateProfilePayload) => {
-      dispatch(authUpdateProfileAction.request(payload));
+      setUser(payload);
     },
-    [dispatch],
+    [setUser],
   );
 
   return (

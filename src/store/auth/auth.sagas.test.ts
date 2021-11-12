@@ -5,14 +5,12 @@ import { Messages } from 'core/api/messages';
 
 import * as authApi from 'core/api/auth';
 import { toast } from 'react-toastify';
-import {
-  GetProfileResponse, RequestError,
-} from 'core/api/types';
+import { RequestError } from 'core/api/types';
 import { HTTP_STATUS } from 'core/api';
 import { AxiosResponse } from 'axios';
+import { UpdateProfilePayload } from 'store/types';
 import {
   authSagas,
-  authGetProfileRequest,
   authGetProfileFailure,
   authUpdateProfileRequest,
   authUpdateProfileSuccess,
@@ -56,7 +54,6 @@ describe('Auth Sagas', () => {
   xtest('authSagas calls the right function on auth actions', () => {
     const genObj = authSagas();
     const expected = all([
-      takeLatest(authGetProfileAction.request, authGetProfileRequest),
       takeLatest(authGetProfileAction.failure, authGetProfileFailure),
       takeLatest(authUpdateProfileAction.request, authUpdateProfileRequest),
       takeLatest(authUpdateProfileAction.failure, authUpdateProfileFailure),
@@ -73,43 +70,6 @@ describe('Auth Sagas', () => {
     expect(genObj.next().done).toBe(true);
   });
 
-  test('authGetProfileRequest succeeds', async () => {
-    const getProfile = jest.spyOn(authApi, 'getProfile').mockImplementation(() => Promise.resolve(
-      {
-        data: {
-          email: 'test@test.test',
-          first_name: 'Firstname',
-          last_name: 'test@test.test',
-        },
-      } as AxiosResponse<GetProfileResponse>,
-    ));
-
-    await runSagaPromise(authGetProfileRequest as Saga);
-
-    expect(dispatchedActions).toEqual([authGetProfileAction.success({
-      email: 'test@test.test',
-      firstName: 'Firstname',
-      lastName: 'test@test.test',
-    })]);
-
-    expect(getProfile).toHaveBeenCalledTimes(1);
-
-    getProfile.mockRestore();
-  });
-
-  test('authGetProfileRequest fails', async () => {
-    const error = { code: HTTP_STATUS.NOT_FOUND };
-
-    const getProfile = jest.spyOn(authApi, 'getProfile').mockImplementation(() => Promise.reject(error));
-
-    await runSagaPromise(authGetProfileRequest as Saga);
-
-    expect(dispatchedActions).toEqual([authGetProfileAction.failure(error as RequestError)]);
-    expect(getProfile).toHaveBeenCalledTimes(1);
-
-    getProfile.mockRestore();
-  });
-
   test('authGetProfileFailure', async () => {
     await runSagaPromise(authGetProfileFailure as Saga, TEST_MESSAGE);
 
@@ -121,13 +81,14 @@ describe('Auth Sagas', () => {
 
   test('authUpdateProfileRequest succeeds', async () => {
     const updateProfile = jest.spyOn(authApi, 'updateProfile').mockImplementation(() => Promise.resolve({} as AxiosResponse));
-
-    await runSagaPromise(authUpdateProfileRequest as Saga, {
+    const payload: UpdateProfilePayload = {
       firstName: TEST_FIRST_NAME,
       lastName: TEST_LAST_NAME,
-    });
+    };
 
-    expect(dispatchedActions).toEqual([authUpdateProfileAction.success()]);
+    await runSagaPromise(authUpdateProfileRequest as Saga, payload);
+
+    expect(dispatchedActions).toEqual([authUpdateProfileAction.success(payload)]);
 
     expect(updateProfile).toHaveBeenCalledWith({ firstName: TEST_FIRST_NAME, lastName: TEST_LAST_NAME });
     expect(updateProfile).toHaveBeenCalledTimes(1);
