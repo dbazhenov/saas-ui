@@ -3,6 +3,7 @@ import { useStyles } from '@grafana/ui';
 import { IconLink } from 'components';
 import { Routes } from 'core/routes';
 import dotCircle from 'assets/dot-circle.svg';
+import dashboard from 'assets/dashboard.svg';
 import sidebarBlog from 'assets/percona-sidebar-blog.svg';
 import sidebarDocs from 'assets/percona-sidebar-docs.svg';
 import sidebarForum from 'assets/percona-sidebar-forum.svg';
@@ -24,6 +25,13 @@ export const SideMenu: FC = () => {
           alt={Messages.gettingStarted}
         >
           {Messages.gettingStarted}
+        </IconLink>
+        <IconLink
+          icon={dashboard}
+          to={Routes.dashboard}
+          alt={Messages.dashboard}
+        >
+          {Messages.dashboard}
         </IconLink>
       </section>
       <section data-testid="side-menu-resources-section" className={styles.section}>

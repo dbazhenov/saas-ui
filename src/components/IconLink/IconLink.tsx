@@ -9,7 +9,7 @@ export const IconLink: FC<IconLinkProps> = ({ alt, children, icon, to }) => {
   const styles = useStyles(getStyles);
 
   return (
-    <NavLink to={to} data-testid="nav-link" activeClassName={styles.linkActive} className={styles.link}>
+    <NavLink exact to={to} data-testid="nav-link" activeClassName={styles.linkActive} className={styles.link}>
       <SidebarItem alt={alt} icon={icon}>
         {children}
       </SidebarItem>

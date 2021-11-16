@@ -81,22 +81,22 @@ export const Api = {
   get: function get<T = any, R = AxiosResponse<T>>(
     path: string, config?: AxiosRequestConfig,
   ) {
-    return axios.get<T, R extends void ? AxiosResponse<T> : AxiosResponse<T>>(path, getConfig(config));
+    return axios.get<T, R extends void ? AxiosResponse<R> : AxiosResponse<R>>(path, getConfig(config));
   },
 
   post: function post<T = any, R = AxiosResponse<T>>(
     path: string, data?: any, config?: AxiosRequestConfig,
   ) {
-    return axios.post<T, R extends void ? AxiosResponse<T> : AxiosResponse<T>>(path, data, getConfig(config));
+    return axios.post<T, R extends void ? AxiosResponse<R> : AxiosResponse<R>>(path, data, getConfig(config));
   },
 
   put: function put<T = any, R = AxiosResponse<T>>(
     path: string, data?: any, config?: AxiosRequestConfig,
   ) {
-    return axios.put<T, R extends void ? AxiosResponse<T> : AxiosResponse<T>>(path, data, getConfig(config));
+    return axios.put<T, R extends void ? AxiosResponse<R> : AxiosResponse<R>>(path, data, getConfig(config));
   },
 
   del: function del<T = any, R = AxiosResponse<T>>(path: string, config?: AxiosRequestConfig) {
-    return axios.put<T, R extends void ? AxiosResponse<T> : AxiosResponse<T>>(path, getConfig(config));
+    return axios.put<T, R extends void ? AxiosResponse<R> : AxiosResponse<R>>(path, getConfig(config));
   },
 };

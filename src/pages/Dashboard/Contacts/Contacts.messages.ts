@@ -1,0 +1,15 @@
+export const Messages = {
+  yourAccount: 'Your Account',
+  name: 'Name:',
+  role: 'Role:',
+  accountType: 'Account Type:',
+  freeAccount: 'Free Account',
+  perconaExperts: 'Percona\'s experts can maximize your application performance with our open source database support, managed services or consulting.',
+  perconaContacts: 'Percona Contacts',
+  contactUs: 'Contact Us',
+  findUs: 'You can find us on our Community spaces:',
+  forums: 'Forums',
+  discord: 'Discord',
+  getInTouch: 'Or get in touch via our',
+  contactsPage: 'Contacts page',
+};

@@ -39,6 +39,8 @@ const runSagaPromise = (saga: Saga, payload?: any) => runSaga({
   },
 }, saga, { payload }).toPromise();
 
+jest.mock('core/api/orgs');
+
 describe('Auth Sagas', () => {
   beforeEach(() => {
     consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});

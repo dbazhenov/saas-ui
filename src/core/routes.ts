@@ -13,4 +13,5 @@ export const Routes = {
   signup: `https://${OAUTH_HOST}/signin/register`,
   ui: '/ui',
   welcome: '/welcome',
+  dashboard: '/dashboard',
 };
