@@ -28,10 +28,8 @@ export const MenuBar: FC = () => {
   };
 
   const logout = useCallback(async () => {
-    dispatch(authLogoutAction.request());
     try {
       await oktaAuth.signOut({ revokeAccessToken: true, revokeRefreshToken: true });
-      dispatch(authLogoutAction.success());
     } catch (e) {
       dispatch(authLogoutAction.failure(e as RequestError));
     }

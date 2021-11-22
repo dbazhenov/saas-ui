@@ -4,7 +4,8 @@ import { AppState } from 'store/types';
 
 const TEST_STATE = {
   auth: {
-    pending: false, email: 'test@test.test', authenticated: false, authCheckCompleted: true,
+    pending: false,
+    email: 'test@test.test',
   },
 } as AppState;
 const TEST_ERROR = Error('test error');

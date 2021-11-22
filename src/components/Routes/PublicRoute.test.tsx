@@ -18,9 +18,7 @@ xdescribe('PublicRoute', () => {
     document.body.appendChild(container);
 
     getAuth.mockImplementation(() => ({
-      authenticated: false,
       pending: false,
-      authCheckCompleted: true,
     }));
   });
 
@@ -41,8 +39,6 @@ xdescribe('PublicRoute', () => {
 
   test('redirect to login if unauthenticated', async () => {
     getAuth.mockImplementation(() => ({
-      authenticated: true,
-      authCheckCompleted: true,
       email:'test@test.test',
       pending: false,
     }));

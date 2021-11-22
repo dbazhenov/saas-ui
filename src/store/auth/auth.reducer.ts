@@ -3,12 +3,10 @@ import { AuthState, UpdateProfilePayload } from 'store/types';
 import { RequestError } from 'core/api/types';
 
 const DEFAULT_STATE: AuthState = {
-  authenticated: false,
   email: undefined,
   firstName: undefined,
   lastName: undefined,
   pending: false,
-  authCheckCompleted: false,
 };
 
 export const authLoginAction = createAsyncAction(
@@ -53,32 +51,12 @@ export function authReducer(state: AuthState = DEFAULT_STATE, action: AuthAction
     case getType(authLoginAction.success):
       return {
         ...state,
-        authenticated: true,
         pending: false,
       };
     case getType(authLoginAction.failure):
       return {
         ...state,
-        authenticated: false,
         email: undefined,
-        pending: false,
-      };
-    // Logout
-    case getType(authLogoutAction.request):
-      return {
-        ...state,
-        pending: true,
-      };
-    case getType(authLogoutAction.success):
-      return {
-        ...state,
-        authenticated: false,
-        email: undefined,
-        pending: false,
-      };
-    case getType(authLogoutAction.failure):
-      return {
-        ...state,
         pending: false,
       };
     // Get Profile
@@ -90,22 +68,18 @@ export function authReducer(state: AuthState = DEFAULT_STATE, action: AuthAction
     case getType(authGetProfileAction.success):
       return {
         ...state,
-        authenticated: true,
         email: action.payload.email,
         firstName: action.payload.firstName,
         lastName: action.payload.lastName,
         pending: false,
-        authCheckCompleted: true,
       };
     case getType(authGetProfileAction.failure):
       return {
         ...state,
-        authenticated: false,
         email: undefined,
         firstName: undefined,
         lastName: undefined,
         pending: false,
-        authCheckCompleted: true,
       };
     // Update Profile
     case getType(authUpdateProfileAction.request):

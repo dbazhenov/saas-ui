@@ -47,13 +47,6 @@ export function* authLogoutFailure(action: AuthLogoutActionFailure): AuthLogoutF
   console.error(action.payload);
 }
 
-type AuthLogoutSuccessGenerator = Generator<StrictEffect, void, never>;
-
-export function* authLogoutSuccess(): AuthLogoutSuccessGenerator {
-  yield call([toast, toast.success], Messages.signOutSucceeded);
-  history.replace(Routes.root);
-}
-
 type AuthGetProfileActionFailure = ReturnType<typeof authGetProfileAction.failure>;
 type AuthGetProfileFailureGenerator = Generator<StrictEffect, void, never>;
 
@@ -103,7 +96,6 @@ export function* authSagas() {
   yield all([
     takeLatest(authLoginAction.success, authLoginSuccess),
     takeLatest(authLoginAction.failure, authLoginFailure),
-    takeLatest(authLogoutAction.success, authLogoutSuccess),
     takeLatest(authLogoutAction.failure, authLogoutFailure),
     takeLatest(authGetProfileAction.failure, authGetProfileFailure),
     takeLatest(authUpdateProfileAction.request, authUpdateProfileRequest),

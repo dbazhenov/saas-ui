@@ -21,9 +21,7 @@ describe('Main Page', () => {
 
     getAuth.mockImplementation(() => ({
       email: 'test@test.test',
-      authenticated: true,
       pending: false,
-      authCheckCompleted: true,
     }));
   });
 
@@ -36,9 +34,7 @@ describe('Main Page', () => {
   // FIXME: This statement is no longer true, the page will show a loader
   xtest('shows an empty page while fetching user data', async () => {
     getAuth.mockImplementation(() => ({
-      authenticated: false,
       pending: true,
-      authCheckCompleted: false,
     }));
 
     await act(async () => {
@@ -65,9 +61,7 @@ describe('Main Page', () => {
 
   xtest('redirect to /login an unauthenticated user if the route does not exist', async () => {
     getAuth.mockImplementation(() => ({
-      authenticated: false,
       pending: false,
-      authCheckCompleted: true,
     }));
 
     await act(async () => {

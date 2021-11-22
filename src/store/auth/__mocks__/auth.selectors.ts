@@ -3,5 +3,4 @@ export const getAuth = () => ({
   firstName: 'Firstname',
   lastName: 'Lastname',
   pending: false,
-  authenticated: true,
 });

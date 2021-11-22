@@ -11,7 +11,4 @@ export const authConfig = {
   scopes: ['openid', 'profile', 'email', 'percona'],
 };
 
-// eslint-disable-next-line no-console
-console.log('authConfig', authConfig);
-
 export const oktaAuth = new OktaAuth(authConfig);
