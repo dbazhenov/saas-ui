@@ -28,5 +28,17 @@ export const getStyles = (theme: GrafanaTheme) => {
         margin-top: ${spacing.md};
       }
     `,
+    infoWrapper: css`
+      align-items: center;
+      background-color: ${colors.bg3};
+      display: flex;
+      height: 60px;
+      padding: ${spacing.sm};
+      width: fit-content;
+      margin-bottom: ${spacing.md};
+    `,
+    icon: css`
+      margin-right: ${spacing.sm};
+    `,
   });
 };

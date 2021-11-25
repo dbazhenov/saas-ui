@@ -3,16 +3,21 @@ import { toast } from 'react-toastify';
 import { render, screen, waitFor } from '@testing-library/react';
 import { ENDPOINTS } from 'core/api';
 import { TestContainer } from 'components/TestContainer';
-import { GettingStartedOrgSection } from '.';
+import { GettingStartedOrgSection } from './GettingStartedOrgSection';
 import { Messages } from './GettingStartedOrgSection.messages';
 
-const mockPost = jest.fn().mockResolvedValue({ orgs: [{ id: 1337 }] });
+const mockPostReturn = {
+  orgs: [{ id: 1337 }],
+  name: 'Percona SN Company',
+};
+
+const mockPost = jest.fn().mockResolvedValue(mockPostReturn);
 
 const toastError = jest.spyOn(toast, 'error');
 
 let mockError: string | null = null;
 
-let mockData = {};
+let mockData: object | null = null;
 
 jest.mock('use-http', () => {
   const originalModule = jest.requireActual('@percona/platform-core');
@@ -82,4 +87,34 @@ describe('Getting Started Organization Section', () => {
     waitFor(() => { expect((mockPost)).toBeCalledTimes(1); });
     expect(await screen.findByText(Messages.viewOrganization));
   });
+
+  test('calls API to get company when user has no orgs', async () => {
+    mockData = { orgs: [] };
+
+    mockPost.mockResolvedValue(mockPostReturn);
+
+    render(
+      <TestContainer>
+        <GettingStartedOrgSection />
+      </TestContainer>,
+    );
+
+    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
+    waitFor(() => { expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getUserCompany); });
+  });
+});
+
+test('shows a link to view the details if user has no orgs but has company in ServiceNow', async () => {
+  mockData = { orgs: [] };
+
+  mockPost.mockResolvedValue(mockPostReturn);
+  
+  render(
+    <TestContainer>
+      <GettingStartedOrgSection />
+    </TestContainer>,
+  );
+
+  waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
+  expect(await screen.findByText(Messages.viewOrganization));
 });

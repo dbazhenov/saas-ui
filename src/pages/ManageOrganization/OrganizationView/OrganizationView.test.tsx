@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { TestContainer } from 'components/TestContainer';
 import { OrganizationView } from '.';
 
@@ -9,6 +9,13 @@ const mockPost = jest.fn();
 const toastError = jest.spyOn(toast, 'error');
 
 let mockError: string | null = null;
+
+const mockData = {
+  org: {
+    name: 'Percona',
+    created_at: '20/02/2008',
+  },
+};
 
 const testOrgId = '123';
 
@@ -25,6 +32,7 @@ jest.mock('use-http', () => {
       error: mockError,
       loading: false,
       post: mockPost,
+      data: mockData,
       response: {
         ok: true,
       },
@@ -43,5 +51,15 @@ describe('Organization View', () => {
     );
 
     expect(toastError).toBeCalledTimes(1);
+  });
+
+  test('shows info if fromCustomerPortal is set ', async () => {
+    render(
+      <TestContainer>
+        <OrganizationView orgId={testOrgId} fromCustomerPortal />
+      </TestContainer>,
+    );
+    
+    expect(screen.getByTestId('info-wrapper')).toBeInTheDocument();
   });
 });

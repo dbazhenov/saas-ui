@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import useFetch from 'use-http';
 import { toast } from 'react-toastify';
 import { Routes } from 'core/routes';
@@ -12,7 +12,16 @@ const { Org } = ENDPOINTS;
 export const GettingStartedOrgSection: FC = () => {
   const [hasOrgIds, setHasOrgIds] = useState(false);
 
-  const { error, data = {} } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }, []));
+  const { error, data, loading } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }, []));
+  const { post: postUserCompany, loading: loadingCompany } = useFetch(...getUseHttpConfig());
+
+  const getUserCompany = useCallback(async() => {
+    const { name } = await postUserCompany(Org.getUserCompany);
+
+    if (name) {
+      setHasOrgIds(true);
+    }
+  }, [postUserCompany]);
 
   useEffect(() => {
     if (error) {
@@ -24,7 +33,11 @@ export const GettingStartedOrgSection: FC = () => {
     if (data?.orgs?.length) {
       setHasOrgIds(true);
     }
-  }, [data]);
+
+    if (data && (!data?.orgs || !data?.orgs?.length)) {
+      getUserCompany();
+    }
+  }, [data, getUserCompany]);
 
   return (
     <GettingStartedSection
@@ -34,6 +47,7 @@ export const GettingStartedOrgSection: FC = () => {
       linkTo={Routes.organization}
       linkText={hasOrgIds ? Messages.viewOrganization : Messages.addOrganization}
       isTicked={hasOrgIds}
+      disabled={loading || loadingCompany}
     />
   );
 };

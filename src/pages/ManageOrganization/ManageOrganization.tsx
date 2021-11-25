@@ -3,6 +3,7 @@ import useFetch from 'use-http';
 import { toast } from 'react-toastify';
 import { useStyles, Tab, TabsBar, TabContent } from '@grafana/ui';
 import { getUseHttpConfig } from 'core/api/api.service';
+import { ENDPOINTS } from 'core/api';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import { useUserRole } from 'core/hooks';
@@ -16,15 +17,19 @@ import { OrganizationCreate } from './OrganizationCreate';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
 
+const { Org } = ENDPOINTS;
+
 export const ManageOrganizationPage: FC = () => {
   const styles = useStyles(getStyles);
   const [orgId, setOrgId] = useState<string>();
   const [orgMembers, setOrgMembers] = useState<Member[]>([]);
   const [userIsAdmin, setUserIsAdmin] = useState(false);
+  const [fromCustomerPortal, setFromCustomerPortal] = useState(false);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_INDEX);
   const [userRole] = useUserRole(orgId);
   const fetchConfig = getUseHttpConfig();
-  const { response, error, loading, post, data = {} } = useFetch(...fetchConfig);
+  const { response, error, loading, post, data } = useFetch(...fetchConfig);
+  const { post: postUserCompany, loading: loadingCompany } = useFetch(...fetchConfig);
 
   useEffect(() => {
     setUserIsAdmin(userRole === MemberRole.admin);
@@ -44,6 +49,20 @@ export const ManageOrganizationPage: FC = () => {
 
     setOrgMembers(formatMembers(members));
   }, [post, orgId]);
+
+  const getUserCompany = useCallback(async() => {
+    const { name } = await postUserCompany(Org.getUserCompany);
+
+    // add org to orgd with the name of the company found in ServiceNow
+    if (name) {
+      const { org } = await post(ORGANIZATIONS_URL, { name });
+      
+      if (org?.id) {  
+        setOrgId(org?.id);
+        setFromCustomerPortal(true);
+      }
+    }
+  }, [post, postUserCompany]);
 
   const handleInviteMemberSubmit = useCallback(async ({ email, role }: InviteMemberFormFields) => {
     await post(`${ORGANIZATIONS_URL}/${orgId}/${ORGANIZATION_MEMBER_URL_CHUNK}`, {
@@ -78,25 +97,43 @@ export const ManageOrganizationPage: FC = () => {
           {orgId
             ? (
               <div data-testid="view-organization">
-                <OrganizationView orgId={orgId} />
+                <OrganizationView orgId={orgId} fromCustomerPortal={fromCustomerPortal} />
               </div>
             ) : (
               <div data-testid="create-organization">
-                <OrganizationCreate onCreateOrgSubmit={handleCreateOrgSubmit} loading={loading} />
+                <OrganizationCreate
+                  onCreateOrgSubmit={handleCreateOrgSubmit}
+                  loading={loading || loadingCompany}
+                />
               </div>
             )}
         </div>
       ),
     },
-  ], [handleCreateOrgSubmit, handleInviteMemberSubmit, loading, orgId, orgMembers, userIsAdmin]);
+  ],
+  [
+    handleCreateOrgSubmit,
+    handleInviteMemberSubmit,
+    loading,
+    loadingCompany,
+    orgId,
+    orgMembers,
+    userIsAdmin,
+    fromCustomerPortal,
+  ]);
 
   useEffect(() => {
     const getOrgs = async () => {
-      await post(GET_USER_ORGS_URL);
+      const { orgs } = await post(GET_USER_ORGS_URL);
+
+      // if there are no orgs check for a linked company in ServiceNow
+      if (!orgs || !orgs.length) {
+        getUserCompany();
+      }
     };
 
     getOrgs();
-  }, [post]);
+  }, [post, getUserCompany]);
 
   useEffect(() => {
     if (error) {

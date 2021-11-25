@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import useFetch from 'use-http';
-import { useStyles } from '@grafana/ui';
+import { Icon, useStyles } from '@grafana/ui';
 import { toast } from 'react-toastify';
 import { ENDPOINTS } from 'core/api';
 import { getUseHttpConfig } from 'core/api/api.service';
@@ -11,7 +11,7 @@ import { OrganizationViewProps } from './OrganizationView.types';
 
 const { Org } = ENDPOINTS;
 
-export const OrganizationView: FC<OrganizationViewProps> = ({ orgId }) => {
+export const OrganizationView: FC<OrganizationViewProps> = ({ orgId, fromCustomerPortal }) => {
   const styles = useStyles(getStyles);
   const [orgName, setOrgName] = useState<string>();
   const [orgCreationDate, setOrgCreationDate] = useState<string>();
@@ -41,6 +41,12 @@ export const OrganizationView: FC<OrganizationViewProps> = ({ orgId }) => {
             <span>
              {Messages.creationDate}: <strong>{orgCreationDate}</strong>
             </span>
+            {fromCustomerPortal && (
+              <div data-testid="info-wrapper" className={styles.infoWrapper}>
+                <Icon className={styles.icon} name="info-circle" />
+                <span>{Messages.fromCustomerPortal}</span>
+              </div>
+            )}
           </>
         )}
       </div>
