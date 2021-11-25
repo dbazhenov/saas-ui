@@ -1,5 +1,6 @@
 DOCKER_TAG ?= latest
-DOCKER_IMAGE = ghcr.io/percona-platform/saas-ui/saas-ui:$(DOCKER_TAG)
+DOCKER_IMAGE_PATH = ghcr.io/percona-platform/saas-ui/saas-ui
+DOCKER_IMAGE = $(DOCKER_IMAGE_PATH):$(DOCKER_TAG)
 
 default: help
 
@@ -26,5 +27,10 @@ build:                  ## Build artifacts
 docker-build:           ## Build Docker image
 	docker build --squash --tag $(DOCKER_IMAGE) .
 
+docker-tag:             ## Extend the image tag only if we have latest or dev images
+	@if $$(echo $(DOCKER_TAG) | grep -E "^(latest|dev)$$" >/dev/null); then \
+	    docker tag $(DOCKER_IMAGE) $(DOCKER_IMAGE_PATH):$(DOCKER_TAG)-$$(git show -s --format=%cd_%h --date=format:'%Y%m%d_%H%M%S'); \
+	fi;
+
 docker-push:            ## Push Docker image
-	docker push $(DOCKER_IMAGE)
+	docker push --all-tags $(DOCKER_IMAGE_PATH)

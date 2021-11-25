@@ -113,6 +113,9 @@ jobs:
       - name: Build Docker image with tag "${{ env.DOCKER_TAG }}"
         run: make docker-build
 
+      - name: Tag Docker image with more details about the build
+        run: make docker-tag
+
       - name: Push Docker image
         run: make docker-push
 
