@@ -10,6 +10,7 @@ describe('ManageOrganization utils', () => {
         username: 'test1@test.com',
         role: MemberRole.admin,
         status: MemberStatus.active,
+        member_id: 'test_id_1',
       },
       {
         first_name: 'First2',
@@ -17,6 +18,7 @@ describe('ManageOrganization utils', () => {
         username: 'test2@test.com',
         role: MemberRole.technical,
         status: MemberStatus.active,
+        member_id: 'test_id_2',
       },
     ];
 
@@ -27,6 +29,7 @@ describe('ManageOrganization utils', () => {
         email: 'test1@test.com',
         role: MemberRole.admin,
         status: MemberStatus.active,
+        memberId: 'test_id_1',
       },
       {
         firstName: 'First2',
@@ -34,6 +37,7 @@ describe('ManageOrganization utils', () => {
         email: 'test2@test.com',
         role: MemberRole.technical,
         status: MemberStatus.active,
+        memberId: 'test_id_2',
       },
     ];
 

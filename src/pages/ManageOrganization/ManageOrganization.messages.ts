@@ -1,4 +1,6 @@
 export const Messages = {
+  admin: 'Admin',
+  technicalUser: 'Technical User',
   fetchError: 'An error occurred, please try again.',
   inviteMemberSuccess: 'The user has been successfully invited',
   manageOrganization: 'Manage Organization',

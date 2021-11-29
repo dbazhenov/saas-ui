@@ -4,7 +4,7 @@ import { useStyles, Button, Label, Select } from '@grafana/ui';
 import { LoaderButton, Modal, TextInputField, validators } from '@percona/platform-core';
 import { getStyles } from './InviteMember.styles';
 import { Messages } from './InviteMember.messages';
-import { ROLES } from './InviteMember.constants';
+import { ROLES } from '../ManageOrganization.constants';
 import { InviteMemberFormFields, MemberRole } from '../ManageOrganization.types';
 import { InviteMemberProps } from './InviteMember.types';
 

@@ -6,16 +6,17 @@ import { getUseHttpConfig } from 'core/api/api.service';
 import { ENDPOINTS } from 'core/api';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
-import { useUserRole } from 'core/hooks';
+import { useUserRole, useUserInfo } from 'core/hooks';
 import { Messages } from './ManageOrganization.messages';
 import { getStyles } from './ManageOrganization.styles';
 import { formatMembers } from './ManageOrganization.utils';
-import { CreateOrganizationPayload, Member, MemberRole, InviteMemberFormFields } from './ManageOrganization.types';
+import { CreateOrganizationPayload, Member, MemberRole, InviteMemberFormFields, EditMemberPayload } from './ManageOrganization.types';
 import { DEFAULT_TAB_INDEX, GET_USER_ORGS_URL, ORGANIZATIONS_URL, GET_MEMBERS_URL_CHUNK, ORGANIZATION_MEMBER_URL_CHUNK } from './ManageOrganization.constants';
 import { OrganizationView } from './OrganizationView';
 import { OrganizationCreate } from './OrganizationCreate';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
+import { ManageOrganizationProvider } from './ManageOrganization.provider';
 
 const { Org } = ENDPOINTS;
 
@@ -27,8 +28,9 @@ export const ManageOrganizationPage: FC = () => {
   const [fromCustomerPortal, setFromCustomerPortal] = useState(false);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_INDEX);
   const [userRole] = useUserRole(orgId);
+  const [userInfo] = useUserInfo();
   const fetchConfig = getUseHttpConfig();
-  const { response, error, loading, post, data } = useFetch(...fetchConfig);
+  const { response, error, loading, post, put, data } = useFetch(...fetchConfig);
   const { post: postUserCompany, loading: loadingCompany } = useFetch(...fetchConfig);
 
   useEffect(() => {
@@ -56,8 +58,8 @@ export const ManageOrganizationPage: FC = () => {
     // add org to orgd with the name of the company found in ServiceNow
     if (name) {
       const { org } = await post(ORGANIZATIONS_URL, { name });
-      
-      if (org?.id) {  
+
+      if (org?.id) {
         setOrgId(org?.id);
         setFromCustomerPortal(true);
       }
@@ -75,6 +77,17 @@ export const ManageOrganizationPage: FC = () => {
       getOrgMembers();
     }
   }, [post, orgId, getOrgMembers, response.ok]);
+
+  const handleEditMemberSubmit = useCallback(async ({ role, memberId }: EditMemberPayload) => {
+    await put(`${ORGANIZATIONS_URL}/${orgId}/${ORGANIZATION_MEMBER_URL_CHUNK}/${memberId}`, {
+      role: role.value,
+    });
+
+    if (response.ok) {
+      toast.success(Messages.inviteMemberSuccess);
+      getOrgMembers();
+    }
+  }, [put, orgId, getOrgMembers, response.ok]);
 
   const tabs = useMemo(() => [
     {
@@ -175,7 +188,16 @@ export const ManageOrganizationPage: FC = () => {
             ))}
           </TabsBar>
           <TabContent data-testid="manage-organization-tab-content">
-            {tabs[activeTab].content}
+            <ManageOrganizationProvider.Provider
+              value={{
+                onEditMemberSubmit: handleEditMemberSubmit,
+                loading,
+                userInfo,
+                userRole,
+              }}
+            >
+              {tabs[activeTab].content}
+            </ManageOrganizationProvider.Provider>
           </TabContent>
         </div>
       </div>

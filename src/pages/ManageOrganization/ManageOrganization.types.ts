@@ -1,4 +1,5 @@
 import { SelectableValue } from '@grafana/data';
+import { AuthState } from 'store/types';
 
 export interface CreateOrganizationPayload {
   organizationName: string;
@@ -19,6 +20,7 @@ export interface MemberPayload {
   last_name: string;
   role: MemberRole;
   status: MemberStatus;
+  member_id: string;
 }
 
 export interface Member {
@@ -27,9 +29,26 @@ export interface Member {
   email: string;
   role: MemberRole;
   status: MemberStatus;
+  memberId: string
+}
+
+export interface EditMemberFormFields {
+  role: SelectableValue<MemberRole>;
+}
+
+export interface EditMemberPayload {
+  memberId: string;
+  role: SelectableValue<MemberRole>;
 }
 
 export interface InviteMemberFormFields {
   email: string;
   role: SelectableValue<MemberRole>;
+}
+
+export interface ManageOrganizationContext {
+  onEditMemberSubmit: ({ role, memberId }: EditMemberPayload) => Promise<void>;
+  loading: boolean;
+  userInfo: AuthState;
+  userRole: string;
 }

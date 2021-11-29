@@ -8,6 +8,7 @@ import { getStyles } from './MembersList.styles';
 import { Messages } from './MembersList.messages';
 import { MembersListProps } from './MembersList.types';
 import { Member, MemberStatus } from '../ManageOrganization.types';
+import { MemberActions } from './MemberActions';
 
 export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
   const styles = useStyles(getStyles);
@@ -38,12 +39,19 @@ export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
       {
         Header: Messages.email,
         accessor: 'email',
-        width: '45%',
+        width: '40%',
       },
       {
         Header: Messages.role,
         accessor: 'role',
         width: '25%',
+      },
+      {
+        Header: Messages.actions,
+        accessor: (member: Member) => (
+          <MemberActions member={member} />
+        ),
+        width: '5%',
       },
     ],
     [styles],
