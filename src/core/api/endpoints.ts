@@ -14,5 +14,6 @@ export const ENDPOINTS = {
     getUserOganizations: '/v1/orgs:search',
     getUserCompany: '/v1/orgs/company:search',
     searchOrgMember: (id: string) => `/v1/orgs/${id}/members:search`,
+    searchOrgTickets: (id: string) => `/v1/orgs/${id}/tickets:search`,
   },
 };

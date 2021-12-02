@@ -75,3 +75,26 @@ export interface OrganizationMembersResponse {
 export interface SearchOrganizationMembersResponse {
   members: OrganizationMembersResponse[];
 }
+
+export enum OrgTicketStatus {
+  Open = 'Open',
+  Closed = 'Closed',
+  Resolved = 'Resolved',
+}
+
+
+export interface OrganizationTicketsResponse {
+  number: string;
+  short_description: string;
+  priority: string;
+  create_time: string;
+  department: string;
+  requester: string;
+  task_type: string;
+  url: string
+  state: OrgTicketStatus;
+}
+
+export interface SearchOrganizationTicketsResponse {
+  tickets: OrganizationTicketsResponse[],
+}
