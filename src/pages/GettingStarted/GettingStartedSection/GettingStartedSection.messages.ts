@@ -4,4 +4,5 @@ export const Messages = {
   signOut: 'Logout',
   done: 'Done',
   incomplete: 'Incomplete',
+  loading: 'Loading...',
 };

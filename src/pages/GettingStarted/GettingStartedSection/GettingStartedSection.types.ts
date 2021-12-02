@@ -8,4 +8,6 @@ export interface GettingStartedSectionProps {
   linkText: string;
   linkTo: string;
   title: string;
+  loading?: boolean;
+  loadingMessage?: string;
 }

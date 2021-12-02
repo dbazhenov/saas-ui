@@ -18,6 +18,9 @@ export const getStyles = (theme: GrafanaTheme) => {
         opacity: 45%;
       }
     `,
+    containerLoading: css`
+      height: 242px;
+    `,
     orgDetails: css`
       align-items: center;
       display: flex;

@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import useFetch from 'use-http';
-import { Icon, useStyles } from '@grafana/ui';
+import { cx } from 'emotion';
+import { Icon, Spinner, useStyles } from '@grafana/ui';
 import { toast } from 'react-toastify';
 import { ENDPOINTS } from 'core/api';
 import { getUseHttpConfig } from 'core/api/api.service';
@@ -16,7 +17,11 @@ export const OrganizationView: FC<OrganizationViewProps> = ({ orgId, fromCustome
   const [orgName, setOrgName] = useState<string>();
   const [orgCreationDate, setOrgCreationDate] = useState<string>();
   const fetchConfig = getUseHttpConfig(`${Org.getOrganization}\\${orgId}`, undefined, [orgId]);
-  const { error, data = {} } = useFetch(...fetchConfig);
+  const { error, data = {}, loading } = useFetch(...fetchConfig);
+  const containerStyles = cx({
+    [styles.container]: true,
+    [styles.containerLoading]: loading,
+  });
 
   useEffect(() => {
     if (error) {
@@ -30,26 +35,32 @@ export const OrganizationView: FC<OrganizationViewProps> = ({ orgId, fromCustome
   }, [data]);
 
   return (
-    <div data-testid="create-organization-wrapper" className={styles.container}>
-      <OrganizationLogo />
-      <div className={styles.orgDetails}>
-        {orgName && orgCreationDate && (
-          <>
-            <span>
-              {Messages.organizationName}: <strong>{orgName}</strong>
-            </span>
-            <span>
-             {Messages.creationDate}: <strong>{orgCreationDate}</strong>
-            </span>
-            {fromCustomerPortal && (
-              <div data-testid="info-wrapper" className={styles.infoWrapper}>
-                <Icon className={styles.icon} name="info-circle" />
-                <span>{Messages.fromCustomerPortal}</span>
-              </div>
+    <div data-testid="create-organization-wrapper" className={containerStyles}>
+      {loading ? (
+        <Spinner />
+      ): (
+        <>
+          <OrganizationLogo />
+          <div className={styles.orgDetails}>
+            {orgName && orgCreationDate && (
+              <>
+                <span>
+                  {Messages.organizationName}: <strong>{orgName}</strong>
+                </span>
+                <span>
+                {Messages.creationDate}: <strong>{orgCreationDate}</strong>
+                </span>
+                {fromCustomerPortal && (
+                  <div data-testid="info-wrapper" className={styles.infoWrapper}>
+                    <Icon className={styles.icon} name="info-circle" />
+                    <span>{Messages.fromCustomerPortal}</span>
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

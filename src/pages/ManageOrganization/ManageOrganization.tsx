@@ -1,7 +1,8 @@
 import React, { FC, useCallback, useMemo, useEffect, useState } from 'react';
 import useFetch from 'use-http';
 import { toast } from 'react-toastify';
-import { useStyles, Tab, TabsBar, TabContent } from '@grafana/ui';
+import { cx } from 'emotion';
+import { useStyles, Tab, TabsBar, TabContent, Spinner } from '@grafana/ui';
 import { getUseHttpConfig } from 'core/api/api.service';
 import { ENDPOINTS } from 'core/api';
 import { PrivateLayout } from 'components/Layouts';
@@ -27,11 +28,17 @@ export const ManageOrganizationPage: FC = () => {
   const [userIsAdmin, setUserIsAdmin] = useState(false);
   const [fromCustomerPortal, setFromCustomerPortal] = useState(false);
   const [activeTab, setActiveTab] = useState(DEFAULT_TAB_INDEX);
-  const [userRole] = useUserRole(orgId);
+  // required to avoid flickering between changing the loading state
+  const [showLoader, setShowLoader] = useState(true);
+  const [userRole, loadingUserRole] = useUserRole(orgId);
   const [userInfo] = useUserInfo();
   const fetchConfig = getUseHttpConfig();
   const { response, error, loading, post, put, data } = useFetch(...fetchConfig);
   const { post: postUserCompany, loading: loadingCompany } = useFetch(...fetchConfig);
+  const tabsWrapperStyles = cx({
+    [styles.tabsWrapper]: true,
+    [styles.tabsWrapperLoading]: showLoader || loading || loadingCompany || loadingUserRole,
+  });
 
   useEffect(() => {
     setUserIsAdmin(userRole === MemberRole.admin);
@@ -50,6 +57,7 @@ export const ManageOrganizationPage: FC = () => {
     const { members } = await post(`${ORGANIZATIONS_URL}/${orgId}/${GET_MEMBERS_URL_CHUNK}`);
 
     setOrgMembers(formatMembers(members));
+    setShowLoader(false);
   }, [post, orgId]);
 
   const getUserCompany = useCallback(async() => {
@@ -64,6 +72,8 @@ export const ManageOrganizationPage: FC = () => {
         setFromCustomerPortal(true);
       }
     }
+
+    setShowLoader(false);
   }, [post, postUserCompany]);
 
   const handleInviteMemberSubmit = useCallback(async ({ email, role }: InviteMemberFormFields) => {
@@ -172,33 +182,39 @@ export const ManageOrganizationPage: FC = () => {
           <OrganizationLogo />
           {Messages.manageOrganization}
         </header>
-        <div data-testid="manage-organization-tabs-wrapper" className={styles.tabsWrapper}>
-          <TabsBar>
-            {tabs.map((tab, index) => (
-              <span key={tab.label} className={tab.disabled ? styles.disabledTab : undefined}>
-                <Tab
-                  // TODO: research why css prop is needed and how to remove it
-                  active={index === activeTab}
-                  css={undefined}
-                  data-testid="manage-organization-tab"
-                  label={tab.label}
-                  onChangeTab={() => setActiveTab(index)}
-                />
-              </span>
-            ))}
-          </TabsBar>
-          <TabContent data-testid="manage-organization-tab-content">
-            <ManageOrganizationProvider.Provider
-              value={{
-                onEditMemberSubmit: handleEditMemberSubmit,
-                loading,
-                userInfo,
-                userRole,
-              }}
-            >
-              {tabs[activeTab].content}
-            </ManageOrganizationProvider.Provider>
-          </TabContent>
+        <div data-testid="manage-organization-tabs-wrapper" className={tabsWrapperStyles}>
+          {showLoader || loading || loadingCompany || loadingUserRole ? (
+            <Spinner />
+          ) : (
+            <>
+              <TabsBar>
+                {tabs.map((tab, index) => (
+                  <span key={tab.label} className={tab.disabled ? styles.disabledTab : undefined}>
+                    <Tab
+                      // TODO: research why css prop is needed and how to remove it
+                      active={index === activeTab}
+                      css={undefined}
+                      data-testid="manage-organization-tab"
+                      label={tab.label}
+                      onChangeTab={() => setActiveTab(index)}
+                    />
+                  </span>
+                ))}
+              </TabsBar>
+              <TabContent data-testid="manage-organization-tab-content">
+                <ManageOrganizationProvider.Provider
+                  value={{
+                    onEditMemberSubmit: handleEditMemberSubmit,
+                    loading,
+                    userInfo,
+                    userRole,
+                  }}
+                >
+                  {tabs[activeTab].content}
+                </ManageOrganizationProvider.Provider>
+              </TabContent>
+            </>
+          )}
         </div>
       </div>
     </PrivateLayout>

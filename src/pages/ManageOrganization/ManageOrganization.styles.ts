@@ -32,6 +32,12 @@ export const getStyles = (theme: GrafanaTheme) => {
         pointer-events: none;
       }
     `,
+    tabsWrapperLoading: css`
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      height: 350px;
+    `,
     tabsWrapper: css`
       background-color: ${colors.pageHeaderBg};
       border-radius: ${border.radius.lg};

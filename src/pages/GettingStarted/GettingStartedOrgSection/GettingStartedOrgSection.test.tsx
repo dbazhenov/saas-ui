@@ -1,6 +1,6 @@
 import React from 'react';
 import { toast } from 'react-toastify';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { ENDPOINTS } from 'core/api';
 import { TestContainer } from 'components/TestContainer';
 import { GettingStartedOrgSection } from './GettingStartedOrgSection';
@@ -71,8 +71,11 @@ describe('Getting Started Organization Section', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect((mockPost)).toBeCalledTimes(1); });
-    expect(await screen.findByText(Messages.addOrganization));
+    waitFor(() => expect(mockPost).toHaveBeenCalledTimes(2));
+    
+    act(() => {
+      expect(screen.findByText(Messages.addOrganization));
+    });
   });
 
   test('shows a link to view the details of the first organization returned by the API for the user', async () => {

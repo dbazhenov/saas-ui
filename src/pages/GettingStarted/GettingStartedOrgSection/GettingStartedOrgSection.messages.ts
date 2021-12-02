@@ -5,4 +5,5 @@ export const Messages = {
   createOrganizationTitle: '1. Create Organization',
   fetchError: 'An error occurred, please try again later.',
   viewOrganization: 'View Organization',
+  loadingOrganization: 'Loading organization...',
 };

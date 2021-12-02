@@ -11,6 +11,8 @@ const { Org } = ENDPOINTS;
 
 export const GettingStartedOrgSection: FC = () => {
   const [hasOrgIds, setHasOrgIds] = useState(false);
+  // required to avoid flickering between changing the loading state for the two requests
+  const [showLoader, setShowLoader] = useState(true);
 
   const { error, data, loading } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }, []));
   const { post: postUserCompany, loading: loadingCompany } = useFetch(...getUseHttpConfig());
@@ -21,6 +23,8 @@ export const GettingStartedOrgSection: FC = () => {
     if (name) {
       setHasOrgIds(true);
     }
+
+    setShowLoader(false);
   }, [postUserCompany]);
 
   useEffect(() => {
@@ -32,6 +36,7 @@ export const GettingStartedOrgSection: FC = () => {
   useEffect(() => {
     if (data?.orgs?.length) {
       setHasOrgIds(true);
+      setShowLoader(false);
     }
 
     if (data && (!data?.orgs || !data?.orgs?.length)) {
@@ -47,7 +52,8 @@ export const GettingStartedOrgSection: FC = () => {
       linkTo={Routes.organization}
       linkText={hasOrgIds ? Messages.viewOrganization : Messages.addOrganization}
       isTicked={hasOrgIds}
-      disabled={loading || loadingCompany}
+      loading={loading || loadingCompany || showLoader}
+      loadingMessage={Messages.loadingOrganization}
     />
   );
 };

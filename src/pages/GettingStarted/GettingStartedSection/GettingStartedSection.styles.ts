@@ -28,6 +28,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       > img {
         height: ${headerImageSize};
         margin-right: ${spacing.lg};
+        transition: 500ms;
       }
     `,
     link: css`
@@ -41,6 +42,25 @@ export const getStyles = (theme: GrafanaTheme) => {
       color: ${colors.text};
       max-width: 900px;
       width: 100%;
+    `,
+    loadingMessage: css`
+      align-items: center;
+      color: ${colors.linkExternal};
+      display: flex;
+      font-weight: ${typography.weight.semibold};
+      justify-content: center;
+      margin-bottom: ${spacing.xs};
+      width: 200px;
+    `,
+    tickImage: css`
+      position: absolute;
+      opacity: 0;
+    `,
+    showTick: css`
+      opacity: 1;
+    `,
+    hideTickBg: css`
+      opacity: 0;
     `,
   };
 };
