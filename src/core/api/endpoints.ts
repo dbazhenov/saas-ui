@@ -13,7 +13,10 @@ export const ENDPOINTS = {
     createOrganization: '/v1/orgs',
     getUserOganizations: '/v1/orgs:search',
     getUserCompany: '/v1/orgs/company:search',
-    searchOrgMember: (id: string) => `/v1/orgs/${id}/members:search`,
-    searchOrgTickets: (id: string) => `/v1/orgs/${id}/tickets:search`,
+    editMember: (orgId: string, memberId: string) => `/v1/orgs/${orgId}/members/${memberId}`,
+    deleteMember: (orgId: string, memberId: string) => `/v1/orgs/${orgId}/members/${memberId}`,
+    inviteMember: (orgId: string) => `/v1/orgs/${orgId}/members`,
+    searchOrgMember: (orgId: string) => `/v1/orgs/${orgId}/members:search`,
+    searchOrgTickets: (orgId: string) => `/v1/orgs/${orgId}/tickets:search`,
   },
 };

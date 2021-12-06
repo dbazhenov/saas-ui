@@ -62,7 +62,7 @@ describe('Invite Members', () => {
 
     fireEvent.click(button!);
 
-    expect(await screen.findByTestId('invite-member-form')).toBeInTheDocument();
+    expect(screen.queryByTestId('invite-member-form')).toBeInTheDocument();
   });
 
   test('closes the modal', async () => {

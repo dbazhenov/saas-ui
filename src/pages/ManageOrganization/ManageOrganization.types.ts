@@ -41,6 +41,10 @@ export interface EditMemberPayload {
   role: SelectableValue<MemberRole>;
 }
 
+export interface DeleteMemberPayload {
+  memberId: string;
+}
+
 export interface InviteMemberFormFields {
   email: string;
   role: SelectableValue<MemberRole>;
@@ -48,6 +52,7 @@ export interface InviteMemberFormFields {
 
 export interface ManageOrganizationContext {
   onEditMemberSubmit: ({ role, memberId }: EditMemberPayload) => Promise<void>;
+  onDeleteMemberSubmit: ({ memberId }: DeleteMemberPayload) => Promise<void>;
   loading: boolean;
   userInfo: AuthState;
   userRole: string;

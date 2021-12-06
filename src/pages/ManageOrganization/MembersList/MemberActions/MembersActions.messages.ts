@@ -1,8 +1,4 @@
 export const Messages = {
+  delete: 'Delete',
   edit: 'Edit',
-  editMember: 'Edit Member',
-  email: 'Email',
-  name: 'Name',
-  role: 'Role',
-  save: 'Save',
 };

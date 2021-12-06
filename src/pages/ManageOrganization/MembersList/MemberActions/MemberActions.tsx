@@ -1,95 +1,90 @@
-import React, { FC, useContext, useState } from 'react';
-import { Modal, LoaderButton, TextInputField } from '@percona/platform-core';
-import { useStyles, IconButton, Select, Label } from '@grafana/ui';
-import { withTypes, FormRenderProps, Field } from 'react-final-form';
+import React, { FC, useContext, useMemo, useState } from 'react';
+import { useStyles, IconButton } from '@grafana/ui';
 import { getStyles } from './MemberActions.styles';
-import { ROLES } from '../../ManageOrganization.constants';
 import { MemberActionsProps } from './MemberActions.types';
 import { EditMemberFormFields, MemberRole } from '../../ManageOrganization.types';
 import { Messages } from './MembersActions.messages';
 import { ManageOrganizationProvider } from '../../ManageOrganization.provider';
-
-const { Form } = withTypes<EditMemberFormFields>();
+import { MemberEditModal } from './MemberEditModal';
+import { MemberDeleteModal } from './MemberDeleteModal';
 
 export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
   const {
     onEditMemberSubmit,
+    onDeleteMemberSubmit,
     loading,
     userInfo,
     userRole,
   } = useContext(ManageOrganizationProvider);
-  const { role, firstName, lastName, email, memberId } = member;
+  const { memberId } = member;
   const styles = useStyles(getStyles);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+
+  const isActionDisabled = useMemo(
+    () => userInfo.email === member.email || userRole !== MemberRole.admin,
+    [userInfo.email, userRole, member],
+  );
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalVisible((currentValue) => !currentValue);
+  };
+
+  const handleDeleteMemberClick = () => {
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteMemberSubmit = async () => {
+    setIsDeleteModalVisible(false);
+    await onDeleteMemberSubmit({ memberId });
+  };
 
   const handleEditModalClose = () => {
-    setIsModalVisible((currentValue) => !currentValue);
+    setIsEditModalVisible((currentValue) => !currentValue);
   };
 
   const handleEditMemberClick = () => {
-    setIsModalVisible(true);
+    setIsEditModalVisible(true);
   };
 
-  const handleEditMemberSubmit = (formData: EditMemberFormFields) => {
-    setIsModalVisible(false);
-    onEditMemberSubmit({ role: formData.role, memberId });
+  const handleEditMemberSubmit = async (formData: EditMemberFormFields) => {
+    setIsEditModalVisible(false);
+    await onEditMemberSubmit({ role: formData.role, memberId });
   };
 
   return (
     <>
       <div className={styles.actionsWrapper} data-testid="member-actions">
         <IconButton
+          className={styles.actionButton}
           data-testid="member-actions-edit"
+          disabled={isActionDisabled}
           name="pen"
-          title={Messages.edit}
           onClick={handleEditMemberClick}
-          disabled={userInfo.email === member.email || userRole !== MemberRole.admin}
+          title={Messages.edit}
+        />
+        <IconButton
+          className={styles.actionButton}
+          data-testid="member-actions-delete"
+          disabled={isActionDisabled}
+          name="trash-alt"
+          onClick={handleDeleteMemberClick}
+          title={Messages.delete}
         />
       </div>
-      <Modal
-        title={Messages.editMember}
-        isVisible={isModalVisible}
+      <MemberEditModal
+        member={member}
+        loading={loading}
+        isVisible={isEditModalVisible}
+        onSubmit={handleEditMemberSubmit}
         onClose={handleEditModalClose}
-      >
-        {/* TODO: fix this cast to any */}
-        <Form onSubmit={handleEditMemberSubmit} initialValues={{ role: role as any }}>
-          {({ handleSubmit, valid, pristine }: FormRenderProps) => (
-            <form onSubmit={handleSubmit} className={styles.editForm} data-testid="edit-member-form">
-              <TextInputField
-                name="name"
-                label={Messages.name}
-                fieldClassName={styles.inputLabel}
-                defaultValue={`${firstName} ${lastName}`}
-                disabled
-              />
-              <TextInputField
-                name="email"
-                label={Messages.email}
-                defaultValue={email}
-                fieldClassName={styles.inputLabel}
-                disabled
-              />
-              <Field name="role">
-                {({ input }) => (
-                  <>
-                    <Label className={styles.selectLabel}>{Messages.role}</Label>
-                    <Select className={styles.roleSelect} options={ROLES} {...input} />
-                  </>
-                )}
-              </Field>
-              <LoaderButton
-                data-testid="edit-member-submit-button"
-                className={styles.saveButton}
-                type="submit"
-                loading={loading}
-                disabled={!valid || loading || pristine}
-              >
-                {Messages.save}
-              </LoaderButton>
-            </form>
-          )}
-        </Form>
-      </Modal>
+      />
+      <MemberDeleteModal
+        loading={loading}
+        isVisible={isDeleteModalVisible}
+        onSubmit={handleDeleteMemberSubmit}
+        onClose={handleDeleteModalClose}
+      />
     </>
   );
 };

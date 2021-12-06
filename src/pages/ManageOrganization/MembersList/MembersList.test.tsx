@@ -37,6 +37,7 @@ describe('Members List', () => {
       <TestContainer>
         <ManageOrganizationProvider.Provider
           value={{
+            onDeleteMemberSubmit: jest.fn(),
             onEditMemberSubmit: jest.fn(),
             loading: false,
             userInfo: testUserInfo,

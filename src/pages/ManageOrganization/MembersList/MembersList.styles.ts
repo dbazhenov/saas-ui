@@ -1,7 +1,7 @@
 import { css } from 'emotion';
 import { GrafanaTheme } from '@grafana/data';
 
-export const getStyles = ({typography, spacing}: GrafanaTheme) => ({
+export const getStyles = ({ typography, spacing }: GrafanaTheme) => ({
     fullNameWrapper: css`
       display: flex;
       align-items: center;

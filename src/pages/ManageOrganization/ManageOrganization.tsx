@@ -11,8 +11,8 @@ import { useUserRole, useUserInfo } from 'core/hooks';
 import { Messages } from './ManageOrganization.messages';
 import { getStyles } from './ManageOrganization.styles';
 import { formatMembers } from './ManageOrganization.utils';
-import { CreateOrganizationPayload, Member, MemberRole, InviteMemberFormFields, EditMemberPayload } from './ManageOrganization.types';
-import { DEFAULT_TAB_INDEX, GET_USER_ORGS_URL, ORGANIZATIONS_URL, GET_MEMBERS_URL_CHUNK, ORGANIZATION_MEMBER_URL_CHUNK } from './ManageOrganization.constants';
+import { CreateOrganizationPayload, Member, MemberRole, InviteMemberFormFields, EditMemberPayload, DeleteMemberPayload } from './ManageOrganization.types';
+import { DEFAULT_TAB_INDEX } from './ManageOrganization.constants';
 import { OrganizationView } from './OrganizationView';
 import { OrganizationCreate } from './OrganizationCreate';
 import { InviteMember } from './InviteMember';
@@ -33,7 +33,7 @@ export const ManageOrganizationPage: FC = () => {
   const [userRole, loadingUserRole] = useUserRole(orgId);
   const [userInfo] = useUserInfo();
   const fetchConfig = getUseHttpConfig();
-  const { response, error, loading, post, put, data } = useFetch(...fetchConfig);
+  const { response, error, loading, post, put, delete: deleteReq, data } = useFetch(...fetchConfig);
   const { post: postUserCompany, loading: loadingCompany } = useFetch(...fetchConfig);
   const tabsWrapperStyles = cx({
     [styles.tabsWrapper]: true,
@@ -45,7 +45,7 @@ export const ManageOrganizationPage: FC = () => {
   }, [userRole, orgMembers]);
 
   const handleCreateOrgSubmit = useCallback(async ({ organizationName }: CreateOrganizationPayload) => {
-    const { org } = await post(ORGANIZATIONS_URL, { name: organizationName });
+    const { org } = await post(Org.createOrganization, { name: organizationName });
 
     if (org?.id && response.ok) {
       toast.success(Messages.orgCreateSuccess);
@@ -54,7 +54,7 @@ export const ManageOrganizationPage: FC = () => {
   }, [post, response.ok]);
 
   const getOrgMembers = useCallback(async () => {
-    const { members } = await post(`${ORGANIZATIONS_URL}/${orgId}/${GET_MEMBERS_URL_CHUNK}`);
+    const { members } = await post(Org.searchOrgMember(orgId!));
 
     setOrgMembers(formatMembers(members));
     setShowLoader(false);
@@ -65,7 +65,7 @@ export const ManageOrganizationPage: FC = () => {
 
     // add org to orgd with the name of the company found in ServiceNow
     if (name) {
-      const { org } = await post(ORGANIZATIONS_URL, { name });
+      const { org } = await post(Org.getOrganization, { name });
 
       if (org?.id) {
         setOrgId(org?.id);
@@ -77,7 +77,7 @@ export const ManageOrganizationPage: FC = () => {
   }, [post, postUserCompany]);
 
   const handleInviteMemberSubmit = useCallback(async ({ email, role }: InviteMemberFormFields) => {
-    await post(`${ORGANIZATIONS_URL}/${orgId}/${ORGANIZATION_MEMBER_URL_CHUNK}`, {
+    await post(Org.inviteMember(orgId!), {
       username: email,
       role: role.value,
     });
@@ -88,13 +88,22 @@ export const ManageOrganizationPage: FC = () => {
     }
   }, [post, orgId, getOrgMembers, response.ok]);
 
+  const handleDeleteMemberSubmit = useCallback(async ({ memberId }: DeleteMemberPayload) => {
+    await deleteReq(Org.deleteMember(orgId!, memberId));
+
+    if (response.ok) {
+      toast.success(Messages.deleteMemberSuccess);
+      getOrgMembers();
+    }
+  }, [deleteReq, orgId, getOrgMembers, response.ok]);
+
   const handleEditMemberSubmit = useCallback(async ({ role, memberId }: EditMemberPayload) => {
-    await put(`${ORGANIZATIONS_URL}/${orgId}/${ORGANIZATION_MEMBER_URL_CHUNK}/${memberId}`, {
+    await put(Org.editMember(orgId!, memberId), {
       role: role.value,
     });
 
     if (response.ok) {
-      toast.success(Messages.inviteMemberSuccess);
+      toast.success(Messages.editMemberSuccess);
       getOrgMembers();
     }
   }, [put, orgId, getOrgMembers, response.ok]);
@@ -147,7 +156,7 @@ export const ManageOrganizationPage: FC = () => {
 
   useEffect(() => {
     const getOrgs = async () => {
-      const { orgs } = await post(GET_USER_ORGS_URL);
+      const { orgs } = await post(Org.getUserOganizations);
 
       // if there are no orgs check for a linked company in ServiceNow
       if (!orgs || !orgs.length) {
@@ -205,6 +214,7 @@ export const ManageOrganizationPage: FC = () => {
                 <ManageOrganizationProvider.Provider
                   value={{
                     onEditMemberSubmit: handleEditMemberSubmit,
+                    onDeleteMemberSubmit: handleDeleteMemberSubmit,
                     loading,
                     userInfo,
                     userRole,
