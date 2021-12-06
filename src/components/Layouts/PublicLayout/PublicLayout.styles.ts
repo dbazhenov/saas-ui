@@ -35,11 +35,11 @@ export const getStyles = (theme: GrafanaTheme) => {
         height: 70px;
         @media (min-width: ${breakpoints.md}) {
           width: 300px;
-          height: 100px;
+          height: 80px;
         }
         @media (min-width: ${breakpoints.lg}) {
           width: 470px;
-          height: 150px;
+          height: 90px;
         }
       }
     `,
@@ -69,7 +69,8 @@ export const getStyles = (theme: GrafanaTheme) => {
         margin-bottom: 0;
       }
       @media (min-width: ${breakpoints.lg}) {
-        font-size: ${typography.size.lg};
+        /* No preset value here */
+        font-size: 16px;
         max-width: 400px;
         margin-bottom: 0;
       }
@@ -77,7 +78,6 @@ export const getStyles = (theme: GrafanaTheme) => {
         display: none;
       }
       max-width: 350px;
-      margin: 1em 0 2em;
       text-align: center;
     `,
     rightZone: css`

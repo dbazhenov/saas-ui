@@ -1,4 +1,4 @@
 export const Messages = {
   productDescription:
-    'Single pane of glass for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL and MongoDB databases.',
+    'A unified experience for developers and database administrators to monitor, manage, secure, and optimize database environments on any infrastructure.',
 };

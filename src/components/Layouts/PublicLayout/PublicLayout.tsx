@@ -13,7 +13,9 @@ export const PublicLayout: FC = ({ children }) => {
         <div className={styles.logo}>
           <PerconaLogo />
         </div>
-        <div className={styles.description}>{Messages.productDescription}</div>
+        <div className={styles.description}>
+          <p>{Messages.productDescription}</p>
+        </div>
       </div>
       <div className={styles.centerZone} />
       <div className={styles.rightZone}>{children}</div>
