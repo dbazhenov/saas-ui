@@ -25,6 +25,7 @@ export const getStyles = ({ spacing, colors, typography }: GrafanaTheme) => ({
     }
   `,
   cardOverlay: css`
+    height: 100%;
     padding: ${spacing.lg};
 
     & > div:first-child {

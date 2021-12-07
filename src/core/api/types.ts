@@ -98,3 +98,16 @@ export interface OrganizationTicketsResponse {
 export interface SearchOrganizationTicketsResponse {
   tickets: OrganizationTicketsResponse[],
 }
+
+export interface GetOrganizationResponse {
+  org: OrganizationResponse;
+  contacts: ContactsResponse;
+}
+
+export interface ContactsResponse {
+  customer_success: {
+    email: string;
+    name: string;
+  }
+  new_ticket_url: string;
+}

@@ -6,6 +6,7 @@ export const getStyles = ({ colors, spacing }: GrafanaTheme) => ({
     display: flex;
     flex-direction: column;
     color: ${colors.text};
+    width: 100%;
   `,
   ticketSection: css`
     margin-top: ${spacing.lg};
