@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
 import { cx } from 'emotion';
 import { Button, useStyles } from '@grafana/ui';
 import doneIcon from 'assets/tick-circle.svg';
@@ -39,11 +38,11 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
               {loadingMessage}
           </span>
         ) : (
-          <Link to={linkTo} className={styles.link}>
+          <a href={linkTo} target="_blank" className={styles.link} rel="noreferrer">
             <Button data-testid="getting-started-section-link" icon={linkIcon} variant="link" disabled={disabled}>
               {linkText}
             </Button>
-          </Link>
+          </a>
         )}
       </div>
     </section>
