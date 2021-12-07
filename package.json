@@ -1,9 +1,9 @@
 {
   "name": "@percona/platform-ui",
-  "version": "0.7.3",
-  "description": "Percona Platform UI",
+  "version": "0.8.0",
+  "description": "Percona Platform Portal UI",
   "private": false,
-  "homepage": "https://platform.percona.com",
+  "homepage": "https://portal.percona.com",
   "author": "info@percona.com",
   "license": "Apache-2.0",
   "files": [
@@ -99,7 +99,7 @@
   },
   "keywords": [
     "percona",
-    "platform",
+    "portal",
     "ui"
   ],
   "browserslist": {

@@ -8,7 +8,7 @@ export const PORTAL_HOST = window.location.host;
 
 export const PORTAL_ORIGIN = window.location.origin;
 
-export const IS_PRODUCTION = PORTAL_HOST === 'platform.percona.com';
+export const IS_PRODUCTION = PORTAL_HOST === 'portal.percona.com';
 
 export const OAUTH_HOST = IS_PRODUCTION
   ? process.env.REACT_APP_OAUTH_PROD_HOST
