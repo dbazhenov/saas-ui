@@ -9,7 +9,7 @@ import { getUseHttpConfig } from 'core/api/api.service';
 import { Overlay } from '@percona/platform-core';
 import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
-import { LINKS } from './Contacts.constants';
+import { HELP_EMAIL, LINKS } from './Contacts.constants';
 import { CustomerContact } from './CustomerContact/CustomerContact';
 import { SuccessManager } from './Contacts.types';
 import { getAccountType } from './Contacts.utils';
@@ -110,6 +110,10 @@ export const Contacts: FC = () => {
       <div className={styles.card}>
       <Overlay className={styles.cardOverlay} isPending={loading}>
         <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
+        <p>
+          <span className={styles.label}>{Messages.needHelp}</span>
+          <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`}>{HELP_EMAIL}</a>
+        </p>
         {sucessManager ? (
           <CustomerContact
             name={sucessManager.name}

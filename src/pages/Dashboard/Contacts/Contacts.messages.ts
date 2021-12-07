@@ -8,10 +8,11 @@ export const Messages = {
   perconaExperts: 'Percona\'s experts can maximize your application performance with our open source database support, managed services or consulting.',
   perconaContacts: 'Percona Contacts',
   contactUs: 'Contact Us',
-  findUs: 'You can find us on our Community spaces:',
+  findUs: 'You can also find us on our Community spaces:',
   forums: 'Forums',
   discord: 'Discord',
   getInTouch: 'Or get in touch via our',
   contactsPage: 'Contacts page',
   fetchContactsError: 'Could not fetch your contacts.',
+  needHelp: 'Need help? Contact us at',
 };

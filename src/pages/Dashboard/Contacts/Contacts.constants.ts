@@ -4,3 +4,5 @@ export const LINKS = {
   discord: 'http://per.co.na/discord',
   contact: 'https://www.percona.com/about-percona/contact',
 };
+
+export const HELP_EMAIL = 'portal-help@percona.com';

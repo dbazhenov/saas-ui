@@ -46,4 +46,7 @@ export const getStyles = ({ spacing, colors, typography }: GrafanaTheme) => ({
   externalLink: css`
     color: ${colors.linkExternal};
   `,
+  label: css`
+    margin-right: ${spacing.xs};
+  `,
 });
