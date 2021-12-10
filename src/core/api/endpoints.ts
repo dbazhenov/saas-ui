@@ -18,5 +18,6 @@ export const ENDPOINTS = {
     inviteMember: (orgId: string) => `/v1/orgs/${orgId}/members`,
     searchOrgMember: (orgId: string) => `/v1/orgs/${orgId}/members:search`,
     searchOrgTickets: (orgId: string) => `/v1/orgs/${orgId}/tickets:search`,
+    searchOrgEntitlements: (id: string) => `/v1/orgs/${id}/entitlements:search`,
   },
 };

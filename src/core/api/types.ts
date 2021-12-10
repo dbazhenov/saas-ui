@@ -111,3 +111,26 @@ export interface ContactsResponse {
   }
   new_ticket_url: string;
 }
+
+export interface SearchOrganizationEntitlementsResponse {
+  entitlements: OrganizationEntitlement[];
+}
+
+export interface OrganizationEntitlement {
+  number: string;
+  name: string;
+  summary: string;
+  tier: string;
+  total_units: string;
+  unlimited_units: boolean;
+  support_level: string;
+  software_families: string[];
+  start_date: string;
+  end_date: string;
+  platform: Advisors;
+}
+
+interface Advisors {
+  security_advisor: boolean;
+  config_advisor: boolean;
+}

@@ -14,5 +14,7 @@ export const Messages = {
   getInTouch: 'Or get in touch via our',
   contactsPage: 'Contacts page',
   fetchContactsError: 'Could not fetch your contacts.',
+  entitlements: 'Entitlements:',
+  viewEntitlements: 'View',
   needHelp: 'Need help? Contact us at',
 };

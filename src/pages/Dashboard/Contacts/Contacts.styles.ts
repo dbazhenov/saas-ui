@@ -1,7 +1,7 @@
 import { css } from 'emotion';
 import { GrafanaTheme } from '@grafana/data';
 
-export const getStyles = ({ spacing, colors, typography }: GrafanaTheme) => ({
+export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme) => ({
   cardsContainer: css`
     display: flex;
     flex-wrap: wrap;
@@ -45,6 +45,17 @@ export const getStyles = ({ spacing, colors, typography }: GrafanaTheme) => ({
   `,
   externalLink: css`
     color: ${colors.linkExternal};
+  `,
+  entitlementsWrapper: css`
+    display: flex;
+  `,
+  icon: css`
+    cursor: pointer;
+    margin-left: ${spacing.md};
+
+    svg {
+      color: ${palette.blue80};
+    }
   `,
   label: css`
     margin-right: ${spacing.xs};
