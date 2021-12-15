@@ -10,5 +10,6 @@ export const GettingStartedPmmSection: FC = () => (
     linkIcon="link"
     linkTo={READ_MORE_LINK}
     linkText={Messages.readMore}
+    linkIsExternal
   />
 );

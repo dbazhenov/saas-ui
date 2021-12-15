@@ -38,6 +38,9 @@ export const getStyles = (theme: GrafanaTheme) => {
       text-decoration: none;
       width: 200px;
     `,
+    linkDisabled: css`
+      pointer-events: none;
+    `,
     section: css`
       color: ${colors.text};
       max-width: 900px;

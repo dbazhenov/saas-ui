@@ -5,6 +5,7 @@ export interface GettingStartedSectionProps {
   disabled?: boolean;
   isTicked?: boolean;
   linkIcon?: IconName;
+  linkIsExternal?: boolean;
   linkText: string;
   linkTo: string;
   title: string;

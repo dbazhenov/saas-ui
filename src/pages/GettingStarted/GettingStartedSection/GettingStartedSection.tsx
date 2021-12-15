@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import { cx } from 'emotion';
 import { Button, useStyles } from '@grafana/ui';
 import doneIcon from 'assets/tick-circle.svg';
@@ -10,6 +11,7 @@ import { GettingStartedSectionProps } from './GettingStartedSection.types';
 export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
   description,
   linkIcon,
+  linkIsExternal,
   linkText,
   linkTo,
   title,
@@ -22,6 +24,40 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
   const tickClassName = cx(styles.tickImage, { [styles.showTick]: isTicked });
   const hideTickBg = cx({ [styles.hideTickBg]: isTicked });
 
+  const LinkButton = () => (
+    <Button
+      data-testid="getting-started-section-link-button"
+      icon={linkIcon}
+      variant="link"
+      disabled={disabled}
+    >
+      {linkText}
+    </Button>
+  );
+
+  const SectionLink = () => (
+    linkIsExternal
+      ? (
+        <a
+          href={linkTo}
+          data-testid="getting-started-section-link"
+          className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <LinkButton />
+        </a>
+      ) : (
+        <Link
+          to={linkTo}
+          data-testid="getting-started-section-link"
+          className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
+        >
+          <LinkButton />
+        </Link>
+      )
+  );
+
   return (
     <section data-testid="getting-started-section" className={styles.section}>
       <header data-testid="getting-started-section-header" className={styles.header}>
@@ -30,7 +66,9 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
         <h2>{title}</h2>
       </header>
       <div data-testid="getting-started-section-description-wrapper" className={styles.descriptionWrapper}>
-        <span data-testid="getting-started-section-description" className={styles.description}>{description}</span>
+        <span data-testid="getting-started-section-description" className={styles.description}>
+          {description}
+        </span>
         {loading ? (
           <span
             data-testid="getting-started-section-loading"
@@ -38,11 +76,7 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
               {loadingMessage}
           </span>
         ) : (
-          <a href={linkTo} target="_blank" className={styles.link} rel="noreferrer">
-            <Button data-testid="getting-started-section-link" icon={linkIcon} variant="link" disabled={disabled}>
-              {linkText}
-            </Button>
-          </a>
+          <SectionLink />
         )}
       </div>
     </section>

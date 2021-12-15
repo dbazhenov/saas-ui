@@ -28,7 +28,14 @@ describe('Getting Started Section', () => {
   test('shows a tick', async () => {
     render(
       <TestContainer>
-        <GettingStartedSection description={testDescription} title={testTitle} isTicked linkIcon="plus-circle" linkTo="/" linkText={testLinkText} />
+        <GettingStartedSection
+          description={testDescription}
+          title={testTitle}
+          isTicked
+          linkIcon="plus-circle"
+          linkTo="/"
+          linkText={testLinkText}
+        />
       </TestContainer>,
     );
 
@@ -41,13 +48,40 @@ describe('Getting Started Section', () => {
   test('shows a disabled link if disabled is passed', async () => {
     render(
       <TestContainer>
-        <GettingStartedSection description={testDescription} title={testTitle} disabled linkIcon="plus-circle" linkTo="/" linkText={testLinkText} />
+        <GettingStartedSection
+          description={testDescription}
+          title={testTitle}
+          disabled
+          linkIcon="plus-circle"
+          linkTo="/"
+          linkText={testLinkText}
+        />
+      </TestContainer>,
+    );
+
+    const link = await screen.findByTestId('getting-started-section-link-button');
+
+    expect(link).toBeDisabled();
+  });
+
+  test('open the link to target=_blank if linkIsExternal is specified', async () => {
+    render(
+      <TestContainer>
+        <GettingStartedSection
+          description={testDescription}
+          title={testTitle}
+          disabled
+          linkIcon="plus-circle"
+          linkTo="/"
+          linkText={testLinkText}
+          linkIsExternal
+        />
       </TestContainer>,
     );
 
     const link = await screen.findByTestId('getting-started-section-link');
 
-    expect(link).toBeDisabled();
+    expect(link).toHaveProperty('target', '_blank');
   });
 
   test('shows loading message if loading is passed ', async () => {
