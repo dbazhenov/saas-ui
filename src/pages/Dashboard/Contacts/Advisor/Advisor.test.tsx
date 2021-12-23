@@ -5,7 +5,7 @@ import { Advisor } from './Advisor';
 
 describe('Advisor', () => {
   test('renders Advisor with label and checked icon', async () => {
-    render(<Advisor label="Test label" hasAvisor />);
+    render(<Advisor label="Test label" hasAdvisor />);
 
     expect(screen.getByTestId('advisor-wrapper').children.length).toBe(2);
     expect(screen.getByTestId('advisor-check-icon')).toBeInTheDocument();
@@ -13,7 +13,7 @@ describe('Advisor', () => {
   });
 
   test('renders Advisor with label and times icon', async () => {
-    render(<Advisor label="Test label" hasAvisor={false} />);
+    render(<Advisor label="Test label" hasAdvisor={false} />);
 
     expect(screen.getByTestId('advisor-wrapper').children.length).toBe(2);
     expect(screen.getByTestId('advisor-times-icon')).toBeInTheDocument();

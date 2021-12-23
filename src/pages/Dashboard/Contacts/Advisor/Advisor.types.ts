@@ -1,4 +1,4 @@
 export interface AdvisorProps {
   label: string;
-  hasAvisor: boolean;
+  hasAdvisor: boolean;
 }

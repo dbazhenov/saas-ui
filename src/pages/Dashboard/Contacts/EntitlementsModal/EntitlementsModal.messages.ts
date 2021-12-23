@@ -9,4 +9,5 @@ export const Messages = {
   platform: 'Platform',
   configAdvisor: 'Config Advisor',
   securityAdvisor: 'Security Advisor',
+  expiryDate: 'Expiry date',
 };
