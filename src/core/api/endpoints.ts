@@ -19,5 +19,6 @@ export const ENDPOINTS = {
     searchOrgMember: (orgId: string) => `/v1/orgs/${orgId}/members:search`,
     searchOrgTickets: (orgId: string) => `/v1/orgs/${orgId}/tickets:search`,
     searchOrgEntitlements: (id: string) => `/v1/orgs/${id}/entitlements:search`,
+    searchOrgInventory: (orgId: string) => `/v1/orgs/${orgId}/inventory:search`,
   },
 };

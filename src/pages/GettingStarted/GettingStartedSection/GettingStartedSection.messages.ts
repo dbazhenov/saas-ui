@@ -5,4 +5,5 @@ export const Messages = {
   done: 'Done',
   incomplete: 'Incomplete',
   loading: 'Loading...',
+  readMore: 'Read more',
 };

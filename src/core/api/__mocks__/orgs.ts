@@ -21,3 +21,13 @@ export const searchOrgMembers = () => Promise.resolve({
     }],
   },
 });
+
+export const searchOrgInventory = () => Promise.resolve({
+  data: {
+    inventory: [{
+      pmm_server_id: 'testId',
+      pmm_server_name: 'testName',
+      pmm_server_url: 'testUrl',
+    }],
+  },
+});

@@ -20,7 +20,7 @@ const mockData = {
 const testOrgId = '123';
 
 jest.mock('use-http', () => {
-  const originalModule = jest.requireActual('@percona/platform-core');
+  const originalModule = jest.requireActual('use-http');
 
   return {
     ...originalModule,
@@ -59,7 +59,7 @@ describe('Organization View', () => {
         <OrganizationView orgId={testOrgId} fromCustomerPortal />
       </TestContainer>,
     );
-    
+
     expect(screen.getByTestId('info-wrapper')).toBeInTheDocument();
   });
 });

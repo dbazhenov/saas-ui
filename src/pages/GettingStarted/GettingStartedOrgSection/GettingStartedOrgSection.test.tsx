@@ -41,6 +41,10 @@ jest.mock('use-http', () => {
 });
 
 describe('Getting Started Organization Section', () => {
+  beforeAll(() => {
+    mockPost.mockClear();
+  });
+
   test('shows an error if an API call fails', async () => {
     mockError = 'Error';
 
@@ -72,7 +76,7 @@ describe('Getting Started Organization Section', () => {
     );
 
     waitFor(() => expect(mockPost).toHaveBeenCalledTimes(2));
-    
+
     act(() => {
       expect(screen.findByText(Messages.addOrganization));
     });
@@ -110,8 +114,11 @@ describe('Getting Started Organization Section', () => {
 test('shows a link to view the details if user has no orgs but has company in ServiceNow', async () => {
   mockData = { orgs: [] };
 
-  mockPost.mockResolvedValue(mockPostReturn);
-  
+  mockPost.mockResolvedValue({
+    orgs: [],
+    name: 'Percona SN Company',
+  });
+
   render(
     <TestContainer>
       <GettingStartedOrgSection />

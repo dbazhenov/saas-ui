@@ -11,4 +11,5 @@ export interface GettingStartedSectionProps {
   title: string;
   loading?: boolean;
   loadingMessage?: string;
+  readMoreLink?: string;
 }

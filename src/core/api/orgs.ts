@@ -1,5 +1,5 @@
 import { Api, ENDPOINTS } from 'core/api';
-import { RequestBody, SearchOrganizationMembersResponse, SearchOrganizationsResponse, SearchOrganizationTicketsResponse } from './types';
+import { RequestBody, SearchOrganizationMembersResponse, SearchOrganizationsResponse, SearchOrganizationTicketsResponse, SearchOrganizationInventoryResponse } from './types';
 
 const { Org } = ENDPOINTS;
 
@@ -12,4 +12,7 @@ export const searchOrgMembers = (orgId: string, username?: string) => Api
   );
 
 export const searchOrgTickets = (orgId: string) => Api
-  .post<RequestBody, SearchOrganizationTicketsResponse>(Org.searchOrgTickets(orgId));  
+  .post<RequestBody, SearchOrganizationTicketsResponse>(Org.searchOrgTickets(orgId));
+
+export const searchOrgInventory = (orgId: string) => Api
+  .post<RequestBody, SearchOrganizationInventoryResponse>(Org.searchOrgInventory(orgId));

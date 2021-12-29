@@ -38,6 +38,14 @@ export const getStyles = (theme: GrafanaTheme) => {
       text-decoration: none;
       width: 200px;
     `,
+    readMoreLink: css`
+      text-decoration: none;
+      line-height: 1;
+
+      & > * {
+        padding: 0;
+      }
+    `,
     linkDisabled: css`
       pointer-events: none;
     `,

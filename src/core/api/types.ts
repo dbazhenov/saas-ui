@@ -116,6 +116,18 @@ export interface SearchOrganizationEntitlementsResponse {
   entitlements: OrganizationEntitlement[];
 }
 
+interface PmmInstance {
+  pmm_server_id: string;
+  pmm_server_name: string;
+  pmm_server_url: string;
+}
+
+export interface SearchOrganizationInventoryResponse {
+  data: {
+    inventory: PmmInstance[];
+  }
+}
+
 export interface OrganizationEntitlement {
   number: string;
   name: string;

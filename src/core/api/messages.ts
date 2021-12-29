@@ -9,4 +9,5 @@ export const Messages = {
   signUpSucceeded: 'An account activation email has been sent to you',
   genericAPIFailure: 'An error occurred while requesting data, please try again',
   updateProfileSucceeded: 'Your profile information has been saved',
+  getOrgsInventoryFailed: 'Unable to fetch the organization inventory',
 };
