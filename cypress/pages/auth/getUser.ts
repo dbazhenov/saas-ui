@@ -1,14 +1,17 @@
 import faker from 'faker';
 import { generate } from 'generate-password';
+import { User } from 'pages/common/interfaces/Auth';
 
 /*
 Using generate-password lib due to a bug in a faker when passing a regex to a password function.
 https://github.com/Marak/faker.js/issues/826
 */
 
-const getFakeEmail = () => `${faker.name.firstName()}.${faker.name.lastName()}@${Cypress.env('MAILOSAUR_UI_TESTS_SERVER_ID')}.mailosaur.net`;
+const getFakeEmail = (firstName: string, lastName: string) =>
+  `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Date.now()}.${faker.datatype.number()}@test.com`;
 
-const getPassword = () => generate({
+const getPassword = () =>
+  generate({
     length: 10,
     numbers: true,
     lowercase: true,
@@ -16,18 +19,14 @@ const getPassword = () => generate({
     strict: true,
   });
 
-export const getUser = (email = getFakeEmail(), password = getPassword()) => {
-  const signedInMessage = `You are signed in as ${email}`;
+export const getUser = (email: string = ''): User => {
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
 
   return {
-    user: {
-      email,
-      password,
-      firstName: faker.name.firstName(),
-      lastName: faker.name.lastName(),
-    },
-    signedInMessage,
-    activationEmailSentMessage: 'An account activation email has been sent to you',
-    loggedOutMessage: 'You are now logged out',
+    email: email || getFakeEmail(firstName, lastName),
+    password: getPassword(),
+    firstName,
+    lastName,
   };
 };

@@ -10,6 +10,7 @@ declare namespace Cypress {
      *   cy.get('button').isVisible();
      */
     isVisible(): Chainable;
+
     /**
      * Asserts that element is disabled
      *
@@ -17,6 +18,7 @@ declare namespace Cypress {
      *   cy.get('button').isDisabled();
      */
     isDisabled(): Chainable;
+
     /**
      * Asserts that element is enabled
      *
@@ -24,6 +26,7 @@ declare namespace Cypress {
      *   cy.get('button').isEnabled();
      */
     isEnabled(): Chainable;
+
     /**
      * Asserts that element has text
      *
@@ -32,6 +35,7 @@ declare namespace Cypress {
      * @param text
      */
     hasText(text: string): Chainable;
+
     /**
      * Asserts that element has attribute
      *
@@ -41,6 +45,7 @@ declare namespace Cypress {
      * @param value
      */
     hasAttr(key: string, value: string): Chainable;
+
     /**
      * Asserts that popUp has text and closes popUp after verification
      *

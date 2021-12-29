@@ -64,4 +64,3 @@ export const OrganizationView: FC<OrganizationViewProps> = ({ orgId, fromCustome
     </div>
   );
 };
-

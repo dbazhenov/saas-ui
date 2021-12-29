@@ -1,4 +1,4 @@
-export const OKTA_PROFILE_SETTINGS = 'https://id-dev.percona.com/enduser/settings';
+export const OKTA_PROFILE_SETTINGS_LINK = 'https://id-dev.percona.com/enduser/settings';
 export const MESSAGES = {
   PROFILE_UPDATED: 'Your profile information has been saved',
   TO_LONG_STRING: 'Must contain at most 50 characters',

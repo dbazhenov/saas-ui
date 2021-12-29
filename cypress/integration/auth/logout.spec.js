@@ -1,20 +1,19 @@
-import { EXISTING_USER, pageDetailsMap, Pages } from 'pages/common/constants';
-import { loginForm } from 'pages/auth/selectors';
-import { setAliases } from 'pages/auth/requests';
+import { loginButton } from 'pages/auth/selectors';
 import { dropdownMenu, logoutButton, profileIcon } from 'pages/main/selectors';
+import { getUser } from 'pages/auth/getUser';
+
+const newUser = getUser();
 
 context('Logout', () => {
   beforeEach(() => {
-    setAliases();
-    cy.visit(pageDetailsMap[Pages.Login].url);
-    cy.runLoginAction(EXISTING_USER.user);
+    cy.oktaCreateUser(newUser);
+    cy.loginByOktaApi(newUser.email, newUser.password);
   });
 
   it('SAAS-T80 - should be able to logout', () => {
     profileIcon().click();
     dropdownMenu().isVisible();
     logoutButton().click();
-    loginForm().isVisible();
-    cy.checkPopUpMessage(EXISTING_USER.loggedOutMessage);
+    loginButton().isVisible();
   });
 });

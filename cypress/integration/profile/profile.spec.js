@@ -1,13 +1,8 @@
-import { EXISTING_USER, pageDetailsMap, Pages, MESSAGES as commonMessages } from 'pages/common/constants';
+import { MESSAGES as commonMessages, pageDetailsMap, Pages } from 'pages/common/constants';
 import { getUser } from 'pages/auth/getUser';
-import { setAliases } from 'pages/auth/requests';
-import { dropdownMenu, profileButton, profileIcon } from 'pages/main/selectors';
-import { OKTA_PROFILE_SETTINGS, MESSAGES, labels } from 'pages/profile/constants';
-import {
-  changeEmailLink,
-  profileForm,
-  updateProfileButton,
-} from 'pages/profile/selectors';
+import { dropdownMenu, logoutButton, profileButton, profileIcon } from 'pages/main/selectors';
+import { labels, MESSAGES, OKTA_PROFILE_SETTINGS_LINK } from 'pages/profile/constants';
+import { changeEmailLink, profileForm, updateProfileButton } from 'pages/profile/selectors';
 import {
   emailField,
   emailFieldLabel,
@@ -19,39 +14,24 @@ import {
   lastNameValidation,
 } from 'pages/auth/selectors';
 
-const newUser = getUser();
 const firstName = 'John';
 const lastName = 'Doe';
 const longInput = 'this is 51 character string for negative inputs test!!!!!!!';
 
 context('User Profile', () => {
-  before(() => {
-    setAliases();
-    cy.visit(pageDetailsMap[Pages.Login].url);
-
-    // Sign Up new user
-    cy.runSignUpAction(newUser.user);
-    cy.checkPopUpMessage(newUser.activationEmailSentMessage);
-
-    // Activate a user directly through OKTA
-    cy.oktaGetUser(newUser.user.email).then((data) => {
-      cy.oktaSetUserPassword(data.id, newUser.user.password);
-    });
-  });
-
-  after(() => {
-    setAliases();
-
-    // Delete user after tests
-    cy.oktaGetUser(newUser.user.email).then((data) => {
-      cy.oktaDeleteUser(data.id);
-    });
-  });
-
   beforeEach(() => {
-    setAliases();
-    cy.visit(pageDetailsMap[Pages.Login].url);
-    cy.runLoginAction(newUser.user);
+    cy.wrap(getUser())
+      .as('user')
+      .then((newUser) => {
+        cy.oktaCreateUser(newUser);
+        cy.loginByOktaApi(newUser.email, newUser.password);
+      });
+  });
+
+  afterEach(() => {
+    cy.get('@user').then((newUser) => {
+      cy.oktaDeleteUserByEmail(newUser.email);
+    });
   });
 
   it('SAAS-T128 should be able to open profile page', () => {
@@ -67,7 +47,9 @@ context('User Profile', () => {
     profileForm().find('legend').hasText(labels.profileSettingsTitle);
     emailField().isDisabled();
     emailFieldLabel().hasText(labels.emailLabel);
-    emailField().hasAttr('value', newUser.user.email);
+    cy.get('@user').then((newUser) => {
+      emailField().hasAttr('value', newUser.email);
+    });
     verifyFields();
     firstNameFieldLabel().hasText(labels.firstNameLabel);
     lastNameFieldLabel().hasText(labels.lastNameLabel);
@@ -77,7 +59,7 @@ context('User Profile', () => {
   it('should be able to see change profile link', () => {
     cy.visit(pageDetailsMap[Pages.Profile].url);
     changeEmailLink()
-      .hasAttr('href', OKTA_PROFILE_SETTINGS)
+      .hasAttr('href', OKTA_PROFILE_SETTINGS_LINK)
       .hasAttr('target', '_blank')
       .hasText(labels.editProfileLink);
   });
@@ -141,10 +123,16 @@ context('User Profile', () => {
     lastNameField().hasAttr('value', lastName);
 
     // Logout and login again
-    cy.runLogoutAction();
-    cy.checkPopUpMessage(EXISTING_USER.loggedOutMessage);
-    cy.runLoginAction(newUser.user);
-    cy.visit(pageDetailsMap[Pages.Profile].url);
+    // Open dropdown menu
+    profileIcon().isVisible().click({ force: true });
+    dropdownMenu().isVisible();
+
+    // Select Profile option from dropdown
+    logoutButton().hasText('Logout').click();
+    cy.get('@user').then((newUser) => {
+      cy.loginByOktaApi(newUser.email, newUser.password);
+      cy.visit(pageDetailsMap[Pages.Profile].url);
+    });
 
     // Verify that first name and last name are updated
     firstNameField().hasAttr('value', firstName);
@@ -153,6 +141,8 @@ context('User Profile', () => {
 });
 
 const verifyFields = () => {
-  firstNameField().hasAttr('value', newUser.user.firstName);
-  lastNameField().hasAttr('value', newUser.user.lastName);
+  cy.get('@user').then((newUser) => {
+    firstNameField().hasAttr('value', newUser.firstName);
+    lastNameField().hasAttr('value', newUser.lastName);
+  });
 };

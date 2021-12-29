@@ -1,6 +1,7 @@
+import { User } from 'pages/common/interfaces/Auth';
+
 declare namespace Cypress {
   interface Chainable {
-
     /**
      * Get User object by email.
      *
@@ -14,14 +15,11 @@ declare namespace Cypress {
     oktaGetUser(userEmail): Chainable;
 
     /**
-     * Set user password. (Activate)
+     * Creates and activates a user in Okta.
      *
-     * @example
-     *   cy.oktaSetUserPassword(userId, password)
-     * @param userId
-     * @param password
+     * @param user
      */
-    oktaSetUserPassword(userId, password): Chainable;
+    oktaCreateUser(user: User): Chainable;
 
     /**
      * Delete user by userID.
@@ -32,6 +30,22 @@ declare namespace Cypress {
      *     });
      * @param userId
      */
-    oktaDeleteUser(userId): Chainable;
+    oktaDeleteUserById(userId): Chainable;
+
+    /**
+     * Delete user by email.
+     * @example
+     *   cy.oktaDeleteUserByEmail('email@example.com');
+     * @param email
+     */
+    oktaDeleteUserByEmail(email): Chainable;
+
+    /**
+     * SSO Okta login, set a token in a browser local storage and open Getting started page.
+     *
+     * @param email
+     * @param password
+     */
+    loginByOktaApi(email, password): Chainable;
   }
 }

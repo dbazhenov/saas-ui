@@ -1,0 +1,16 @@
+/* eslint-disable no-magic-numbers */
+const MILLISECONDS_PER_SECOND = 1000;
+const SECONDS_PER_MINUTE = 60;
+
+const SECOND = MILLISECONDS_PER_SECOND;
+const MINUTE = SECOND * SECONDS_PER_MINUTE;
+
+export const timeouts = {
+  ONE_SEC: SECOND,
+  FIVE_SEC: SECOND * 5,
+  TEN_SEC: SECOND * 10,
+  TWENTY_SEC: SECOND * 20,
+  HALF_MIN: MINUTE / 2,
+  ONE_MIN: MINUTE,
+  TWO_MIN: MINUTE * 2,
+};

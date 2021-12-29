@@ -1,69 +1,46 @@
-import {
-  loginForm,
-  signupForm,
-  signUpLink,
-  forgotPassword,
-  emailFieldLabel,
-  emailField,
-  passwordField,
-  passwordValidation,
-  submitButton,
-  passwordFieldLabel,
-} from 'pages/auth/selectors';
-import { setAliases } from 'pages/auth/requests';
-import { MESSAGES, INVALID_USER, EXISTING_USER, pageDetailsMap, Pages } from 'pages/common/constants';
-import { VALIDATION_MESSAGES, FORGOT_PASSWORD_URL } from 'pages/auth/constants';
-import { checkEmailValidation } from './helper';
+import { loginButton, loginHelpLink, resetPasswordLink, signUpLink } from 'pages/auth/selectors';
+import { pageDetailsMap, Pages } from 'pages/common/constants';
+import { getUser } from 'pages/auth/getUser';
+import { profileIcon } from 'pages/main/selectors';
+import { FORGOT_PASSWORD_LINK, HELP_LINK, SIGNUP_LINK } from 'pages/auth/constants';
+import { timeouts as TIMEOUTS } from '../../fixtures/timeouts';
+
+const newUser = getUser();
 
 context('Login', () => {
+  before(() => {
+    cy.oktaCreateUser(newUser);
+  });
+
+  after(() => {
+    // Delete user after tests
+    cy.oktaDeleteUserByEmail(newUser.email);
+  });
+
   beforeEach(() => {
-    setAliases();
     cy.visit(pageDetailsMap[Pages.Login].url);
   });
 
-  it('SAAS-T82 - should be able to see the login form', () => {
-    loginForm().isVisible();
-    emailFieldLabel().contains('Email *');
-    emailField().isVisible();
-    submitButton().isDisabled();
-    passwordFieldLabel().contains('Password *');
-    passwordField().isVisible();
-    signUpLink().hasAttr('href', '/signup');
-  });
-
-  it('should be able to see "Forgot Password" link', () => {
-    forgotPassword().hasAttr('href', FORGOT_PASSWORD_URL);
-  });
-
-  it('SAAS-T114 - should have validation for login input fields', () => {
-    checkEmailValidation();
-    passwordField().click();
-    cy.get('a').last().focus();
-    passwordValidation().hasText(MESSAGES.REQUIRED_FIELD);
-    passwordField().clear().type('test');
-    passwordValidation().hasText(VALIDATION_MESSAGES.SHORT_PASSWORD);
-    passwordField().type('testqwerty');
-    passwordValidation().hasText(VALIDATION_MESSAGES.NUMBER_IN_PASSWORD);
-    passwordField().type('1');
-    passwordValidation().hasText(VALIDATION_MESSAGES.UPPER_CASE_IN_PASSWORD);
-    passwordField().type('P');
-    passwordValidation().hasText('');
-    submitButton().isVisible().isDisabled();
-  });
-
-  it('SAAS-T83 - should be able to open the signup page from the login', () => {
-    signUpLink().click();
-    cy.url().should('contain', pageDetailsMap[Pages.SignUp].url);
-    signupForm().isVisible();
+  it('SAAS-T200 - should be able to see landing page form', () => {
+    loginButton().isVisible().hasText('Login with Percona Account');
+    signUpLink().isVisible().hasAttr('href', SIGNUP_LINK).hasAttr('target', '_blank').hasText('Sign up');
+    resetPasswordLink()
+      .isVisible()
+      .hasAttr('href', FORGOT_PASSWORD_LINK)
+      .hasAttr('target', '_blank')
+      .hasText('Reset password');
+    loginHelpLink().isVisible().hasAttr('href', HELP_LINK).hasAttr('target', '_blank').hasText('Help');
   });
 
   it('SAAS-T111 SAAS-T81 - should be able to login', () => {
-    cy.runLoginFlow(EXISTING_USER);
-  });
+    loginButton().click();
+    cy.get('#okta-signin-submit').should('be.visible');
+    cy.get('#okta-signin-username').type(newUser.email);
+    cy.get('#okta-signin-password').type(newUser.password);
+    cy.get('#okta-signin-submit').hasAttr('value', 'Sign In').click().wait(TIMEOUTS.FIVE_SEC);
 
-  it('SAAS-T86 - should see invalid username or password message', () => {
-    cy.runLoginAction(INVALID_USER.user, true);
-    cy.checkPopUpMessage(INVALID_USER.invalidLoginMessage);
-    loginForm().isVisible();
+    cy.findByTestId('getting-started-container', { timeout: TIMEOUTS.TEN_SEC }).should('be.visible');
+    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/`);
+    profileIcon().isVisible();
   });
 });

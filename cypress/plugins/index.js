@@ -3,6 +3,7 @@
 // the project's config changing)
 import dotenv from 'dotenv';
 import { oktaRequest } from './oktaRequest';
+import { serviceNowRequest } from './snRequest';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();
@@ -19,12 +20,13 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
 
   // Setting up env variables
-  config.env.PORTAL_USER_EMAIL = process.env.PORTAL_USER_EMAIL;
-  config.env.PORTAL_USER_PASSWORD = process.env.PORTAL_USER_PASSWORD;
+  config.env.portal_user_email = process.env.PORTAL_USER_EMAIL;
+  config.env.portal_user_password = process.env.PORTAL_USER_PASSWORD;
   config.env.MAILOSAUR_API_KEY = process.env.MAILOSAUR_API_KEY;
-  config.env.MAILOSAUR_UI_TESTS_SERVER_ID = process.env.MAILOSAUR_UI_TESTS_SERVER_ID;
-  config.env.OKTA_TOKEN = process.env.OKTA_TOKEN;
-  config.env.OAUTH_HOST = process.env.REACT_APP_OAUTH_DEV_HOST;
+  config.env.mailosaur_ui_tests_server_id = process.env.MAILOSAUR_UI_TESTS_SERVER_ID;
+  config.env.okta_token = process.env.OKTA_TOKEN;
+  config.env.oauth_host = process.env.REACT_APP_OAUTH_DEV_HOST;
+  config.env.oauth_client_id = process.env.REACT_APP_OAUTH_DEV_CLIENT_ID;
 
   // This code executes before the browser launch
   on('before:browser:launch', (browser, launchOptions) => {
@@ -44,6 +46,7 @@ module.exports = (on, config) => {
     setPassword: (password) => (userPassword = password),
     getUser: () => ({ userEmail, userPassword }),
     oktaRequest,
+    serviceNowRequest,
   });
 
   return config;
