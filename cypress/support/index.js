@@ -34,3 +34,9 @@ Cypress.on('test:after:run', (test, runnable) => {
 
   addContext({ test }, videoUrl);
 });
+
+Cypress.on('uncaught:exception', () =>
+  // returning false here prevents Cypress from
+  // failing the test
+  false,
+);
