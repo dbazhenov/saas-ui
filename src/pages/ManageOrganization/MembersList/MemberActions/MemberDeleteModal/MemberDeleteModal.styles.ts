@@ -13,6 +13,10 @@ export const getStyles = ({ spacing }: GrafanaTheme) => ({
       margin-left: ${spacing.xs};
     }
   `,
+  deleteMessage: css`
+    margin-bottom: 0;
+    text-align: center;
+  `,
   saveButton: css`
     align-self: flex-end;
   `,

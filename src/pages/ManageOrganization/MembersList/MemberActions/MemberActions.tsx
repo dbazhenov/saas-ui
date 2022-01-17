@@ -80,6 +80,7 @@ export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
         onClose={handleEditModalClose}
       />
       <MemberDeleteModal
+        member={member}
         loading={loading}
         isVisible={isDeleteModalVisible}
         onSubmit={handleDeleteMemberSubmit}
