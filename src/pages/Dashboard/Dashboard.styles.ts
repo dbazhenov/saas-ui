@@ -14,4 +14,12 @@ export const getStyles = ({ colors, spacing }: GrafanaTheme) => ({
   ticketSectionTitle: css`
     color: ${colors.textSemiWeak};
   `,
+  ticketListHeader: css`
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  `,
+  newTicketButton: css`
+    text-decoration: none;
+  `,
 });

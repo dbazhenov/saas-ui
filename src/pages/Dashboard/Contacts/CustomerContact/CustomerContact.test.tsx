@@ -30,7 +30,7 @@ describe('Customer Contact', () => {
 
     expect(screen.getByTestId('customer-contact-name').textContent).toBe('Test name');
     expect(screen.getByTitle(contact.email)).toBeInTheDocument();
-    expect(container.querySelectorAll('button').length).toBe(2);
+    expect(container.querySelectorAll('button').length).toBe(1);
   });
 
   test('copies to clipboard successfully', async () => {
@@ -40,8 +40,8 @@ describe('Customer Contact', () => {
       </TestContainer>,
     );
 
-    fireEvent.click(container.querySelectorAll('button')[1]);
-    
+    fireEvent.click(container.querySelectorAll('button')[0]);
+
     expect(toastSuccess).toHaveBeenCalledTimes(1);
     expect(writeText).toHaveBeenCalledTimes(1);
   });

@@ -77,7 +77,8 @@ export const TicketList: FC = () => {
     <Table
       pendingRequest={pending}
       totalItems={tickets.length}
-      columns={columns} data={tickets}
+      columns={columns}
+      data={tickets}
       getRowProps={getRowProps}
     />
   );

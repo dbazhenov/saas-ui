@@ -64,14 +64,12 @@ export const Contacts: FC = () => {
     const getOrg = async () => {
       const { contacts: {
         customer_success: { email, name },
-        new_ticket_url,
       } }: GetOrganizationResponse = await get(`${Org.getOrganization}/${orgId}`);
-        
-      if (email && name && new_ticket_url) {
-        setSuccessManager({ 
+
+      if (email && name) {
+        setSuccessManager({
           email,
           name,
-          url: new_ticket_url,
         });
       }
     };
@@ -151,7 +149,6 @@ export const Contacts: FC = () => {
           <CustomerContact
             name={sucessManager.name}
             email={sucessManager.email}
-            ticketUrl={sucessManager.url}
           />
         ) : (
           <>
