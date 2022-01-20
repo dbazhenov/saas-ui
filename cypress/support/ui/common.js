@@ -34,3 +34,28 @@ Cypress.Commands.add('checkPopUpMessage', (message) => {
       element.next('button').click();
     });
 });
+
+Cypress.Commands.add('getTable', { prevSubject: true }, (subj, options = {}) => {
+  // eslint-disable-next-line no-magic-numbers
+  if (subj.get().length > 1) {
+    throw new Error(`Selector "${subj.selector}" returned more than 1 element.`);
+  }
+
+  const tableElement = subj.get()[0];
+  const tableHeaders = [...tableElement.querySelectorAll('thead th')].map((e) => e.textContent);
+  const rows = [...tableElement.querySelectorAll('tbody tr')].map((row) =>
+    [...row.querySelectorAll('td')].map((e) => e.textContent),
+  );
+
+  // return structured object from headers and rows variables
+  return rows.map((row) =>
+    row.reduce((acc, curr, idx) => {
+      if (options.onlyColumns && !options.onlyColumns.includes(tableHeaders[idx])) {
+        // don't include columns that are not present in onlyColumns
+        return { ...acc };
+      }
+
+      return { ...acc, [tableHeaders[idx]]: curr };
+    }, {}),
+  );
+});

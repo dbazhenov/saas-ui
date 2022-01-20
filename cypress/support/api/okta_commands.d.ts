@@ -47,5 +47,13 @@ declare namespace Cypress {
      * @param password
      */
     loginByOktaApi(email, password): Chainable;
+
+    /**
+     * Perform /v1/auth/SignIn API request and return user access_token.
+     *
+     * @param email
+     * @param password
+     */
+    getUserAccessToken(email, password): Chainable;
   }
 }

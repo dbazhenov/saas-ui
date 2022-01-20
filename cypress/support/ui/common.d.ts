@@ -54,5 +54,16 @@ declare namespace Cypress {
      * @param message
      */
     checkPopUpMessage(message: string): Chainable;
+
+    /**
+     * Parse a table and return array of table rows presented as objects.
+     * Pass { onlyColumns: ['Name'] } 'options' argument to get only Name values from a table
+     *
+     * @example
+     *   cy.get('table').getTable().then((table) => {
+     *     cy.log(table)
+     *   });
+     */
+    getTable(options: {}): Chainable;
   }
 }

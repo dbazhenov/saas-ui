@@ -20,6 +20,7 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
       const config = {
         issuer: `${url}/oauth2/default`,
         clientId: Cypress.env('oauth_client_id'),
+        pkce: true,
         redirectUri: `${Cypress.config('baseUrl')}/login/callback`,
         scope: ['percona', 'openid', 'email', 'profile'],
       };
@@ -27,7 +28,7 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
 
       return authClient.token.getWithoutPrompt({ sessionToken: body.sessionToken }).then(({ tokens }) => {
         const userToken = {
-          token: tokens.accessToken.value,
+          token: tokens.accessToken.accessToken,
           user: {
             sub: user.id,
             email: user.profile.login,
@@ -44,6 +45,17 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
       });
     }),
 );
+
+Cypress.Commands.add('getUserAccessToken', (username, password) => {
+  cy.request({
+    method: 'POST',
+    url: '/v1/auth/SignIn',
+    body: {
+      email: username,
+      password,
+    },
+  }).then(({ body: { access_token } }) => cy.wrap(access_token));
+});
 
 Cypress.Commands.add('oktaCreateUser', ({ email, password, firstName, lastName }) =>
   cy

@@ -1,7 +1,7 @@
 import { MESSAGES as commonMessages, pageDetailsMap, Pages } from 'pages/common/constants';
 import { getUser } from 'pages/auth/getUser';
 import { dropdownMenu, logoutButton, profileButton, profileIcon } from 'pages/main/selectors';
-import { labels, MESSAGES, OKTA_PROFILE_SETTINGS_LINK } from 'pages/profile/constants';
+import { profilePage } from 'pages/profile.page';
 import { changeEmailLink, profileForm, updateProfileButton } from 'pages/profile/selectors';
 import {
   emailField,
@@ -34,7 +34,7 @@ context('User Profile', () => {
     });
   });
 
-  it('SAAS-T128 should be able to open profile page', () => {
+  it('SAAS-T128 should be able to open profile page and see change profile link', () => {
     // Open dropdown menu
     profileIcon().isVisible().click({ force: true });
     dropdownMenu().isVisible();
@@ -44,24 +44,20 @@ context('User Profile', () => {
     cy.url().should('be.eq', `${Cypress.config().baseUrl}${pageDetailsMap[Pages.Profile].url}`);
 
     // Verify Profile Settings form elements
-    profileForm().find('legend').hasText(labels.profileSettingsTitle);
+    profileForm().find('legend').hasText(profilePage.constants.labels.profileSettingsTitle);
     emailField().isDisabled();
-    emailFieldLabel().hasText(labels.emailLabel);
+    emailFieldLabel().hasText(profilePage.constants.labels.emailLabel);
     cy.get('@user').then((newUser) => {
       emailField().hasAttr('value', newUser.email);
     });
     verifyFields();
-    firstNameFieldLabel().hasText(labels.firstNameLabel);
-    lastNameFieldLabel().hasText(labels.lastNameLabel);
+    firstNameFieldLabel().hasText(profilePage.constants.labels.firstNameLabel);
+    lastNameFieldLabel().hasText(profilePage.constants.labels.lastNameLabel);
     updateProfileButton().isDisabled();
-  });
-
-  it('should be able to see change profile link', () => {
-    cy.visit(pageDetailsMap[Pages.Profile].url);
     changeEmailLink()
-      .hasAttr('href', OKTA_PROFILE_SETTINGS_LINK)
+      .hasAttr('href', profilePage.constants.links.oktaProfileSettings)
       .hasAttr('target', '_blank')
-      .hasText(labels.editProfileLink);
+      .hasText(profilePage.constants.labels.editProfileLink);
   });
 
   it('SAAS-T130 should have validation for user profile fields', () => {
@@ -81,9 +77,9 @@ context('User Profile', () => {
 
     // Verify validation error for string length
     firstNameField().clear().type(longInput);
-    firstNameValidation().hasText(MESSAGES.TO_LONG_STRING);
+    firstNameValidation().hasText(profilePage.constants.messages.toLongString);
     lastNameField().clear().type(longInput);
-    lastNameValidation().hasText(MESSAGES.TO_LONG_STRING);
+    lastNameValidation().hasText(profilePage.constants.messages.toLongString);
     updateProfileButton().isDisabled();
 
     // Verify there is no validation error for a string with 50 characters
@@ -115,7 +111,7 @@ context('User Profile', () => {
 
     // Save changes
     updateProfileButton().isEnabled().click();
-    cy.checkPopUpMessage(MESSAGES.PROFILE_UPDATED);
+    cy.checkPopUpMessage(profilePage.constants.messages.profileUpdated);
 
     // Reload page and verify that first name and last name are updated
     cy.reload();
