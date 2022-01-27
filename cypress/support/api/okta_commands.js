@@ -46,6 +46,14 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
     }),
 );
 
+Cypress.Commands.add('retrieveCurrentUserAccessToken', () => {
+  return JSON.parse(window.localStorage.getItem('okta-token-storage')).accessToken.accessToken;
+});
+
+Cypress.Commands.add('removeCurrentUserAccessToken', () => {
+  window.localStorage.removeItem('okta-token-storage');
+});
+
 Cypress.Commands.add('getUserAccessToken', (username, password) => {
   cy.request({
     method: 'POST',

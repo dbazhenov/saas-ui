@@ -1,4 +1,5 @@
 import { popUp } from 'pages/common/selectors';
+import { profileIcon, dropdownMenu, logoutButton } from '../../pages/main/selectors';
 
 // Assert that previous element is visible
 Cypress.Commands.add('isVisible', { prevSubject: 'element' }, ($element) => {
@@ -58,4 +59,11 @@ Cypress.Commands.add('getTable', { prevSubject: true }, (subj, options = {}) => 
       return { ...acc, [tableHeaders[idx]]: curr };
     }, {}),
   );
+});
+
+// Logs user out of the Portal
+Cypress.Commands.add('logoutUser', () => {
+  profileIcon().click();
+  dropdownMenu().isVisible();
+  logoutButton().click();
 });

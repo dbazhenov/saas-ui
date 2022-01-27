@@ -10,6 +10,8 @@ Cypress.Commands.add('apiCreateOrg', (accessToken, orgName = 'Test Organization'
     body: {
       name: orgName,
     },
+  }).then((res) => {
+    return res.body;
   });
 });
 
@@ -23,7 +25,7 @@ Cypress.Commands.add('apiGetOrg', (accessToken) => {
   });
 });
 
-Cypress.Commands.add('apiInviteOrgMember', (accessToken, orgId, member = { email: '', role: '' }) => {
+Cypress.Commands.add('apiInviteOrgMember', (accessToken, orgId, member = { username: '', role: '' }) => {
   cy.request({
     method: 'POST',
     url: `v1/orgs/${orgId}/members`,

@@ -65,5 +65,13 @@ declare namespace Cypress {
      *   });
      */
     getTable(options: {}): Chainable;
+
+    /**
+     *  Logs user out of the Portal.
+     *
+     * @example
+     *   cy.logoutUser();
+     */
+    logoutUser(): Chainable;
   }
 }

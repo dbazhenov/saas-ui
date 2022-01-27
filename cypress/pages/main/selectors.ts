@@ -8,4 +8,3 @@ export const profileIcon = () => cy.get('testid:menu-bar-profile-dropdown-toggle
 export const dropdownMenu = () => cy.get('testid:dropdown-menu-menu');
 export const userEmail = () => cy.get('testid:user-email');
 export const homeIcon = () => cy.get('testid:menu-bar-home-link');
-

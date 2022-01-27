@@ -55,5 +55,15 @@ declare namespace Cypress {
      * @param password
      */
     getUserAccessToken(email, password): Chainable;
+
+    /**
+     * Retrieves user access token from local storage and returns user access_token.
+     */
+    retrieveCurrentUserAccessToken(): Chainable;
+
+    /**
+     * Removes user access token from local storage.
+     */
+    removeCurrentUserAccessToken(): Chainable;
   }
 }
