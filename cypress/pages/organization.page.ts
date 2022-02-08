@@ -10,7 +10,14 @@ export const organizationPage = {
     messages: {
       customerOrgFound: 'We found your organization on Percona Customer Portal and used it',
       orgCreatedSuccessfully: 'Your organization has been created.',
+      memberEditedSuccessfully: 'The user\'s role has been successfully updated',
+      memberDeletedSuccessfully: 'The user has been successfully removed from the organization',
     },
   },
-  locators: {},
+  locators: {
+    editMemberIcon: 'member-actions-edit',
+    deleteMemberIcon: 'member-actions-delete',
+    ediMemberSubmitButton: 'edit-member-submit-button',
+    deleteMemberSubmitButton: 'delete-member-submit-button',
+  },
 };
