@@ -96,4 +96,32 @@ context('Members tests for the Free Users', () => {
                 });
         });
     });
+
+    it('SAAS-T215 Verify admin is able to remove users from organization', () => {
+        cy.loginByOktaApi(admin1User.email, admin1User.password);
+        // Navigate to the members page
+        cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+          .should('be.visible')
+          .click();
+        // Edit button for logged in user should be disabled
+        cy.contains('td', admin1User.email)
+          .parent()
+          .within(() => cy.findByTestId(organizationPage.locators.deleteMemberIcon).should('be.disabled'));
+        const emails = [technical1User.email, admin2User.email];
+        // Delete all types of users (Admin and Technical)
+
+        emails.forEach((email, index) => {
+            cy.contains('td', email)
+                .parent()
+                .within(() => cy.findByTestId(organizationPage.locators.deleteMemberIcon).click());
+            cy.findByTestId(organizationPage.locators.deleteMemberModalContent).should((modalContent) =>
+                expect(modalContent).to.contain(emails[index]),
+            );
+            cy.findByTestId(organizationPage.locators.deleteMemberSubmitButton).click();
+            cy.checkPopUpMessage(organizationPage.constants.messages.memberDeletedSuccessfully);
+            cy.findByTestId('table')
+                .getTable({ onlyColumns: ['Email'] })
+                .then((table) => expect(table).to.not.include(emails[index]));
+        });
+    });
 });

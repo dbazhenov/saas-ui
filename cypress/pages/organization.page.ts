@@ -19,5 +19,6 @@ export const organizationPage = {
     deleteMemberIcon: 'member-actions-delete',
     ediMemberSubmitButton: 'edit-member-submit-button',
     deleteMemberSubmitButton: 'delete-member-submit-button',
+    deleteMemberModalContent: 'modal-content',
   },
 };
