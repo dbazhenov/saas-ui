@@ -65,11 +65,11 @@ Cypress.Commands.add('getUserAccessToken', (username, password) => {
   }).then(({ body: { access_token } }) => cy.wrap(access_token));
 });
 
-Cypress.Commands.add('oktaCreateUser', ({ email, password, firstName, lastName }) =>
+Cypress.Commands.add('oktaCreateUser', ({ email, password, firstName, lastName }, activate=true) =>
   cy
     .task('oktaRequest', {
       baseUrl: url,
-      urlSuffix: '/api/v1/users?activate=true',
+      urlSuffix: `/api/v1/users?activate=${activate}`,
       method: 'post',
       token,
       data: {
