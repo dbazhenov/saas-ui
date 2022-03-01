@@ -143,7 +143,7 @@ export const Contacts: FC = () => {
         <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
         <p>
           <span className={styles.label}>{Messages.needHelp}</span>
-          <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`}>{HELP_EMAIL}</a>
+          <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">{HELP_EMAIL}</a>
         </p>
         {sucessManager ? (
           <CustomerContact
@@ -153,10 +153,10 @@ export const Contacts: FC = () => {
         ) : (
           <>
             <p>{Messages.findUs}</p>
-            <p><a className={styles.externalLink} href={LINKS.forum} target="_blank" rel="noreferrer">{Messages.forums}</a></p>
-            <p><a className={styles.externalLink} href={LINKS.discord} target="_blank" rel="noreferrer">{Messages.discord}</a></p>
+            <p><a className={styles.externalLink} href={LINKS.forum} target="_blank" rel="noreferrer" data-testid="forum-contact-link">{Messages.forums}</a></p>
+            <p><a className={styles.externalLink} href={LINKS.discord} target="_blank" rel="noreferrer" data-testid="discord-contact-link">{Messages.discord}</a></p>
             <p>
-              {Messages.getInTouch} <a className={styles.externalLink} href={LINKS.contact} target="_blank" rel="noreferrer">{Messages.contactsPage}</a>
+              {Messages.getInTouch} <a className={styles.externalLink} href={LINKS.contact} target="_blank" rel="noreferrer" data-testid="contact-page-link">{Messages.contactsPage}</a>
             </p>
           </>
         )}

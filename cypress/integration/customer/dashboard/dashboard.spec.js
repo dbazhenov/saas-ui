@@ -1,6 +1,7 @@
 import { getUser } from 'pages/auth/getUser';
 import { commonPage } from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
+import { LeftMainMenuLinks } from 'pages/helpers/commonPage.helper';
 import { timeouts } from '../../../fixtures/timeouts';
 import { createOrgAndAddUsers, getOrgAndAddUsers } from './helper';
 
@@ -21,11 +22,11 @@ context('Dashboard Tests for customers', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.loginByOktaApi(user.email, user.password);
-      cy.findAllByTestId(commonPage.locators.sideMenuLink).get('a[href*="/dashboard"]').click();
+      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
       cy.findByTestId(dashboardPage.locators.ticketSection)
         .find('a')
         .hasAttr('target', '_blank')
-        .hasAttr('href', dashboardPage.links.serviceNowAddress);
+        .hasAttr('href', dashboardPage.constants.links.serviceNowAddress);
       cy.removeCurrentUserAccessToken();
     });
   });
@@ -35,7 +36,7 @@ context('Dashboard Tests for customers', () => {
       cy.log(`Running test for ${user.email} user`);
       cy.intercept('POST', '**/tickets:search').as('userTickets');
       cy.loginByOktaApi(user.email, user.password);
-      cy.findAllByTestId(commonPage.locators.sideMenuLink).get('a[href*="/dashboard"]').click();
+      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
       // Table header exists with correct fields
       cy.findByTestId(dashboardPage.locators.tableHeader)
         .get('th')
@@ -68,7 +69,7 @@ context('Dashboard Tests for customers', () => {
         body: { tickets: [] },
       });
       cy.loginByOktaApi(user.email, user.password);
-      cy.findAllByTestId(commonPage.locators.sideMenuLink).get('a[href*="/dashboard"]').click();
+      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
       // Check if table is empty.
       cy.findByTestId(dashboardPage.locators.noDataTable).should('exist');
       cy.removeCurrentUserAccessToken();
@@ -81,7 +82,7 @@ context('Dashboard Tests for customers', () => {
     cy.oktaCreateUser(nonSnUser);
     getOrgAndAddUsers(users[0], [{ email: nonSnUser.email, role: 'Admin' }]);
     cy.loginByOktaApi(nonSnUser.email, nonSnUser.password);
-    cy.findAllByTestId(commonPage.locators.sideMenuLink).get('a[href*="/dashboard"]').click();
+    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
     // Wait for loading overlays to disappear only then table can become visible
     cy.findAllByTestId(dashboardPage.locators.loadingOverlaySpinners, { timeout: timeouts.HALF_MIN }).should(
       'not.exist',
@@ -89,5 +90,29 @@ context('Dashboard Tests for customers', () => {
     // Check if table is not present.
     cy.findByTestId(dashboardPage.locators.ticketSection).should('not.exist');
     cy.removeCurrentUserAccessToken();
+  });
+
+  it('SAAS-T224 - Verify Percona Customer user is able to view Contacts (dynamic)', () => {
+    cy.loginByOktaApi(users[0].email, users[0].password);
+    cy.retrieveCurrentUserAccessToken().then((token) =>
+        cy.apiGetOrg(token).then((res) => {
+          cy.intercept('GET', `**/${res.body.orgs[0].id}`).as('organizationDetails');
+        }),
+    );
+    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
+    cy.window()
+        .then((win) => cy.stub(win.navigator.clipboard, 'writeText'))
+        .as('clipBoardContent');
+    cy.findByTestId(dashboardPage.locators.emailContactLink)
+        .contains(dashboardPage.constants.labels.contactsHelpEmail)
+        .hasAttr('href', dashboardPage.constants.links.perconaHelpEmail);
+    cy.findByTestId(dashboardPage.locators.customerContactIcon).click();
+    cy.checkPopUpMessage(dashboardPage.constants.messages.emailCopiedClipboard);
+    cy.get('@organizationDetails')
+        .its('response.body.contacts')
+        .then((res) => {
+            cy.findByTestId(dashboardPage.locators.customerContactName).hasText(res.customer_success.name);
+            cy.get('@clipBoardContent').should('be.calledWith', res.customer_success.email);
+        });
   });
 });

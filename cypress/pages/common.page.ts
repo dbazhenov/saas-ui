@@ -1,3 +1,5 @@
+import {leftMainMenuClick, LeftMainMenuLinks} from 'pages/helpers/commonPage.helper';
+
 export const commonPage = {
   constants: {
     labels: {},
@@ -6,5 +8,8 @@ export const commonPage = {
   },
   locators: {
     sideMenuLink: 'nav-link',
+  },
+  methods: {
+    leftMainMenuClick: (target: LeftMainMenuLinks) => leftMainMenuClick(target),
   },
 };

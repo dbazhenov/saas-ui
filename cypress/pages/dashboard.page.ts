@@ -10,9 +10,22 @@ const dashboardPage = {
         'Status',
         'Creation Date',
       ],
+      perconaContacts: 'Percona Contacts',
+      contactsForums: 'Forums',
+      contactsDiscord: 'Discord',
+      contactsContactPage: 'Contacts page',
+      contactsHelpEmail: 'portal-help@percona.com',
     },
-    messages: {},
-    links: {},
+    messages: {
+      emailCopiedClipboard: 'Email copied to clipboard',
+    },
+    links: {
+      serviceNowAddress: 'https://perconadev.service-now.com/percona',
+      perconaForum: 'https://forums.percona.com',
+      perconaDiscord: 'http://per.co.na/discord',
+      perconaContactPage: 'https://www.percona.com/about-percona/contact',
+      perconaHelpEmail: 'mailto:portal-help@percona.com',
+    },
   },
   locators: {
     ticketSection: 'dashboard-ticket-section',
@@ -20,10 +33,15 @@ const dashboardPage = {
     tableBody: 'table-tbody-tr',
     noDataTable: 'table-no-data',
     loadingOverlaySpinners: 'overlay-spinner',
+    emailContactLink: 'email-contact-link',
+    forumContactLink: 'forum-contact-link',
+    discordContactLink: 'discord-contact-link',
+    contactPageLink: 'contact-page-link',
+    contactMessage: 'contact-message',
+    customerContactName: 'customer-contact-name',
+    customerContactIcon: 'customer-contact-email-icon',
   },
-  links: {
-    serviceNowAddress: 'https://perconadev.service-now.com/percona',
-  },
+
 };
 
 export default dashboardPage;
