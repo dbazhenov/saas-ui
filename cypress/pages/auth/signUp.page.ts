@@ -15,9 +15,9 @@ const signUpPage = {
         lastNamePlaceholder:  'Last name *',
         activateAccount: 'Activate Account',
         activateEmailSubject: 'Percona Account Activation',
-        activateEmailHeader: 'Welcome to Percona Account!',
+        activateEmailHeader: 'Welcome to Percona Platform!',
         activateEmailVerifyAccount: 'To verify your email address and activate your account, please click the following link:',
-        activateEmailFooter: 'This is an automatically generated message by Percona Portal. Replies are not monitored or answered.',
+        activateEmailFooter: 'This is an automatically generated message by Okta. Replies are not monitored or answered.',
       },
       messages: {
         emailAlreadyRegistered: 'An account with that Work or Professional email already exists',
