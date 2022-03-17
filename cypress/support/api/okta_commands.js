@@ -41,14 +41,13 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
         window.localStorage.setItem('okta-token-storage', JSON.stringify(userToken));
 
         cy.visit('/');
+        cy.findByTestId('login-button').click();
         profileIcon().isVisible();
       });
     }),
 );
 
-Cypress.Commands.add('retrieveCurrentUserAccessToken', () => {
-  return JSON.parse(window.localStorage.getItem('okta-token-storage')).accessToken.accessToken;
-});
+Cypress.Commands.add('retrieveCurrentUserAccessToken', () => JSON.parse(window.localStorage.getItem('okta-token-storage')).accessToken.accessToken);
 
 Cypress.Commands.add('removeCurrentUserAccessToken', () => {
   window.localStorage.removeItem('okta-token-storage');
