@@ -13,7 +13,7 @@ Run a local dev environment with one command:
 When developing locally, you'll want to route your API requests to a dev server. To do so, add the following key to your `package.json`:
 
 ```json
-"proxy": "https://platform-dev.percona.com"
+"proxy": "https://portal-dev.percona.com"
 ```
 
 ### Running E2E tests locally
@@ -37,7 +37,7 @@ To execute E2E tests just use `npm run cy:run`
 3. The store is merely a combination of distinct store slices, every slice has its own key.
 4. Action names should describe events that occured rather than look like setters.
 5. Every action must obey the interface { type: string; payload?: PayloadType }. The payload should be strongly typed.
-6. Action helpers are using [typesafe-actions](https://github.com/piotrwitek/typesafe-actions#using-action-creators-instances-instead-of-type-constants) library
+6. Action helpers are using either [createAction](https://redux-toolkit.js.org/api/createAction) if synchronous, or [createAsyncThunk](https://redux-toolkit.js.org/api/createAsyncThunk) otherwise
 
 ### Integration with Okta
 

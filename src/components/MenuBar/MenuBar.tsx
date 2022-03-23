@@ -1,16 +1,15 @@
 import React, { FC, forwardRef, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { ThemeContext, useStyles } from '@grafana/ui';
 import { Dropdown, Icons } from '@percona/platform-core';
 import { useOktaAuth } from '@okta/okta-react';
 import { Routes } from 'core/routes';
-import { getCurrentTheme, themeChangeRequestAction } from 'store/theme';
+import { themeChangeAction } from 'store/theme';
 import { history } from 'core/history';
 import { ReactComponent as Profile } from 'assets/profile.svg';
 import logo from 'assets/percona-logo.svg';
-import { RequestError } from 'core/api/types';
-import { authLogoutAction } from '../../store/auth';
+import { logoutAction } from 'store/auth';
 import { getStyles } from './MenuBar.styles';
 import { Messages } from './MenuBar.messages';
 import { DropdownToggleProps } from './MenuBar.types';
@@ -20,24 +19,19 @@ const { ThemeDark, ThemeLight } = Icons;
 export const MenuBar: FC = () => {
   const styles = useStyles(getStyles);
   const dispatch = useDispatch();
-  const { authState, oktaAuth } = useOktaAuth();
-  const currentTheme = useSelector(getCurrentTheme);
+  const { authState } = useOktaAuth();
 
   const goToProfilePage = () => {
-    history.replace(Routes.profile);
+    history.push(Routes.profile);
   };
 
   const logout = useCallback(async () => {
-    try {
-      await oktaAuth.signOut({ revokeAccessToken: true, revokeRefreshToken: true });
-    } catch (e) {
-      dispatch(authLogoutAction.failure(e as RequestError));
-    }
-  }, [oktaAuth, dispatch]);
+    dispatch(logoutAction());
+  }, [dispatch]);
 
   const changeTheme = useCallback(() => {
-    dispatch(themeChangeRequestAction(currentTheme));
-  }, [currentTheme, dispatch]);
+    dispatch(themeChangeAction());
+  }, [dispatch]);
 
   const DropdownToggle = forwardRef<HTMLDivElement, DropdownToggleProps>((props, ref) => (
     <div ref={ref} {...props} data-testid="menu-bar-profile-dropdown-toggle" className={styles.menuIcon}>

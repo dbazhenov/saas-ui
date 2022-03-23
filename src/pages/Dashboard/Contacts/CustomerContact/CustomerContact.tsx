@@ -1,17 +1,17 @@
 import React, { FC, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { Icon, IconButton, useStyles } from '@grafana/ui';
+import { getCustomerSuccessContact } from 'store/orgs';
 import { getStyles } from './CustomerContact.styles';
-import { CustomerContactProps } from './CustomerContact.types';
 import { Messages } from './CustomerContact.messages';
 
-export const CustomerContact: FC<CustomerContactProps> = ({
-  name,
-  email,
-}) => {
+export const CustomerContact: FC = () => {
   const styles = useStyles(getStyles);
-  const copyToClipboard = useCallback(() => {
-    navigator.clipboard.writeText(email);
+  const { name, email } = useSelector(getCustomerSuccessContact);
+
+  const copyToClipboard = useCallback(async () => {
+    await navigator.clipboard.writeText(email);
     toast.success(Messages.copiedSuccessfully);
   }, [email]);
 
@@ -28,6 +28,7 @@ export const CustomerContact: FC<CustomerContactProps> = ({
           name="envelope"
           onClick={copyToClipboard}
           size="lg"
+          disabled={!email}
         />
       </div>
     </div>

@@ -3,6 +3,5 @@ export interface CreateOrganizationPayload {
 }
 
 export interface OrganizationCreateProps {
-  onCreateOrgSubmit: ({ organizationName }: CreateOrganizationPayload) => Promise<void>;
   loading: boolean;
 }

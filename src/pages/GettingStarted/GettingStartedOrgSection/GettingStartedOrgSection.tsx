@@ -1,58 +1,30 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
-import useFetch from 'use-http';
-import { toast } from 'react-toastify';
-import { Routes } from 'core/routes';
-import { ENDPOINTS } from 'core/api';
-import { getUseHttpConfig } from 'core/api/api.service';
-import { Messages } from './GettingStartedOrgSection.messages';
+import React, { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { getFirstOrgId, getIsOrgPending } from 'store/orgs';
+import { Routes } from 'core';
+import { getUserCompanyName } from 'store/auth';
 import { GettingStartedSection } from '../GettingStartedSection';
-
-const { Org } = ENDPOINTS;
+import { Messages } from './GettingStartedOrgSection.messages';
 
 export const GettingStartedOrgSection: FC = () => {
-  const [hasOrgIds, setHasOrgIds] = useState(false);
-  // required to avoid flickering between changing the loading state for the two requests
-  const [showLoader, setShowLoader] = useState(true);
-
-  const { error, data, loading } = useFetch(...getUseHttpConfig(Org.getUserOganizations, { method: 'POST' }, []));
-  const { post: postUserCompany, loading: loadingCompany } = useFetch(...getUseHttpConfig());
-
-  const getUserCompany = useCallback(async() => {
-    const { name } = await postUserCompany(Org.getUserCompany);
-
-    if (name) {
-      setHasOrgIds(true);
-    }
-
-    setShowLoader(false);
-  }, [postUserCompany]);
+  const orgId = useSelector(getFirstOrgId);
+  const companyName = useSelector(getUserCompanyName);
+  const isOrgPending = useSelector(getIsOrgPending);
+  const [hasOrg, setHasOrg] = useState<boolean>();
 
   useEffect(() => {
-    if (error) {
-      toast.error(Messages.orgFetchError);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (data?.orgs?.length) {
-      setHasOrgIds(true);
-      setShowLoader(false);
-    }
-
-    if (data && (!data?.orgs || !data?.orgs?.length)) {
-      getUserCompany();
-    }
-  }, [data, getUserCompany]);
+    setHasOrg(!!(companyName || orgId));
+  }, [orgId, companyName]);
 
   return (
     <GettingStartedSection
       description={Messages.createOrganizationDescription}
       title={Messages.createOrganizationTitle}
-      linkIcon={hasOrgIds ? undefined : 'plus-circle'}
+      linkIcon={hasOrg ? undefined : 'plus-circle'}
       linkTo={Routes.organization}
-      linkText={hasOrgIds ? Messages.viewOrganization : Messages.addOrganization}
-      isTicked={hasOrgIds}
-      loading={loading || loadingCompany || showLoader}
+      linkText={hasOrg ? Messages.viewOrganization : Messages.addOrganization}
+      isTicked={hasOrg}
+      loading={isOrgPending}
       loadingMessage={Messages.loadingOrganization}
     />
   );

@@ -1,7 +1,6 @@
 import { OktaAuth } from '@okta/okta-auth-js';
 import { OAUTH_CLIENT_ID, OAUTH_ISSUER_URI, PORTAL_ORIGIN } from './constants';
 
-
 export const authConfig = {
   clientId: OAUTH_CLIENT_ID,
   issuer: OAUTH_ISSUER_URI,

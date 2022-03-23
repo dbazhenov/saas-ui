@@ -2,7 +2,15 @@ import React, { FC } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { PublicRoute } from 'components';
-import { LoginPage, ProfilePage, UIDemo, NotFound, GettingStartedPage, ManageOrganizationPage, ManagePmmInstancesPage, DashboardPage } from 'pages';
+import {
+  DashboardPage,
+  GettingStartedPage,
+  LoginPage,
+  ManageOrganizationPage,
+  ManagePmmInstancesPage,
+  NotFound,
+  ProfilePage,
+} from 'pages';
 import { Routes } from 'core/routes';
 
 export const Main: FC = () => (
@@ -26,9 +34,6 @@ export const Main: FC = () => (
     <SecureRoute exact path={Routes.dashboard}>
       <DashboardPage />
     </SecureRoute>
-    <PublicRoute path={Routes.ui}>
-      <UIDemo />
-    </PublicRoute>
     <SecureRoute>
       <NotFound />
     </SecureRoute>

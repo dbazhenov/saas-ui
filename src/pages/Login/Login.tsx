@@ -1,30 +1,21 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useStyles } from '@grafana/ui';
 import { LoaderButton } from '@percona/platform-core';
-import { useOktaAuth } from '@okta/okta-react';
 import { useDispatch } from 'react-redux';
 import { PublicLayout } from 'components';
 import { Routes } from 'core/routes';
-import { RequestError } from 'core/api/types';
-import { authLoginAction } from '../../store/auth';
+import { loginAction } from 'store/auth';
 import { Messages } from './Login.messages';
 import { getStyles } from './Login.styles';
 
 export const LoginPage: FC = () => {
   const styles = useStyles(getStyles);
-  const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
 
-  const doLogin = async () => {
-    dispatch(authLoginAction.request());
-
-    try {
-      await oktaAuth.signInWithRedirect({ originalUri: Routes.root });
-    } catch (e) {
-      dispatch(authLoginAction.failure(e as RequestError));
-    }
-  };
+  const doLogin = useCallback(() => {
+    dispatch(loginAction());
+  }, [dispatch]);
 
   return (
     <PublicLayout>

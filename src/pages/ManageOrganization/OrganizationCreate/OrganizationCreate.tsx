@@ -1,14 +1,22 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { Form, FormRenderProps } from 'react-final-form';
 import { useStyles } from '@grafana/ui';
 import { LoaderButton, TextInputField, validators } from '@percona/platform-core';
+import { createOrganizationAction } from 'store/orgs';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import { getStyles } from './OrganizationCreate.styles';
 import { Messages } from './OrganizationCreate.messages';
 import { OrganizationCreateProps } from './OrganizationCreate.types';
+import { CreateOrganizationPayload } from '../ManageOrganization.types';
 
-export const OrganizationCreate: FC<OrganizationCreateProps> = ({ onCreateOrgSubmit, loading }) => {
+export const OrganizationCreate: FC<OrganizationCreateProps> = ({ loading }) => {
   const styles = useStyles(getStyles);
+  const dispatch = useDispatch();
+
+  const onCreateOrgSubmit = useCallback(({ organizationName }: CreateOrganizationPayload) => {
+    dispatch(createOrganizationAction(organizationName));
+  }, [dispatch]);
 
   return (
     <div data-testid="create-organization-wrapper" className={styles.container}>

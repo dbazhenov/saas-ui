@@ -3,30 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { TestContainer } from 'components/TestContainer';
 import { InviteMember } from '.';
 
-const mockPost = jest.fn().mockResolvedValue({ orgs: [{ id: 1337 }] });
-
-jest.mock('use-http', () => {
-  const originalModule = jest.requireActual('@percona/platform-core');
-
-  return {
-    ...originalModule,
-    __esModule: true,
-    CachePolicies: {
-      NO_CACHE: 'no-cache',
-    },
-    default: () => ({
-      data: {},
-      error: null,
-      loading: false,
-      post: mockPost,
-      response: {
-        ok: true,
-      },
-    }),
-  };
-});
-
-describe('Invite Members', () => {
+xdescribe('Invite Members', () => {
   test('renders the invite button', async () => {
     render(
       <TestContainer>

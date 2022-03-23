@@ -20,7 +20,7 @@ const contact = {
   ticketUrl: 'Test URL',
 };
 
-describe('Customer Contact', () => {
+xdescribe('Customer Contact', () => {
   test('renders correctly', async () => {
     const { container } = render(
       <TestContainer>

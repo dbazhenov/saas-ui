@@ -21,31 +21,7 @@ const mockPost = jest.fn().mockResolvedValue({
 const toastError = jest.spyOn(toast, 'error');
 const toastSuccess = jest.spyOn(toast, 'success');
 
-let mockError: string | null = null;
-
-let mockData = {};
 const testId = '123';
-
-jest.mock('use-http', () => {
-  const originalModule = jest.requireActual('@percona/platform-core');
-
-  return {
-    ...originalModule,
-    __esModule: true,
-    CachePolicies: {
-      NO_CACHE: 'no-cache',
-    },
-    default: () => ({
-      data: mockData,
-      error: mockError,
-      loading: false,
-      post: mockPost,
-      response: {
-        ok: true,
-      },
-    }),
-  };
-});
 
 xdescribe('Manage Organization', () => {
   test('renders header and tabs', async () => {
@@ -74,8 +50,6 @@ xdescribe('Manage Organization', () => {
   });
 
   test('shows an error if an API call fails', async () => {
-    mockError = 'Error';
-
     render(
       <TestContainer>
         <ManageOrganizationPage />
@@ -131,7 +105,6 @@ xdescribe('Manage Organization', () => {
   });
 
   test('shows the members tab if an organization exists', async () => {
-    mockData = { orgs: [{ id: testId }] };
     mockPost.mockResolvedValue({
       members: [{
         'member_id': 'test-uid',

@@ -36,26 +36,28 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
     </Button>
   );
 
-  const SectionLink = () =>
-    linkIsExternal ? (
-      <a
-        href={linkTo}
-        data-testid="getting-started-section-link"
-        className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <LinkButton />
-      </a>
-    ) : (
-      <Link
-        to={linkTo}
-        data-testid="getting-started-section-link"
-        className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
-      >
-        <LinkButton />
-      </Link>
-    );
+  const SectionLink = () => (
+    linkIsExternal
+      ? (
+        <a
+          href={linkTo}
+          data-testid="getting-started-section-link"
+          className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          <LinkButton />
+        </a>
+      ) : (
+        <Link
+          to={linkTo}
+          data-testid="getting-started-section-link"
+          className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
+        >
+          <LinkButton />
+        </Link>
+      )
+  );
 
   return (
     <section data-testid="getting-started-section" className={styles.section}>

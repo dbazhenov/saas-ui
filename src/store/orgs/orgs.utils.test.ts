@@ -1,5 +1,5 @@
-import { formatMembers } from './ManageOrganization.utils';
-import { MemberRole, MemberStatus } from './ManageOrganization.types';
+import { MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
+import { transformOrgMembers } from './orgs.utils';
 
 describe('ManageOrganization utils', () => {
   test('formatMembers', () => {
@@ -41,6 +41,6 @@ describe('ManageOrganization utils', () => {
       },
     ];
 
-    expect(formatMembers(testInput)).toEqual(expectedOutput);
+    expect(transformOrgMembers(testInput)).toEqual(expectedOutput);
   });
 });

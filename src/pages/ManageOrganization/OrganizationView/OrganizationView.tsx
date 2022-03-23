@@ -1,59 +1,90 @@
-import React, { FC, useEffect, useState } from 'react';
-import useFetch from 'use-http';
+import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { Icon, Spinner, useStyles } from '@grafana/ui';
-import { toast } from 'react-toastify';
-import { ENDPOINTS } from 'core/api';
-import { getUseHttpConfig } from 'core/api/api.service';
+import { Icon, IconButton, Spinner, useStyles } from '@grafana/ui';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
+import {
+  enterOrganizationEditing,
+  getCurrentOrgCreationDate,
+  getCurrentOrgName,
+  getFirstOrgId,
+  getIsOrgFromPortal,
+  getIsOrgPending,
+  getOrganizationAction,
+  setOrgDetailsSeen,
+} from 'store/orgs';
+import { getUserCompanyName } from 'store/auth';
 import { getStyles } from './OrganizationView.styles';
 import { Messages } from './OrganizationView.messages';
-import { OrganizationViewProps } from './OrganizationView.types';
 
-const { Org } = ENDPOINTS;
-
-export const OrganizationView: FC<OrganizationViewProps> = ({ orgId, fromCustomerPortal }) => {
+export const OrganizationView: FC = () => {
   const styles = useStyles(getStyles);
-  const [orgName, setOrgName] = useState<string>();
-  const [orgCreationDate, setOrgCreationDate] = useState<string>();
-  const fetchConfig = getUseHttpConfig(`${Org.getOrganization}\\${orgId}`, undefined, [orgId]);
-  const { error, data = {}, loading } = useFetch(...fetchConfig);
+  const dispatch = useDispatch();
+  const orgId = useSelector(getFirstOrgId);
+  const orgName = useSelector(getCurrentOrgName);
+  const companyName = useSelector(getUserCompanyName);
+  const orgCreationDate = useSelector(getCurrentOrgCreationDate);
+  const isOrgFromPortal = useSelector(getIsOrgFromPortal);
+  const pending = useSelector(getIsOrgPending);
+  const [displayName, setDisplayName] = useState<string>();
+
   const containerStyles = cx({
     [styles.container]: true,
-    [styles.containerLoading]: loading,
+    [styles.containerLoading]: pending,
   });
 
   useEffect(() => {
-    if (error) {
-      toast.error(Messages.fetchError);
+    if (orgId && !pending && !orgName) {
+      dispatch(getOrganizationAction(orgId));
     }
-  }, [error]);
+  }, [dispatch, orgId, orgName, pending]);
 
   useEffect(() => {
-    setOrgName(data?.org?.name);
-    setOrgCreationDate(new Date(data?.org?.created_at).toLocaleDateString());
-  }, [data]);
+    if (displayName) {
+      dispatch(setOrgDetailsSeen());
+    }
+  }, [dispatch, displayName]);
+
+  useEffect(() => {
+    setDisplayName(companyName || orgName);
+  }, [orgName, companyName]);
+
+  const handleEditOrganizationClick = useCallback(() => {
+    dispatch(enterOrganizationEditing());
+  }, [dispatch]);
 
   return (
     <div data-testid="create-organization-wrapper" className={containerStyles}>
-      {loading ? (
+      {pending ? (
         <Spinner />
       ): (
         <>
           <OrganizationLogo />
           <div className={styles.orgDetails}>
-            {orgName && orgCreationDate && (
+            {displayName && (
               <>
                 <span>
-                  {Messages.organizationName}: <strong>{orgName}</strong>
+                  {Messages.organizationName}: <strong>{displayName}</strong>
                 </span>
-                <span>
-                {Messages.creationDate}: <strong>{orgCreationDate}</strong>
-                </span>
-                {fromCustomerPortal && (
+                {orgCreationDate && (
+                  <span>
+                    {Messages.creationDate}: <strong>{orgCreationDate}</strong>
+                  </span>
+                )}
+                {!isOrgFromPortal && (
                   <div data-testid="info-wrapper" className={styles.infoWrapper}>
                     <Icon className={styles.icon} name="info-circle" />
                     <span>{Messages.fromCustomerPortal}</span>
+                  </div>
+                )}
+                {!companyName && (
+                  <div className={styles.actions}>
+                    <IconButton
+                      data-testid="member-actions-edit"
+                      name="pen"
+                      title={Messages.editOrganization}
+                      onClick={handleEditOrganizationClick}
+                    />
                   </div>
                 )}
               </>

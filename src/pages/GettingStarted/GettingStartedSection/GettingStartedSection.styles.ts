@@ -23,6 +23,7 @@ export const getStyles = (theme: GrafanaTheme) => {
 
       > h2 {
         margin: ${spacing.md} 0;
+        font-weight: ${typography.weight.semibold};
       }
 
       > img {

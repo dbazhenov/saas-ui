@@ -1,9 +1,8 @@
-import { Member } from '../../../ManageOrganization.types';
+import { OrgMember } from 'store/types';
 
 export interface MemberDeleteModalProps {
-  member: Member;
+  member: OrgMember;
   isVisible: boolean;
-  loading: boolean;
-  onSubmit: () => Promise<void>;
+  onSubmit: () => void;
   onClose: () => void;
 }

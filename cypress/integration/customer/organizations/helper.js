@@ -17,13 +17,6 @@ export const verifyOrganizationName = (name) => {
     .should('have.text', name);
 };
 
-export const openMembersTab = () => {
-  cy.findAllByTestId('manage-organization-tab')
-    .contains(organizationPage.constants.labels.membersTabLabel)
-    .click();
-  cy.findAllByTestId('table-tbody-tr').should('be.visible');
-};
-
 export const prepareOrganizationWithAdminAndTechnical = (snAccount) => {
   // create users
   cy.oktaCreateUser(snAccount.admin1);

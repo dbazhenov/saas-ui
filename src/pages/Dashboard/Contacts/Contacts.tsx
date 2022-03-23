@@ -1,103 +1,64 @@
 import React, { FC, useEffect, useState, useCallback } from 'react';
-import useFetch from 'use-http';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import { IconButton, LinkButton, useStyles } from '@grafana/ui';
-import { ENDPOINTS } from 'core/api';
-import { useUserInfo, useUserRole } from 'core/hooks';
-import { GetOrganizationResponse, OrganizationEntitlement, SearchOrganizationEntitlementsResponse } from 'core/api/types';
-import { getUseHttpConfig } from 'core/api/api.service';
 import { Overlay } from '@percona/platform-core';
+import { getAuth, getUserOrgRole, getIsPerconaCustomer } from 'store/auth';
+import {
+  getCustomerSuccessContact,
+  getEntitlementsAction,
+  getFirstOrgId,
+  getIsOrgPending,
+  getOrganizationAction,
+  getOrgEntitlements,
+  getCurrentOrgName,
+  searchOrgsAction,
+} from 'store/orgs';
 import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
 import { HELP_EMAIL, LINKS } from './Contacts.constants';
 import { CustomerContact } from './CustomerContact/CustomerContact';
-import { SuccessManager } from './Contacts.types';
 import { getAccountType } from './Contacts.utils';
 import { EntitlementsModal } from './EntitlementsModal/EntitlementsModal';
 
-const { Org } = ENDPOINTS;
-
 export const Contacts: FC = () => {
   const styles = useStyles(getStyles);
-  const [orgId, setOrgId] = useState<string>();
-  const [sucessManager, setSuccessManager] = useState<SuccessManager>();
-  const [isCustomer, setIsCustomer] = useState(false);
-  const [entitlements, setEntitlements] = useState<OrganizationEntitlement[]>([]);
+  const orgId = useSelector(getFirstOrgId);
+  const orgName = useSelector(getCurrentOrgName);
+  const dispatch = useDispatch();
+  const isCustomer = useSelector(getIsPerconaCustomer);
+  const isOrgPending = useSelector(getIsOrgPending);
+  const CSContact = useSelector(getCustomerSuccessContact);
+  const entitlements = useSelector(getOrgEntitlements);
   const [isEntitlementsVisible, setIsEntilementsVisible] = useState(false);
-  const [user] = useUserInfo();
-  const [role, rolePending] = useUserRole();
-  const fetchConfig = getUseHttpConfig();
-  const { error, loading, post, get } = useFetch(...fetchConfig);
-  const {
-    loading: loadingCompany,
-    post: postUserCompany,
-  } = useFetch(...getUseHttpConfig(undefined, { loading }));
-  const { loading: loadingEntitlements, post: postEntitlements } = useFetch(...fetchConfig);
-  const { firstName, lastName, pending: userPending } = user;
-  const isPending = userPending || rolePending || loading || loadingCompany || loadingEntitlements;
-  const getUserCompany = useCallback(async() => {
-    const { name } = await postUserCompany(Org.getUserCompany);
+  const user = useSelector(getAuth);
+  const role = useSelector(getUserOrgRole);
+  const { firstName, lastName, pending: isUserPending } = user;
+  const isPending = isUserPending || isOrgPending;
 
-    if (name) {
-      setIsCustomer(true);
-    }
-
-  }, [postUserCompany]);
   const viewEntitlements = useCallback((isVisible: boolean) => () => {
     setIsEntilementsVisible(isVisible);
   }, [setIsEntilementsVisible]);
 
   useEffect(() => {
-    const getOrgs = async () => {
-      const { orgs } = await post(Org.getUserOganizations);
-
-      if (orgs && orgs.length) {
-        setOrgId(orgs[0].id);
-      }
-    };
-
-    getOrgs();
-    getUserCompany();
-  }, [post, getUserCompany]);
+    if (!orgId) {
+      dispatch(searchOrgsAction());
+    }
+  }, [dispatch, orgId]);
 
   useEffect(() => {
-    const getOrg = async () => {
-      const { contacts: {
-        customer_success: { email, name },
-      } }: GetOrganizationResponse = await get(`${Org.getOrganization}/${orgId}`);
-
-      if (email && name) {
-        setSuccessManager({
-          email,
-          name,
-        });
-      }
-    };
-
-    const getEntitlements = async () => {
-      const {
-        entitlements: entitlementsResponse,
-      }: SearchOrganizationEntitlementsResponse = await postEntitlements(Org.searchOrgEntitlements(orgId!));
-
-      if (entitlementsResponse) {
-        setEntitlements(entitlementsResponse);
-      }
-    };
-
     if (orgId) {
-      getOrg();
-      getEntitlements();
-    }
-  }, [orgId, get, postEntitlements]);
+      if (!orgName) {
+        dispatch(getOrganizationAction(orgId));
+      }
 
-  useEffect(() => {
-    if (error) {
-      toast.error(Messages.fetchContactsError);
+      if (!entitlements.length) {
+        dispatch(getEntitlementsAction(orgId));
+      }
     }
-  }, [error]);
+  }, [dispatch, orgId, orgName, entitlements.length]);
 
   return (
-    <div className={styles.cardsContainer}>
+    <section className={styles.cardsContainer}>
       <div className={styles.card}>
         <Overlay
           className={styles.cardOverlay}
@@ -113,12 +74,12 @@ export const Contacts: FC = () => {
           <p>
             <span className={styles.cardPoint}>{Messages.accountType}</span>
             &nbsp;
-            {getAccountType(isCustomer, !!sucessManager, isPending)}
+            {getAccountType(isCustomer, !!CSContact.name, isPending)}
           </p>
           {!isPending && !isCustomer && (
             <>
               <p>{Messages.perconaExperts}</p>
-              <LinkButton target="_blank" rel="noreferrer" className={styles.contactBtn} variant="primary" href={LINKS.contactUs}>{Messages.contactUs}</LinkButton>
+              <LinkButton target="_blank" rel="noreferrer noopener" className={styles.contactBtn} variant="primary" href={LINKS.contactUs}>{Messages.contactUs}</LinkButton>
             </>
           )}
           {isCustomer && (
@@ -139,28 +100,25 @@ export const Contacts: FC = () => {
         </Overlay>
       </div>
       <div className={styles.card}>
-      <Overlay className={styles.cardOverlay} isPending={loading}>
-        <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
-        <p>
-          <span className={styles.label}>{Messages.needHelp}</span>
-          <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">{HELP_EMAIL}</a>
-        </p>
-        {sucessManager ? (
-          <CustomerContact
-            name={sucessManager.name}
-            email={sucessManager.email}
-          />
-        ) : (
-          <>
-            <p>{Messages.findUs}</p>
-            <p><a className={styles.externalLink} href={LINKS.forum} target="_blank" rel="noreferrer" data-testid="forum-contact-link">{Messages.forums}</a></p>
-            <p><a className={styles.externalLink} href={LINKS.discord} target="_blank" rel="noreferrer" data-testid="discord-contact-link">{Messages.discord}</a></p>
-            <p>
-              {Messages.getInTouch} <a className={styles.externalLink} href={LINKS.contact} target="_blank" rel="noreferrer" data-testid="contact-page-link">{Messages.contactsPage}</a>
-            </p>
-          </>
-        )}
-      </Overlay>
+        <Overlay className={styles.cardOverlay} isPending={isOrgPending}>
+          <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
+          <p>
+            <span className={styles.label}>{Messages.needHelp}</span>
+            <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">{HELP_EMAIL}</a>
+          </p>
+          {CSContact.name ? (
+            <CustomerContact />
+          ) : (
+            <>
+              <p>{Messages.findUs}</p>
+              <p><a className={styles.externalLink} href={LINKS.forum} target="_blank" rel="noreferrer noopener" data-testid="forum-contact-link">{Messages.forums}</a></p>
+              <p><a className={styles.externalLink} href={LINKS.discord} target="_blank" rel="noreferrer noopener" data-testid="discord-contact-link">{Messages.discord}</a></p>
+              <p>
+                {Messages.getInTouch} <a className={styles.externalLink} href={LINKS.contact} target="_blank" rel="noreferrer noopener" data-testid="contact-page-link">{Messages.contactsPage}</a>
+              </p>
+            </>
+          )}
+        </Overlay>
       </div>
       {isEntitlementsVisible && (
         <EntitlementsModal
@@ -168,6 +126,6 @@ export const Contacts: FC = () => {
           onClose={viewEntitlements(false)}
         />
       )}
-    </div>
+    </section>
   );
 };

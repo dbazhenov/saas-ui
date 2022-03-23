@@ -29,11 +29,13 @@ context('Members tests for the Free Users', () => {
             .should('be.visible')
             .click();
         // Edit button for logged-in user should be disabled
+        organizationPage.methods.verifyOrganizationTab();
+        organizationPage.methods.openMembersTab();
         cy.contains('td', admin1User.email)
             .parent()
             .within(() => cy.findByTestId(organizationPage.locators.editMemberIcon).should('be.disabled'));
         const emails = [technical1User.email, admin2User.email];
-        const oldValues = ['Technical User', 'Admin'];
+        const oldValues = ['Technical', 'Admin'];
         const newValues = ['Admin', 'Technical'];
 
         // Change user roles from Technical to Admin and Admin to Technical
@@ -45,12 +47,14 @@ context('Members tests for the Free Users', () => {
             cy.contains('div', oldValues[index]).click();
             cy.contains('div', newValues[index]).click();
             cy.findByTestId(organizationPage.locators.ediMemberSubmitButton).click();
+            cy.checkPopUpMessage(organizationPage.constants.messages.memberEditedSuccessfully);
+            // eslint-disable-next-line cypress/no-unnecessary-waiting, no-magic-numbers
+            cy.wait(1000);  // Due to bug SAAS-873, should be removed when bug is fixed.
             cy.contains('td', email)
                 .parent()
                 .then((row) => {
                     expect(row).to.deep.contain(newValues[index]);
                 });
-            cy.checkPopUpMessage(organizationPage.constants.messages.memberEditedSuccessfully);
         });
     });
 
@@ -60,6 +64,8 @@ context('Members tests for the Free Users', () => {
         cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
             .should('be.visible')
             .click();
+        organizationPage.methods.verifyOrganizationTab();
+        organizationPage.methods.openMembersTab();
         const usersTable = [
             {
                 Name: `${admin1User.firstName} ${admin1User.lastName}`,
@@ -103,6 +109,8 @@ context('Members tests for the Free Users', () => {
         cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
           .should('be.visible')
           .click();
+        organizationPage.methods.verifyOrganizationTab();
+        organizationPage.methods.openMembersTab();
         // Edit button for logged in user should be disabled
         cy.contains('td', admin1User.email)
           .parent()

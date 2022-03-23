@@ -1,36 +1,32 @@
-import { createAction, ActionType, getType } from 'typesafe-actions';
-import { GrafanaTheme } from '@grafana/data';
+import { createReducer, createAsyncThunk } from '@reduxjs/toolkit';
 import { getTheme } from '@percona/platform-core';
 import { THEME_STORAGE_KEY } from 'core/constants';
-import { ThemeState } from './theme.types';
+import { AppState } from 'store/types';
 
-const themeValue: string = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
-const theme = getTheme(themeValue);
+const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'light';
 
-const DEFAULT_STATE: ThemeState = theme;
+const themeValue = ['dark', 'light'].includes(storedTheme) ? storedTheme : 'light';
 
-export const themeChangeRequestAction = createAction('THEME_CHANGE_REQUEST')<GrafanaTheme>();
-export const themeChangeSuccessAction = createAction('THEME_CHANGE_SUCCESS')<GrafanaTheme>();
+const DEFAULT_STATE = getTheme(themeValue);
 
-export type ThemeActions = (
-  ActionType<typeof themeChangeRequestAction> |
-  ActionType<typeof themeChangeSuccessAction>
+export const themeChangeAction = createAsyncThunk<void, void, { state: AppState; rejectValue: boolean }>(
+  'THEME/CHANGE',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const { theme } = getState();
+
+      localStorage.setItem(THEME_STORAGE_KEY, theme.isDark ? 'light' : 'dark');
+    } catch {
+      // TODO: log an error saying the theme could not be persisted to ELK
+      rejectWithValue(false);
+    }
+  },
 );
 
-export function themeReducer(state: ThemeState = DEFAULT_STATE, action: ThemeActions): ThemeState {
-  switch (action.type) {
-    case getType(themeChangeSuccessAction): {
-      if (state.isDark && action.payload.isDark) {
-        return state;
-      }
+export const themeReducer = createReducer(DEFAULT_STATE, (builder) => {
+  builder.addCase(themeChangeAction.fulfilled, (state) => {
+    const theme = getTheme(state.isDark ? 'light' : 'dark');
 
-      if (state.isLight && action.payload.isLight) {
-        return state;
-      }
-
-      return action.payload;
-    }
-    default:
-      return state;
-  }
-}
+    return theme;
+  });
+});

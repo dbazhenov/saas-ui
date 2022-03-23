@@ -1,188 +1,140 @@
 import React, { FC, useCallback, useMemo, useEffect, useState } from 'react';
-import useFetch from 'use-http';
-import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
 import { useStyles, Tab, TabsBar, TabContent, Spinner } from '@grafana/ui';
-import { getUseHttpConfig } from 'core/api/api.service';
-import { ENDPOINTS } from 'core/api';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
-import { useUserRole, useUserInfo } from 'core/hooks';
+import { getIsUserPending, getUserCompanyAction, getUserCompanyName } from 'store/auth';
+import {
+  getFirstOrgId,
+  getIsOrgPending,
+  getIsUserAdmin,
+  getOrgMembers,
+  getOrgs,
+  getIsOrgEditing,
+  getServiceNowOrganizationAction,
+  getUserRoleAction,
+  getOrgViewActiveTab,
+  setOrgViewActiveTab,
+} from 'store/orgs';
+import { OrganizationViewTabs } from 'store/types/orgs';
 import { Messages } from './ManageOrganization.messages';
 import { getStyles } from './ManageOrganization.styles';
-import { formatMembers } from './ManageOrganization.utils';
-import { CreateOrganizationPayload, Member, MemberRole, InviteMemberFormFields, EditMemberPayload, DeleteMemberPayload } from './ManageOrganization.types';
-import { DEFAULT_TAB_INDEX } from './ManageOrganization.constants';
 import { OrganizationView } from './OrganizationView';
 import { OrganizationCreate } from './OrganizationCreate';
+import { OrganizationEdit } from './OrganizationEdit';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
-import { ManageOrganizationProvider } from './ManageOrganization.provider';
-
-const { Org } = ENDPOINTS;
 
 export const ManageOrganizationPage: FC = () => {
   const styles = useStyles(getStyles);
-  const [orgId, setOrgId] = useState<string>();
-  const [orgMembers, setOrgMembers] = useState<Member[]>([]);
-  const [userIsAdmin, setUserIsAdmin] = useState(false);
-  const [fromCustomerPortal, setFromCustomerPortal] = useState(false);
-  const [activeTab, setActiveTab] = useState(DEFAULT_TAB_INDEX);
-  // required to avoid flickering between changing the loading state
-  const [showLoader, setShowLoader] = useState(true);
-  const [userRole, loadingUserRole] = useUserRole(orgId);
-  const [userInfo] = useUserInfo();
-  const fetchConfig = getUseHttpConfig();
-  const { response, error, loading, post, put, delete: deleteReq, data } = useFetch(...fetchConfig);
-  const { post: postUserCompany, loading: loadingCompany } = useFetch(...fetchConfig);
+  const dispatch = useDispatch();
+  const orgId = useSelector(getFirstOrgId);
+  const isUserAdmin = useSelector(getIsUserAdmin);
+  const isUserPending = useSelector(getIsUserPending);
+  const isOrgPending = useSelector(getIsOrgPending);
+  const orgs = useSelector(getOrgs);
+  const members = useSelector(getOrgMembers);
+  const companyName = useSelector(getUserCompanyName);
+  const isOrgEditing = useSelector(getIsOrgEditing);
+  const activeTab = useSelector(getOrgViewActiveTab);
+  const [activeTabIndex, setActiveTabIndex] = useState<number>();
   const tabsWrapperStyles = cx({
     [styles.tabsWrapper]: true,
-    [styles.tabsWrapperLoading]: showLoader || loading || loadingCompany || loadingUserRole,
+    [styles.tabsWrapperLoading]: isOrgPending || isUserPending,
   });
+  const [hasOrg, setHasOrg] = useState<boolean>();
 
   useEffect(() => {
-    setUserIsAdmin(userRole === MemberRole.admin);
-  }, [userRole, orgMembers]);
+    setHasOrg(!!(companyName || orgId));
+  }, [orgId, companyName]);
 
-  const handleCreateOrgSubmit = useCallback(async ({ organizationName }: CreateOrganizationPayload) => {
-    const { org } = await post(Org.createOrganization, { name: organizationName });
-
-    if (org?.id && response.ok) {
-      toast.success(Messages.orgCreateSuccess);
-      setOrgId(org?.id);
-    }
-  }, [post, response.ok]);
-
-  const getOrgMembers = useCallback(async () => {
-    const { members } = await post(Org.searchOrgMember(orgId!));
-
-    setOrgMembers(formatMembers(members));
-    setShowLoader(false);
-  }, [post, orgId]);
-
-  const getUserCompany = useCallback(async() => {
-    const { name } = await postUserCompany(Org.getUserCompany);
-
-    // add org to orgd with the name of the company found in ServiceNow
-    if (name) {
-      const { org } = await post(Org.getOrganization, { name });
-
-      if (org?.id) {
-        setOrgId(org?.id);
-        setFromCustomerPortal(true);
-      }
+  const orgTabContent = useMemo(() => {
+    if (hasOrg && !isOrgEditing) {
+      return (
+        <div data-testid="view-organization">
+          <OrganizationView />
+        </div>
+      );
     }
 
-    setShowLoader(false);
-  }, [post, postUserCompany]);
-
-  const handleInviteMemberSubmit = useCallback(async ({ email, role }: InviteMemberFormFields) => {
-    await post(Org.inviteMember(orgId!), {
-      username: email,
-      role: role.value,
-    });
-
-    if (response.ok) {
-      toast.success(Messages.inviteMemberSuccess);
-      getOrgMembers();
+    if (hasOrg && isOrgEditing) {
+      return (
+        <div data-testid="edit-organization">
+          <OrganizationEdit
+            loading={isOrgPending || isUserPending}
+          />
+        </div>
+      );
     }
-  }, [post, orgId, getOrgMembers, response.ok]);
 
-  const handleDeleteMemberSubmit = useCallback(async ({ memberId }: DeleteMemberPayload) => {
-    await deleteReq(Org.deleteMember(orgId!, memberId));
-
-    if (response.ok) {
-      toast.success(Messages.deleteMemberSuccess);
-      getOrgMembers();
-    }
-  }, [deleteReq, orgId, getOrgMembers, response.ok]);
-
-  const handleEditMemberSubmit = useCallback(async ({ role, memberId }: EditMemberPayload) => {
-    await put(Org.editMember(orgId!, memberId), {
-      role: role.value,
-    });
-
-    if (response.ok) {
-      toast.success(Messages.editMemberSuccess);
-      getOrgMembers();
-    }
-  }, [put, orgId, getOrgMembers, response.ok]);
+    return (
+      <div data-testid="create-organization">
+        <OrganizationCreate
+          loading={isOrgPending || isUserPending}
+        />
+      </div>
+    );
+  }, [hasOrg, isOrgEditing, isOrgPending, isUserPending]);
 
   const tabs = useMemo(() => [
     {
       label: Messages.members,
-      disabled: !orgId,
+      key: OrganizationViewTabs.members,
+      disabled: !members.length,
       content: (
         <div data-testid="manage-organization-members-tab">
-          {userIsAdmin && (
-            <InviteMember onInviteMemberSubmit={handleInviteMemberSubmit} loading={loading} />
+          {isUserAdmin && (
+            <InviteMember />
           )}
-          <MembersList members={orgMembers} loading={loading} />
+          <MembersList />
         </div>
       ),
     },
     {
       label: Messages.organization,
+      key: OrganizationViewTabs.organization,
       disabled: false,
       content: (
         <div data-testid="manage-organization-organization-tab">
-          {orgId
-            ? (
-              <div data-testid="view-organization">
-                <OrganizationView orgId={orgId} fromCustomerPortal={fromCustomerPortal} />
-              </div>
-            ) : (
-              <div data-testid="create-organization">
-                <OrganizationCreate
-                  onCreateOrgSubmit={handleCreateOrgSubmit}
-                  loading={loading || loadingCompany}
-                />
-              </div>
-            )}
+          {orgTabContent}
         </div>
       ),
     },
   ],
-  [
-    handleCreateOrgSubmit,
-    handleInviteMemberSubmit,
-    loading,
-    loadingCompany,
-    orgId,
-    orgMembers,
-    userIsAdmin,
-    fromCustomerPortal,
-  ]);
+  [members.length, isUserAdmin, orgTabContent]);
 
   useEffect(() => {
-    const getOrgs = async () => {
-      const { orgs } = await post(Org.getUserOganizations);
-
-      // if there are no orgs check for a linked company in ServiceNow
-      if (!orgs || !orgs.length) {
-        getUserCompany();
-      }
-    };
-
-    getOrgs();
-  }, [post, getUserCompany]);
+    if (!members.length) {
+      // XXX: this action includes searchOrgsAction, that's why it's not dispatched separately
+      //      consider to improve that
+      dispatch(getUserRoleAction());
+    }
+  }, [dispatch, members.length]);
 
   useEffect(() => {
-    if (error) {
-      toast.error(data?.message ? data.message : Messages.fetchError);
+    if (!companyName) {
+      dispatch(getUserCompanyAction());
     }
-
-    if (data?.orgs?.length) {
-      setOrgId(data?.orgs[0].id);
-      setActiveTab(tabs.findIndex((tab) => tab.label === Messages.members));
-    }
-  }, [error, data, tabs]);
+  }, [dispatch, companyName]);
 
   useEffect(() => {
-    if (orgId) {
-      getOrgMembers();
+    // if there are no orgs check for a linked company in ServiceNow
+    // and add the org to orgd with the name of the company found in ServiceNow
+    if (!orgs.length && !orgId && companyName) {
+      dispatch(getServiceNowOrganizationAction(companyName));
     }
-  }, [getOrgMembers, orgId]);
+  }, [dispatch, orgId, orgs.length, companyName]);
+
+  useEffect(() => {
+    setActiveTabIndex(tabs.findIndex((tab) => tab.key === activeTab));
+  }, [tabs, activeTab]);
+
+  const changeActiveTab = useCallback((index: number) => {
+    dispatch(setOrgViewActiveTab(tabs[index].key));
+  }, [dispatch, tabs]);
+
+  const ActiveTab = useCallback(() => tabs.find((tab) => tab.key === activeTab)!.content, [tabs, activeTab]);
 
   return (
     <PrivateLayout>
@@ -192,36 +144,26 @@ export const ManageOrganizationPage: FC = () => {
           {Messages.manageOrganization}
         </header>
         <div data-testid="manage-organization-tabs-wrapper" className={tabsWrapperStyles}>
-          {showLoader || loading || loadingCompany || loadingUserRole ? (
+          {isOrgPending || isUserPending ? (
             <Spinner />
           ) : (
             <>
               <TabsBar>
                 {tabs.map((tab, index) => (
-                  <span key={tab.label} className={tab.disabled ? styles.disabledTab : undefined}>
+                  <span key={tab.label} className={cx({ [styles.disabledTab]: tab.disabled })}>
                     <Tab
-                      // TODO: research why css prop is needed and how to remove it
-                      active={index === activeTab}
+                      // TODO: research why css prop is needed and how to remove it => upgrade Grafana
+                      active={index === activeTabIndex}
                       css={undefined}
                       data-testid="manage-organization-tab"
                       label={tab.label}
-                      onChangeTab={() => setActiveTab(index)}
+                      onChangeTab={() => changeActiveTab(index)}
                     />
                   </span>
                 ))}
               </TabsBar>
               <TabContent data-testid="manage-organization-tab-content">
-                <ManageOrganizationProvider.Provider
-                  value={{
-                    onEditMemberSubmit: handleEditMemberSubmit,
-                    onDeleteMemberSubmit: handleDeleteMemberSubmit,
-                    loading,
-                    userInfo,
-                    userRole,
-                  }}
-                >
-                  {tabs[activeTab].content}
-                </ManageOrganizationProvider.Provider>
+                <ActiveTab />
               </TabContent>
             </>
           )}

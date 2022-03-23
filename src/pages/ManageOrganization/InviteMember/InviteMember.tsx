@@ -1,12 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Form, FormRenderProps, Field } from 'react-final-form';
 import { useStyles, Button, Label, Select } from '@grafana/ui';
 import { LoaderButton, Modal, TextInputField, validators } from '@percona/platform-core';
+import { getFirstOrgId, inviteOrgMemberAction, getIsOrgPending } from 'store/orgs';
 import { getStyles } from './InviteMember.styles';
 import { Messages } from './InviteMember.messages';
 import { ROLES } from '../ManageOrganization.constants';
 import { InviteMemberFormFields, MemberRole } from '../ManageOrganization.types';
-import { InviteMemberProps } from './InviteMember.types';
 
 const { email: emailValidator, required } = validators;
 
@@ -15,8 +16,11 @@ const initialValues = {
   role: ROLES.find((role) => role.value === MemberRole.technical),
 };
 
-export const InviteMember: FC<InviteMemberProps> = ({ onInviteMemberSubmit, loading }) => {
+export const InviteMember: FC = () => {
   const styles = useStyles(getStyles);
+  const pending = useSelector(getIsOrgPending);
+  const orgId = useSelector(getFirstOrgId);
+  const dispatch = useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleModalClose = () => {
@@ -27,10 +31,10 @@ export const InviteMember: FC<InviteMemberProps> = ({ onInviteMemberSubmit, load
     setIsModalVisible(true);
   };
 
-  const handleInviteMemberSubmit = (formData: InviteMemberFormFields) => {
+  const handleInviteMemberSubmit = useCallback(({ email, role }: InviteMemberFormFields) => {
     setIsModalVisible(false);
-    onInviteMemberSubmit(formData);
-  };
+    dispatch(inviteOrgMemberAction({ orgId, username: email, role: role.value! }));
+  }, [dispatch, orgId]);
 
   return (
     <div data-testid="invite-member-wrapper" className={styles.container}>
@@ -63,8 +67,8 @@ export const InviteMember: FC<InviteMemberProps> = ({ onInviteMemberSubmit, load
                 data-testid="invite-member-submit-button"
                 className={styles.saveButton}
                 type="submit"
-                loading={loading}
-                disabled={!valid || loading || pristine}
+                loading={pending}
+                disabled={!valid || pending || pristine}
               >
                 {Messages.save}
               </LoaderButton>

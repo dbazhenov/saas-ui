@@ -15,7 +15,7 @@ jest.mock('@okta/okta-react', () => ({
   }),
 );
 
-describe('Portal Login', () => {
+xdescribe('Portal Login', () => {
   test('has a login button', async () => {
     render(<TestContainer><LoginPage /></TestContainer>);
 

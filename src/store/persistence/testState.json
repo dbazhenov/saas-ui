@@ -1,0 +1,256 @@
+{
+  "auth": {
+    "companyName": "",
+    "orgRole": "",
+    "pending": false
+  },
+  "orgs": {
+    "currentOrg": {
+      "contacts": {
+        "customer_success": {
+          "email": "",
+          "name": ""
+        },
+        "new_ticket_url": ""
+      },
+      "org": {
+        "created_at": 0,
+        "id": "",
+        "name": "",
+        "updated_at": 0
+      }
+    },
+    "entitlements": [],
+    "inventory": [],
+    "isOrgFromPortal": false,
+    "members": [],
+    "orgs": [],
+    "pending": false
+  },
+  "router": {
+    "action": "POP",
+    "location": {
+      "hash": "",
+      "pathname": "/",
+      "query": {},
+      "search": ""
+    }
+  },
+  "theme": {
+    "border": {
+      "radius": {
+        "lg": "5px",
+        "md": "3px",
+        "sm": "2px"
+      },
+      "width": {
+        "sm": "1px"
+      }
+    },
+    "breakpoints": {
+      "lg": "992px",
+      "md": "769px",
+      "sm": "544px",
+      "xl": "1200px",
+      "xs": "0",
+      "xxl": "1440px"
+    },
+    "colors": {
+      "bg1": "#ffffff",
+      "bg2": "#f1f5f9",
+      "bg3": "#dce1e6",
+      "bgBlue1": "#3274d9",
+      "bgBlue2": "#1f60c4",
+      "bodyBg": "#ffffff",
+      "border1": "#dce1e6",
+      "border2": "#c7d0d9",
+      "border3": "#9fa7b3",
+      "dashboardBg": "#f7f8fa",
+      "dropdownBg": "#ffffff",
+      "dropdownOptionHoverBg": "#f1f5f9",
+      "dropdownShadow": "#acb6bf",
+      "formCheckboxBgChecked": "#1f60c4",
+      "formCheckboxBgCheckedHover": "#3274d9",
+      "formCheckboxCheckmark": "#ffffff",
+      "formDescription": "#7b8087",
+      "formFocusOutline": "#5794f2",
+      "formInputBg": "#ffffff",
+      "formInputBgDisabled": "#e9edf2",
+      "formInputBorder": "#c7d0d9",
+      "formInputBorderActive": "#1f60c4",
+      "formInputBorderHover": "#9fa7b3",
+      "formInputBorderInvalid": "#e02f44",
+      "formInputDisabledText": "#7b8087",
+      "formInputPlaceholderText": "#9fa7b3",
+      "formInputText": "#202226",
+      "formLabel": "#202226",
+      "formLegend": "#2c3235",
+      "formSwitchBg": "#c7d0d9",
+      "formSwitchBgActive": "#1f60c4",
+      "formSwitchBgActiveHover": "#3274d9",
+      "formSwitchBgDisabled": "#c7d0d9",
+      "formSwitchBgHover": "#acb6bf",
+      "formSwitchDot": "#ffffff",
+      "formValidationMessageBg": "#e02f44",
+      "formValidationMessageText": "#ffffff",
+      "link": "#202226",
+      "linkDisabled": "#7b8087",
+      "linkExternal": "#33a2e5",
+      "linkHover": "#202226",
+      "pageHeaderBg": "#f1f5f9",
+      "pageHeaderBorder": "#dce1e6",
+      "panelBg": "#ffffff",
+      "panelBorder": "#dce1e6",
+      "text": "#202226",
+      "textBlue": "#33a2e5",
+      "textFaint": "#9fa7b3",
+      "textHeading": "#2c3235",
+      "textSemiWeak": "#464c54",
+      "textStrong": "#202226",
+      "textWeak": "#7b8087"
+    },
+    "height": {
+      "lg": 48,
+      "md": 32,
+      "sm": 24
+    },
+    "isDark": false,
+    "isLight": true,
+    "name": "Grafana Light",
+    "palette": {
+      "black": "#000000",
+      "blue77": "#1f60c4",
+      "blue80": "#3274d9",
+      "blue85": "#33a2e5",
+      "blue95": "#5794f2",
+      "brandDanger": "#e02f44",
+      "brandPrimary": "#ff7941",
+      "brandSuccess": "#3eb15b",
+      "brandWarning": "#ff7941",
+      "critical": "#c4162a",
+      "dark1": "#1e2028",
+      "dark10": "#424345",
+      "dark2": "#41444b",
+      "dark3": "#303133",
+      "dark4": "#35373f",
+      "dark5": "#41444b",
+      "dark6": "#41444b",
+      "dark7": "#41444b",
+      "dark8": "#2f2f32",
+      "dark9": "#343436",
+      "gray05": "#0b0c0e",
+      "gray1": "#52545c",
+      "gray10": "#141619",
+      "gray15": "#202226",
+      "gray2": "#767980",
+      "gray25": "#2c3235",
+      "gray3": "#acb6bf",
+      "gray33": "#464c54",
+      "gray4": "#c7d0d9",
+      "gray5": "#dde4ed",
+      "gray6": "#e9edf2",
+      "gray60": "#7b8087",
+      "gray7": "#f7f8fa",
+      "gray70": "#9fa7b3",
+      "gray85": "#c7d0d9",
+      "gray90": "#dce1e6",
+      "gray95": "#e9edf2",
+      "gray97": "#f1f5f9",
+      "gray98": "#f7f8fa",
+      "greenBase": "#3eb15b",
+      "greenShade": "#369b4f",
+      "online": "#369b4f",
+      "orange": "#ff7941",
+      "orangeDark": "#ed5700",
+      "purple": "#9954bb",
+      "queryGreen": "#3eb15b",
+      "queryOrange": "#ff7941",
+      "queryPurple": "#9954bb",
+      "queryRed": "#e02f44",
+      "red": "#d44939",
+      "red88": "#e02f44",
+      "redBase": "#e02f44",
+      "redShade": "#c4162a",
+      "warn": "#f79520",
+      "white": "#ffffff",
+      "yellow": "#ff851b"
+    },
+    "panelHeaderHeight": 28,
+    "panelPadding": 8,
+    "shadows": {
+      "listItem": "none"
+    },
+    "spacing": {
+      "base": 8,
+      "d": "16px",
+      "formButtonHeight": 32,
+      "formFieldsetMargin": "16px",
+      "formInputAffixPaddingHorizontal": "4px",
+      "formInputHeight": 32,
+      "formInputMargin": "16px",
+      "formInputPaddingHorizontal": "8px",
+      "formLabelMargin": "0 0 4px 0",
+      "formLabelPadding": "0 0 0 2px",
+      "formMargin": "32px",
+      "formSpacingBase": 8,
+      "formValidationMessageMargin": "6px 0 0 0",
+      "formValidationMessagePadding": "4px 8px",
+      "gutter": "30px",
+      "inlineFormMargin": "4px",
+      "insetSquishMd": "4px 8px",
+      "lg": "24px",
+      "md": "16px",
+      "sm": "8px",
+      "xl": "32px",
+      "xs": "4px",
+      "xxs": "2px"
+    },
+    "type": "light",
+    "typography": {
+      "fontFamily": {
+        "monospace": "Menlo, Monaco, Consolas, 'Courier New', monospace",
+        "sansSerif": "'Roboto', 'Helvetica Neue', Arial, sans-serif"
+      },
+      "heading": {
+        "h1": "28px",
+        "h2": "24px",
+        "h3": "21px",
+        "h4": "18px",
+        "h5": "16px",
+        "h6": "14px"
+      },
+      "lineHeight": {
+        "lg": 2,
+        "md": 1.5,
+        "sm": 1.1,
+        "xs": 1
+      },
+      "link": {
+        "decoration": "none",
+        "hoverDecoration": "none"
+      },
+      "size": {
+        "base": "14px",
+        "lg": "18px",
+        "md": "14px",
+        "sm": "12px",
+        "xs": "10px"
+      },
+      "weight": {
+        "bold": 600,
+        "light": 300,
+        "regular": 400,
+        "semibold": 500
+      }
+    },
+    "zIndex": {
+      "dropdown": 1030,
+      "modal": 1060,
+      "modalBackdrop": 1050,
+      "navbarFixed": 1000,
+      "sidemenu": 1020,
+      "tooltip": 1040,
+      "typeahead": 1030
+    }
+  }
+}

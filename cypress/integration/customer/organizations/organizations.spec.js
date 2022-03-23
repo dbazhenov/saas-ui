@@ -2,7 +2,6 @@ import { organizationPage } from 'pages/organization.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
 import { timeouts } from '../../../fixtures/timeouts';
 import {
-  openMembersTab,
   openViewOrganizationPage,
   prepareOrganizationWithAdminAndTechnical,
   verifyOrganizationName,
@@ -41,7 +40,7 @@ context('Percona Customer', () => {
         .click();
 
       // open Members tab
-      openMembersTab();
+      organizationPage.methods.openMembersTab();
 
       // verify there are 2 org members
       cy.findAllByTestId('table-tbody-tr')

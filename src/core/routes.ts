@@ -12,7 +12,6 @@ export const Routes = {
   root: '/',
   resetPassword: `https://${OAUTH_HOST}/signin/forgot-password`,
   signup: `https://${OAUTH_HOST}/signin/register`,
-  ui: '/ui',
   welcome: '/welcome',
   dashboard: '/dashboard',
 };

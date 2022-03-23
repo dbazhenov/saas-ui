@@ -1,3 +1,5 @@
+import { openMembersTab, verifyOrganizationTab } from './helpers/organizationPage.helper';
+
 export const organizationPage = {
   constants: {
     labels: {
@@ -20,5 +22,11 @@ export const organizationPage = {
     ediMemberSubmitButton: 'edit-member-submit-button',
     deleteMemberSubmitButton: 'delete-member-submit-button',
     deleteMemberModalContent: 'modal-content',
+    manageOrgTab: 'manage-organization-tab',
+    orgTableRow: 'table-tbody-tr',
+  },
+  methods: {
+    openMembersTab: () => openMembersTab(),
+    verifyOrganizationTab: () => verifyOrganizationTab(),
   },
 };

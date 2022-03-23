@@ -1,105 +1,93 @@
-import { createAsyncAction, ActionType, getType } from 'typesafe-actions';
-import { AuthState, UpdateProfilePayload } from 'store/types';
-import { RequestError } from 'core/api/types';
+import { createReducer } from '@reduxjs/toolkit';
+import { getUserRoleAction } from 'store/orgs';
+import { AuthState } from 'store/types';
+import { errorUserInfoAction, getUserCompanyAction, startUserInfoAction, updateUserInfoAction } from '.';
+import { getProfileAction, loginAction, updateProfileAction } from './auth.actions';
 
 const DEFAULT_STATE: AuthState = {
   email: undefined,
   firstName: undefined,
   lastName: undefined,
+  companyName: '',
+  orgRole: '',
   pending: false,
 };
 
-export const authLoginAction = createAsyncAction(
-  'LOGIN_USER_REQUEST',
-  'LOGIN_USER_SUCCESS',
-  'LOGIN_USER_FAILURE',
-)<undefined, undefined, RequestError>();
-
-export const authLogoutAction = createAsyncAction(
-  'LOGOUT_USER_REQUEST',
-  'LOGOUT_USER_SUCCESS',
-  'LOGOUT_USER_FAILURE',
-)<undefined, undefined, RequestError>();
-
-export const authGetProfileAction = createAsyncAction(
-  'GET_PROFILE_USER_REQUEST',
-  'GET_PROFILE_USER_SUCCESS',
-  'GET_PROFILE_USER_FAILURE',
-)<undefined, Pick<AuthState, 'email' | 'firstName' | 'lastName'>, RequestError>();
-
-export const authUpdateProfileAction = createAsyncAction(
-  'UPDATE_PROFILE_USER_REQUEST',
-  'UPDATE_PROFILE_USER_SUCCESS',
-  'UPDATE_PROFILE_USER_FAILURE',
-)<UpdateProfilePayload, UpdateProfilePayload, RequestError>();
-
-export type AuthActions = (
-  ActionType<typeof authLoginAction>
-  | ActionType<typeof authLogoutAction>
-  | ActionType<typeof authGetProfileAction>
-  | ActionType<typeof authUpdateProfileAction>
-);
-
-export function authReducer(state: AuthState = DEFAULT_STATE, action: AuthActions): AuthState {
-  switch (action.type) {
+export const authReducer = createReducer<AuthState>(DEFAULT_STATE, (builder) => {
+  builder
     // Login
-    case getType(authLoginAction.request):
-      return {
-        ...state,
-        pending: true,
-      };
-    case getType(authLoginAction.success):
-      return {
-        ...state,
-        pending: false,
-      };
-    case getType(authLoginAction.failure):
-      return {
-        ...state,
-        email: undefined,
-        pending: false,
-      };
+    .addCase(loginAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(loginAction.fulfilled, (state) => {
+      state.pending = false;
+    })
+    .addCase(loginAction.rejected, (state) => {
+      state.pending = false;
+      state.email = undefined;
+    })
+    /* Logout Action is not present, since the state gets re-initialized due to a redirect
+     **
+     */
+    // Get User - special sync actions for AuthMiddleware
+    .addCase(updateUserInfoAction, (state, { payload }) => {
+      state.email = payload.email;
+      state.firstName = payload.firstName;
+      state.lastName = payload.lastName;
+      state.pending = false;
+    })
+    .addCase(startUserInfoAction, (state) => {
+      state.pending = true;
+    })
+    .addCase(errorUserInfoAction, (state) => {
+      state.pending = false;
+    })
     // Get Profile
-    case getType(authGetProfileAction.request):
-      return {
-        ...state,
-        pending: true,
-      };
-    case getType(authGetProfileAction.success):
-      return {
-        ...state,
-        email: action.payload.email,
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName,
-        pending: false,
-      };
-    case getType(authGetProfileAction.failure):
-      return {
-        ...state,
-        email: undefined,
-        firstName: undefined,
-        lastName: undefined,
-        pending: false,
-      };
+    .addCase(getProfileAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(getProfileAction.fulfilled, (state, { payload }) => {
+      state.email = payload.email;
+      state.firstName = payload.first_name;
+      state.lastName = payload.last_name;
+      state.pending = false;
+    })
+    .addCase(getProfileAction.rejected, (state) => {
+      state.pending = false;
+    })
     // Update Profile
-    case getType(authUpdateProfileAction.request):
-      return {
-        ...state,
-        pending: true,
-      };
-    case getType(authUpdateProfileAction.success):
-      return {
-        ...state,
-        firstName: action.payload.firstName,
-        lastName: action.payload.lastName,
-        pending: false,
-      };
-    case getType(authUpdateProfileAction.failure):
-      return {
-        ...state,
-        pending: false,
-      };
-    default:
-      return state;
-  }
-}
+    .addCase(updateProfileAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(updateProfileAction.fulfilled, (state, { payload }) => {
+      state.firstName = payload.firstName;
+      state.lastName = payload.lastName;
+      state.pending = false;
+    })
+    .addCase(updateProfileAction.rejected, (state) => {
+      state.pending = false;
+    })
+    // User role
+    .addCase(getUserRoleAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(getUserRoleAction.fulfilled, (state, { payload }) => {
+      state.pending = false;
+      state.orgRole = payload;
+    })
+    .addCase(getUserRoleAction.rejected, (state) => {
+      state.pending = false;
+    })
+    // User company
+    .addCase(getUserCompanyAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(getUserCompanyAction.fulfilled, (state, { payload }) => {
+      state.pending = false;
+      state.companyName = payload;
+    })
+    .addCase(getUserCompanyAction.rejected, (state) => {
+      state.pending = false;
+      state.companyName = '';
+    });
+});

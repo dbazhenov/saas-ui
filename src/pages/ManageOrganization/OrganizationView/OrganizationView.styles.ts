@@ -12,7 +12,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       justify-content: center;
       padding-top: ${spacing.lg};
 
-      svg {
+      & > svg {
         color: ${colors.bgBlue1};
         height: 145px;
         opacity: 45%;
@@ -38,10 +38,20 @@ export const getStyles = (theme: GrafanaTheme) => {
       height: 60px;
       padding: ${spacing.sm};
       width: fit-content;
-      margin-bottom: ${spacing.md};
     `,
     icon: css`
       margin-right: ${spacing.sm};
+    `,
+    actions: css`
+      & > * {
+        color: ${colors.textBlue};
+        cursor: pointer;
+
+        &:hover {
+          color: ${colors.textBlue};
+          opacity: 75%;
+        }
+      }
     `,
   });
 };

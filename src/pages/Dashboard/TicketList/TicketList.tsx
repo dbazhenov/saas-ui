@@ -1,18 +1,21 @@
-import React, { FC, useCallback, useMemo, useState, useEffect } from 'react';
-import { logger, Table } from '@percona/platform-core';
+import React, { FC, useCallback, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Table } from '@percona/platform-core';
 import { useStyles } from '@grafana/ui';
 import { Column, Row } from 'react-table';
-import { toast } from 'react-toastify';
+import { openNewTab } from 'core';
+import { getOrgTickets, getIsOrgPending, getOrgTicketsAction } from 'store/orgs';
 import { OrgTicket } from './TicketList.types';
 import { Messages } from './TicketList.messages';
-import { getTickets } from './TicketList.service';
 import { TicketStatus } from './TicketStatus';
 import { getStyles } from './TicketList.styles';
 
 export const TicketList: FC = () => {
   const styles = useStyles(getStyles);
-  const [tickets, setTickets] = useState<OrgTicket[]>([]);
-  const [pending, setPending] = useState(false);
+  const dispatch = useDispatch();
+  const tickets = useSelector(getOrgTickets);
+  const isOrgPending = useSelector(getIsOrgPending);
+
   const columns: Column<any>[] = useMemo(
     (): Array<Column<OrgTicket>> => [
       {
@@ -51,31 +54,17 @@ export const TicketList: FC = () => {
   const getRowProps = useCallback(({ id, original: { url } }: Row<OrgTicket>) => ({
     key: id,
     className: styles.row,
-    onClick: () => window.open(url, '_blank', 'noopener,noreferrer'),
+    onClick: () => openNewTab(url),
   }), [styles]);
 
   useEffect(() => {
-    const getData = async() => {
-      setPending(true);
-
-      try {
-        const ticketData = await getTickets();
-
-        setTickets(ticketData);
-      } catch (e) {
-        toast.error(Messages.errorFetching);
-        logger.error(e);
-      } finally {
-        setPending(false);
-      }
-    };
-
-    getData();
-  }, []);
+    dispatch(getOrgTicketsAction());
+  }, [dispatch]);
 
   return (
     <Table
-      pendingRequest={pending}
+      pendingRequest={isOrgPending}
+      emptyMessage={Messages.emptyMessage}
       totalItems={tickets.length}
       columns={columns}
       data={tickets}

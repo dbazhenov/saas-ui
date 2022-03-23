@@ -1,9 +1,9 @@
-import { EditMemberFormFields, Member } from '../../../ManageOrganization.types';
+import { EditMemberFormFields } from 'pages/ManageOrganization/ManageOrganization.types';
+import { OrgMember } from 'store/types';
 
 export interface MemberEditModalProps {
   isVisible: boolean;
-  loading: boolean;
-  member: Member;
-  onSubmit: (formData: EditMemberFormFields) => Promise<void>;
+  member: OrgMember;
+  onSubmit: (formData: EditMemberFormFields) => void;
   onClose: () => void;
 }

@@ -1,22 +1,28 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Column } from 'react-table';
 import { Table } from '@percona/platform-core';
 import { useStyles } from '@grafana/ui';
+import { OrgMember } from 'store/types';
+import { getFirstOrgId, getOrgMembers, getIsOrgPending, searchOrgMembersAction } from 'store/orgs';
 import { ReactComponent as UserAvatar } from 'assets/user-avatar.svg';
 import { ReactComponent as Clock } from 'assets/clock.svg';
 import { getStyles } from './MembersList.styles';
 import { Messages } from './MembersList.messages';
-import { MembersListProps } from './MembersList.types';
-import { Member, MemberStatus } from '../ManageOrganization.types';
+import { MemberStatus } from '../ManageOrganization.types';
 import { MemberActions } from './MemberActions';
 
-export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
+export const MembersList: FC = () => {
   const styles = useStyles(getStyles);
-  const columns = useMemo<Column<Member>[]>(
+  const dispatch = useDispatch();
+  const pending = useSelector(getIsOrgPending);
+  const members = useSelector(getOrgMembers);
+  const orgId = useSelector(getFirstOrgId);
+  const columns = useMemo<Column<OrgMember>[]>(
     () => [
       {
         Header: Messages.name,
-        accessor: ({ firstName, lastName, status }: Member) => {
+        accessor: ({ firstName, lastName, status }: OrgMember) => {
           const fullName = `${firstName} ${lastName}`;
 
           return (
@@ -48,7 +54,7 @@ export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
       },
       {
         Header: Messages.actions,
-        accessor: (member: Member) => (
+        accessor: (member: OrgMember) => (
           <MemberActions member={member} />
         ),
         width: '5%',
@@ -57,6 +63,12 @@ export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
     [styles],
   ) as any;
 
+  useEffect(() => {
+    if (orgId && !pending && !members.length) {
+      dispatch(searchOrgMembersAction({ orgId }));
+    }
+  }, [dispatch, orgId, members, pending]);
+
   return (
     <div data-testid="members-list-wrapper" className={styles.tableWrapper}>
       <Table
@@ -64,7 +76,7 @@ export const MembersList: FC<MembersListProps> = ({ loading, members }) => {
         totalItems={members.length}
         columns={columns}
         emptyMessage={Messages.noData}
-        pendingRequest={loading}
+        pendingRequest={pending}
       />
     </div>
   );

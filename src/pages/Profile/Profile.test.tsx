@@ -5,9 +5,6 @@ import { TestContainer } from 'components/TestContainer';
 import * as authApi from 'core/api/auth';
 import { ProfilePage } from './Profile';
 
-jest.mock('core/api/auth');
-jest.mock('store/auth/auth.selectors');
-
 xdescribe('Profile Page', () => {
   test('has save button disabled at start-up', async () => {
     render(<TestContainer><ProfilePage /></TestContainer>);

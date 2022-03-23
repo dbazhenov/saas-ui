@@ -1,7 +1,9 @@
 import React, { FC } from 'react';
+import { useSelector } from 'react-redux';
 import { Modal, LoaderButton } from '@percona/platform-core';
 import { useStyles, Button, HorizontalGroup } from '@grafana/ui';
 import { Form, FormRenderProps } from 'react-final-form';
+import { getIsOrgPending } from 'store/orgs';
 import { getStyles } from './MemberDeleteModal.styles';
 import { Messages } from './MemberDeleteModal.messages';
 import { MemberDeleteModalProps } from './MemberDeleteModal.types';
@@ -9,11 +11,11 @@ import { MemberDeleteModalProps } from './MemberDeleteModal.types';
 export const MemberDeleteModal: FC<MemberDeleteModalProps> = ({
   member,
   isVisible,
-  loading,
   onClose,
   onSubmit,
 }) => {
   const styles = useStyles(getStyles);
+  const pending = useSelector(getIsOrgPending);
 
   return (
     <Modal
@@ -40,9 +42,9 @@ export const MemberDeleteModal: FC<MemberDeleteModalProps> = ({
                 data-testid="delete-member-submit-button"
                 className={styles.saveButton}
                 type="submit"
-                loading={loading}
+                loading={pending}
                 variant="destructive"
-                disabled={loading}
+                disabled={pending}
               >
                 {Messages.confirm}
               </LoaderButton>

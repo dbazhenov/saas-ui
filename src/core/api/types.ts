@@ -1,32 +1,25 @@
+import { MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
+import { AxiosRequestConfig } from 'axios';
+
 export interface RequestBody {
   [key: string]: any;
 }
 
-export interface RequestError {
+export interface RequestErrorData {
   code: number;
+  error: string;
   message: string;
+  details: any[];
 }
 
-export interface SignInRequest {
-  email: string;
-  password: string;
-}
-
-export interface SignInResponse {
-  sessionId: string;
-  expireTime?: string;
-}
-
-export interface SignUpRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
-
-export interface SignUpResponse {
-  sessionId: string;
-  expireTime?: string;
+// We could use AxiosResponse here, but the types are not complete there
+export interface AxiosErrorResponse {
+  headers: Headers;
+  config: AxiosRequestConfig;
+  data: RequestErrorData;
+  request: XMLHttpRequest;
+  status: number;
+  statusText: string;
 }
 
 export interface GetProfileResponse {
@@ -44,14 +37,6 @@ export interface ResetPasswordRequest {
   email: string;
 }
 
-export type SignUp = ({ email, firstName, lastName, password }: SignUpRequest) =>
-  Promise<SignUpResponse>;
-
-export type GetProfile = () => Promise<GetProfileResponse>;
-
-export type UpdateProfile = ({ firstName, lastName }: UpdateProfileRequest) =>
-  Promise<Response>;
-
 export interface OrganizationResponse {
   id: string;
   name: string;
@@ -60,16 +45,16 @@ export interface OrganizationResponse {
 }
 
 export interface SearchOrganizationsResponse {
-  orgs: OrganizationResponse[],
+  orgs: OrganizationResponse[];
 }
 
 export interface OrganizationMembersResponse {
-  member_id: string;
-  username: string;
   first_name: string;
   last_name: string;
-  role: string;
-  status: string;
+  member_id: string;
+  role: MemberRole;
+  status: MemberStatus;
+  username: string;
 }
 
 export interface SearchOrganizationMembersResponse {
@@ -82,7 +67,6 @@ export enum OrgTicketStatus {
   Resolved = 'Resolved',
 }
 
-
 export interface OrganizationTicketsResponse {
   number: string;
   short_description: string;
@@ -91,12 +75,12 @@ export interface OrganizationTicketsResponse {
   department: string;
   requester: string;
   task_type: string;
-  url: string
+  url: string;
   state: OrgTicketStatus;
 }
 
 export interface SearchOrganizationTicketsResponse {
-  tickets: OrganizationTicketsResponse[],
+  tickets: OrganizationTicketsResponse[];
 }
 
 export interface GetOrganizationResponse {
@@ -104,11 +88,19 @@ export interface GetOrganizationResponse {
   contacts: ContactsResponse;
 }
 
+export interface CreateOrganizationResponse {
+  org: OrganizationResponse;
+}
+
+export interface EditOrganizationResponse {
+  org: OrganizationResponse;
+}
+
 export interface ContactsResponse {
   customer_success: {
     email: string;
     name: string;
-  }
+  };
   new_ticket_url: string;
 }
 
@@ -123,9 +115,7 @@ interface PmmInstance {
 }
 
 export interface SearchOrganizationInventoryResponse {
-  data: {
-    inventory: PmmInstance[];
-  }
+  inventory: PmmInstance[];
 }
 
 export interface OrganizationEntitlement {

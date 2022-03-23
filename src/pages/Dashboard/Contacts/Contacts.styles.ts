@@ -9,7 +9,7 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
   card: css`
     color: ${colors.text};
     flex: 1 1 calc(50% - ${spacing.lg});
-    background-color: ${colors.pageHeaderBg};
+    background-color: ${colors.panelBg};
 
     @media (max-width: 850px) {
       flex: 0 0 100%;

@@ -1,4 +1,5 @@
-import { openMembersTab, openViewOrganizationPage, prepareOrganizationWithAdminAndTechnical } from './helper';
+import { organizationPage } from 'pages/organization.page';
+import { openViewOrganizationPage, prepareOrganizationWithAdminAndTechnical } from './helper';
 
 context('Percona Customer', () => {
   let snAccount;
@@ -16,7 +17,7 @@ context('Percona Customer', () => {
     it('SAAS-T223 SAAS-T174 members list', () => {
       cy.loginByOktaApi(snAccount.admin2.email, snAccount.admin2.password);
       openViewOrganizationPage();
-      openMembersTab();
+      organizationPage.methods.openMembersTab();
 
       const users = [
         {

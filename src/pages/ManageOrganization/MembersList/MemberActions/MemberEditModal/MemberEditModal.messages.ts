@@ -4,4 +4,5 @@ export const Messages = {
   name: 'Name',
   role: 'Role',
   save: 'Save',
+  cancel: 'Cancel',
 };

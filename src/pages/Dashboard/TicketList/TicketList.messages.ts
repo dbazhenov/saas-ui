@@ -9,4 +9,5 @@ export const Messages = {
     date: 'Creation Date',
   },
   errorFetching: 'Error fetching tickets',
+  emptyMessage: 'No tickets found',
 };

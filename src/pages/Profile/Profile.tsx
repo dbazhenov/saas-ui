@@ -1,12 +1,13 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
+import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from '@grafana/ui';
 import { LoaderButton, TextInputField, validators } from '@percona/platform-core';
 import { Routes } from 'core/routes';
 import { MAX_NAME_LENGTH } from 'core/constants';
+import { updateProfileAction, getAuth, getProfileAction } from 'store/auth';
 import { UpdateProfilePayload } from 'store/types';
 import { PrivateLayout } from 'components/Layouts';
-import { useUserInfo } from 'core/hooks';
 import { getStyles } from './Profile.styles';
 import { Messages } from './Profile.messages';
 
@@ -15,14 +16,21 @@ const nameValidators = [required, maxLength(MAX_NAME_LENGTH)];
 
 export const ProfilePage: FC = () => {
   const styles = useStyles(getStyles);
-  const [user, setUser] = useUserInfo();
-  const { pending, email, firstName, lastName } = user;
+  const dispatch = useDispatch();
+  const { pending, email, firstName, lastName } = useSelector(getAuth);
+
+  useEffect(() => {
+    if (!email && !pending) {
+      dispatch(getProfileAction());
+    }
+
+  }, [dispatch, email, pending]);
 
   const handleUpdateProfileSubmit = useCallback(
     (payload: UpdateProfilePayload) => {
-      setUser(payload);
+      dispatch(updateProfileAction(payload));
     },
-    [setUser],
+    [dispatch],
   );
 
   return (
@@ -50,7 +58,7 @@ export const ProfilePage: FC = () => {
               </div>
               <div className={styles.emailFieldWrapper}>
                 <TextInputField disabled label={Messages.emailLabel} name="email" />
-                <a href={Routes.editProfile} target="_blank" data-testid="profile-edit-button" className={styles.externalLink} rel="noreferrer">
+                <a href={Routes.editProfile} target="_blank" data-testid="profile-edit-button" className={styles.externalLink} rel="noreferrer noopener">
                   {Messages.editProfile}
                 </a>
               </div>

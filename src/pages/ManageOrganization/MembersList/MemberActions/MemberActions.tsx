@@ -1,56 +1,54 @@
-import React, { FC, useContext, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useStyles, IconButton } from '@grafana/ui';
+import { getAuth } from 'store/auth';
+import { editOrgMemberAction, getFirstOrgId, removeOrgMemberAction } from 'store/orgs';
 import { getStyles } from './MemberActions.styles';
 import { MemberActionsProps } from './MemberActions.types';
 import { EditMemberFormFields, MemberRole } from '../../ManageOrganization.types';
 import { Messages } from './MembersActions.messages';
-import { ManageOrganizationProvider } from '../../ManageOrganization.provider';
 import { MemberEditModal } from './MemberEditModal';
 import { MemberDeleteModal } from './MemberDeleteModal';
 
 export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
-  const {
-    onEditMemberSubmit,
-    onDeleteMemberSubmit,
-    loading,
-    userInfo,
-    userRole,
-  } = useContext(ManageOrganizationProvider);
   const { memberId } = member;
   const styles = useStyles(getStyles);
+  const { email, orgRole } = useSelector(getAuth);
+  const orgId = useSelector(getFirstOrgId);
+  const dispatch = useDispatch();
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const isActionDisabled = useMemo(
-    () => userInfo.email === member.email || userRole !== MemberRole.admin,
-    [userInfo.email, userRole, member],
+    () => email === member.email || orgRole !== MemberRole.admin,
+    [email, orgRole, member],
   );
 
   const handleDeleteModalClose = () => {
-    setIsDeleteModalVisible((currentValue) => !currentValue);
+    setIsDeleteModalVisible(false);
   };
 
   const handleDeleteMemberClick = () => {
     setIsDeleteModalVisible(true);
   };
 
-  const handleDeleteMemberSubmit = async () => {
+  const handleDeleteMemberSubmit = useCallback(() => {
     setIsDeleteModalVisible(false);
-    await onDeleteMemberSubmit({ memberId });
-  };
+    dispatch(removeOrgMemberAction({ orgId, memberId }));
+  }, [dispatch, orgId, memberId]);
 
   const handleEditModalClose = () => {
-    setIsEditModalVisible((currentValue) => !currentValue);
+    setIsEditModalVisible(false);
   };
 
   const handleEditMemberClick = () => {
     setIsEditModalVisible(true);
   };
 
-  const handleEditMemberSubmit = async (formData: EditMemberFormFields) => {
+  const handleEditMemberSubmit = useCallback((formData: EditMemberFormFields) => {
     setIsEditModalVisible(false);
-    await onEditMemberSubmit({ role: formData.role, memberId });
-  };
+    dispatch(editOrgMemberAction({ orgId, memberId, role: formData.role.value! }));
+  }, [dispatch, orgId, memberId]);
 
   return (
     <>
@@ -74,14 +72,12 @@ export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
       </div>
       <MemberEditModal
         member={member}
-        loading={loading}
         isVisible={isEditModalVisible}
         onSubmit={handleEditMemberSubmit}
         onClose={handleEditModalClose}
       />
       <MemberDeleteModal
         member={member}
-        loading={loading}
         isVisible={isDeleteModalVisible}
         onSubmit={handleDeleteMemberSubmit}
         onClose={handleDeleteModalClose}
