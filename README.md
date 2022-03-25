@@ -6,6 +6,10 @@ SaaS UI.
 
 ### Developing locally
 
+Install dependencies:
+
+`make init`
+
 Run a local dev environment with one command:
 
 `make dev`
