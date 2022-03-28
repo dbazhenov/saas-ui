@@ -27,15 +27,15 @@ context('Free user', () => {
     const date = new Date().toLocaleDateString();
 
     cy.contains(gettingStartedPage.constants.labels.addOrganization).isVisible().click();
-    cy.findByTestId('create-organization-form')
-      .isVisible()
-      .findByTestId('organizationName-text-input')
+    cy.findByTestId(organizationPage.locators.createOrgForm).isVisible();
+    cy.findByTestId(organizationPage.locators.createOrgNameInput).isEnabled();
+    cy.findByTestId(organizationPage.locators.createOrgNameInput)
       .as('orgNameField')
       .hasAttr('placeholder', organizationPage.constants.labels.orgNamePlaceholder)
       .type('test')
       .clear();
-    cy.findByTestId('create-organization-submit-button').as('createButton').isDisabled();
-    cy.findByTestId('organizationName-field-error-message').hasText(MESSAGES.REQUIRED_FIELD);
+    cy.findByTestId(organizationPage.locators.createOrgSubmitButton).as('createButton').isDisabled();
+    cy.findByTestId(organizationPage.locators.createOrgNameInputError).hasText(MESSAGES.REQUIRED_FIELD);
 
     cy.get('@orgNameField').type(orgName);
     cy.get('@createButton').click();

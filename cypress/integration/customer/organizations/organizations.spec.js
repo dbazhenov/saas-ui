@@ -38,7 +38,6 @@ context('Percona Customer', () => {
       cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
         .should('be.visible')
         .click();
-
       // open Members tab
       organizationPage.methods.openMembersTab();
 

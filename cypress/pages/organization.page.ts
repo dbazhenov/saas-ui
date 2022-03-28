@@ -24,6 +24,10 @@ export const organizationPage = {
     deleteMemberModalContent: 'modal-content',
     manageOrgTab: 'manage-organization-tab',
     orgTableRow: 'table-tbody-tr',
+    createOrgNameInput: 'organizationName-text-input',
+    createOrgNameInputError: 'organizationName-field-error-message',
+    createOrgForm: 'create-organization-form',
+    createOrgSubmitButton: 'create-organization-submit-button',
   },
   methods: {
     openMembersTab: () => openMembersTab(),

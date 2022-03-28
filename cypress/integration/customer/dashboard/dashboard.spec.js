@@ -2,7 +2,6 @@ import { getUser } from 'pages/auth/getUser';
 import { commonPage } from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
 import { LeftMainMenuLinks } from 'pages/helpers/commonPage.helper';
-import { timeouts } from '../../../fixtures/timeouts';
 import { createOrgAndAddUsers, getOrgAndAddUsers } from './helper';
 
 context('Dashboard Tests for customers', () => {
@@ -84,9 +83,7 @@ context('Dashboard Tests for customers', () => {
     cy.loginByOktaApi(nonSnUser.email, nonSnUser.password);
     commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
     // Wait for loading overlays to disappear only then table can become visible
-    cy.findAllByTestId(dashboardPage.locators.loadingOverlaySpinners, { timeout: timeouts.HALF_MIN }).should(
-      'not.exist',
-    );
+    dashboardPage.methods.waitForDashboardToLoad();
     // Check if table is not present.
     cy.findByTestId(dashboardPage.locators.ticketSection).should('not.exist');
     cy.removeCurrentUserAccessToken();
@@ -100,6 +97,7 @@ context('Dashboard Tests for customers', () => {
         }),
     );
     commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
+    dashboardPage.methods.waitForDashboardToLoad();
     cy.window()
         .then((win) => cy.stub(win.navigator.clipboard, 'writeText'))
         .as('clipBoardContent');

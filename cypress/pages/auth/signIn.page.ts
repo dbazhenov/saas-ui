@@ -7,7 +7,7 @@ const signInPage = {
       links: {},
     },
     locators: {
-        emailInput: '[id=okta-signin-username]',
+        emailInput: '[id=idp-discovery-username]',
         passwordInput: '[id=okta-signin-password]',
         signInButton: '[id=okta-signin-submit]',
     },

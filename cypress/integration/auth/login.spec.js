@@ -34,8 +34,8 @@ context('Login', () => {
 
   it('SAAS-T111 SAAS-T81 - should be able to login', () => {
     loginButton().click();
-    cy.get('#okta-signin-submit').should('be.visible');
-    cy.get('#okta-signin-username').type(newUser.email);
+    cy.get('#idp-discovery-username').should('be.visible').type(newUser.email);
+    cy.get('#idp-discovery-submit').click();
     cy.get('#okta-signin-password').type(newUser.password);
     cy.get('#okta-signin-submit').hasAttr('value', 'Sign In').click().wait(TIMEOUTS.FIVE_SEC);
 

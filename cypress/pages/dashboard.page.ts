@@ -1,3 +1,5 @@
+import { waitForDashboardToLoad } from './helpers/dashboardPage.helper';
+
 const dashboardPage = {
   constants: {
     labels: {
@@ -41,7 +43,9 @@ const dashboardPage = {
     customerContactName: 'customer-contact-name',
     customerContactIcon: 'customer-contact-email-icon',
   },
-
+  methods: {
+    waitForDashboardToLoad: () => waitForDashboardToLoad(),
+  },
 };
 
 export default dashboardPage;
