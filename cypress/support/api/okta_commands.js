@@ -16,32 +16,37 @@ Cypress.Commands.add('loginByOktaApi', (username, password) =>
     })
     .then(({ body }) => {
       // eslint-disable-next-line no-underscore-dangle
-      const { user } = body._embedded;
-      const config = {
-        issuer: `${url}/oauth2/default`,
+      const authConfig = {
+        baseUrl: url,
         clientId: Cypress.env('oauth_client_id'),
-        pkce: true,
-        redirectUri: `${Cypress.config('baseUrl')}/login/callback`,
-        scope: ['percona', 'openid', 'email', 'profile'],
+        redirectUri: `${window.location.origin}/login/callback`, 
+        issuer: Cypress.env('oauth_dev_issuer_uri'),
+        features: {
+          registration: true,
+          rememberMe: true,
+          idpDiscovery: true,
+        },
+        authParams: {
+          pkce: true,
+        },
+        scopes: ['openid', 'profile', 'email', 'percona'],
+        postLogoutRedirectUri: window.location.origin,
+        idpDiscovery: {
+          requestContext: `${window.location.origin}/login/callback`,
+        },
+        idps: [
+          { type: 'GOOGLE', id: Cypress.env('google_idp_id') },
+          { type: 'GITHUB', id: Cypress.env('github_idp_id') },
+        ],
       };
-      const authClient = new OktaAuth(config);
+      const authClient = new OktaAuth(authConfig);
 
       return authClient.token.getWithoutPrompt({ sessionToken: body.sessionToken }).then(({ tokens }) => {
-        const userToken = {
-          token: tokens.accessToken.accessToken,
-          user: {
-            sub: user.id,
-            email: user.profile.login,
-            given_name: user.profile.firstName,
-            family_name: user.profile.lastName,
-            preferred_username: user.profile.login,
-          },
-        };
+        const userToken = { accessToken: tokens.accessToken, idToken: tokens.idToken };
 
         window.localStorage.setItem('okta-token-storage', JSON.stringify(userToken));
 
         cy.visit('/');
-        cy.findByTestId('login-button').click();
         profileIcon().isVisible();
       });
     }),

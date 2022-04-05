@@ -2,12 +2,16 @@ import { css } from 'emotion';
 import { GrafanaTheme } from '@grafana/data';
 
 export const getStyles = (theme: GrafanaTheme) => {
-  const { border, colors } = theme;
+  const { border, colors, spacing } = theme;
 
   const link = css`
-    &:hover,
-    &:active {
-      background-color: ${theme.isLight ? colors.bg3 : colors.bg1};
+    padding: 0 ${spacing.md};
+    text-decoration: none;
+    color: ${colors.text};
+    font-weight: 'regular';
+
+    img {
+      margin-right: 15px;
     }
   `;
 
@@ -33,7 +37,6 @@ export const getStyles = (theme: GrafanaTheme) => {
 
           li {
             height: 100%;
-            width: 60px;
             position: relative;
 
             & > * {
@@ -48,15 +51,6 @@ export const getStyles = (theme: GrafanaTheme) => {
     `,
     leftSide: css`
       flex: 1;
-
-      li::before {
-        content: '';
-        border-right: ${border.width.sm} solid ${menuBorderColor};
-        height: 100%;
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
     `,
     rightSide: css`
       color: ${colors.text};

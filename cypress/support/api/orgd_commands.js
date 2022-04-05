@@ -10,9 +10,7 @@ Cypress.Commands.add('apiCreateOrg', (accessToken, orgName = 'Test Organization'
     body: {
       name: orgName,
     },
-  }).then((res) => {
-    return res.body;
-  });
+  }).then((res) => res.body);
 });
 
 Cypress.Commands.add('apiGetOrg', (accessToken) => {

@@ -31,6 +31,7 @@ const signUpPage = {
       },
       links: {
         registerAddress: 'https://id-dev.percona.com/signin/register',
+        loginAddress: '/login',
         platformPrivacy: 'https://per.co.na/pmm/platform-privacy',
         platformTerms: 'https://per.co.na/pmm/platform-terms',
       },

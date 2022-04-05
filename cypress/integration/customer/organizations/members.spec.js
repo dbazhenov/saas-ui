@@ -17,6 +17,7 @@ context('Percona Customer', () => {
     it('SAAS-T223 SAAS-T174 members list', () => {
       cy.loginByOktaApi(snAccount.admin2.email, snAccount.admin2.password);
       openViewOrganizationPage();
+      cy.intercept('POST', '**/members:search').as('membersSearch').wait('@membersSearch');
       organizationPage.methods.openMembersTab();
 
       const users = [

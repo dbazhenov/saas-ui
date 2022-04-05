@@ -2,6 +2,7 @@ import {getUser} from 'pages/auth/getUser';
 import signUpPage from 'pages/auth/signUp.page';
 import loginPage from 'pages/loginPage';
 import signInPage from 'pages/auth/signIn.page';
+import { commonPage } from 'pages/common.page';
 
 context('Sign Up', () => {
     let newUser;
@@ -49,17 +50,18 @@ context('Sign Up', () => {
                 const activateLink = message.html.links
                     .find(({text}) => text.trim() === signUpPage.constants.labels.activateAccount).href;
 
-                /*
-                    cy.visit() cannot visit different page, that is why we are replacing address
-                 */
+                // cy.visit() cannot visit different page, that is why we are replacing address
                 cy.document().then((doc) => doc.location.replace(activateLink));
-                cy.findByTestId(loginPage.locators.loginButton).click();
                 cy.mailosaurDeleteMessage(message.id);
             });
+        cy.url().should('contain', signUpPage.constants.links.loginAddress);
+        cy.visit('');
+        cy.findByTestId(loginPage.locators.loginButton).click();
         cy.logoutUser();
         cy.findByTestId(loginPage.locators.loginButton).click();
         signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
-        cy.get(signInPage.locators.signInButton).isEnabled().click();
+        cy.get(signInPage.locators.signInButton).isEnabled().click();    
+        commonPage.methods.commonPageLoaded();        
     });
 
     it('SAAS-T85 - Verify Sign Up if user already has Percona account', () => {

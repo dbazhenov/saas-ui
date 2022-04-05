@@ -8,3 +8,8 @@ export enum LeftMainMenuLinks {
   gettingStarted = 'a[href*="/"]',
   dashboard = 'a[href*="/dashboard"]',
 }
+
+export const commonPageLoaded = () => {
+  cy.findByTestId(commonPage.locators.perconaLogo);
+  cy.findByTestId(commonPage.locators.profileToggle);
+};

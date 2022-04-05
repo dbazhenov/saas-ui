@@ -27,6 +27,7 @@ module.exports = (on, config) => {
   config.env.okta_token = process.env.OKTA_TOKEN;
   config.env.oauth_host = process.env.REACT_APP_OAUTH_DEV_HOST;
   config.env.oauth_client_id = process.env.REACT_APP_OAUTH_DEV_CLIENT_ID;
+  config.env.oauth_dev_issuer_uri = process.env.REACT_APP_OAUTH_DEV_ISSUER_URI;
 
   // This code executes before the browser launch
   on('before:browser:launch', (browser, launchOptions) => {
