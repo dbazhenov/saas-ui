@@ -117,6 +117,5 @@
   },
   "bugs": {
     "url": "https://jira.percona.com/browse/SAAS"
-  },
-  "proxy": "https://portal-dev.percona.com"
+  }
 }
