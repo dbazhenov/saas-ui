@@ -29,3 +29,5 @@ export const THEME_STORAGE_KEY = 'percona.saas.theme';
 export const MAX_NAME_LENGTH = 50;
 
 export const PASSWORD_MIN_LENGTH = 10;
+
+export const OKTA_TOKEN_STORE_LOCALSTORAGE_KEY = 'okta-token-storage';

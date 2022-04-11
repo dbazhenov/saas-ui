@@ -8,6 +8,7 @@ export const getStyles = (theme: GrafanaTheme) => {
     wrapper: css`
       display: flex;
       justify-content: center;
+      width: 100%;
     `,
     form: css`
       flex: 1;
@@ -32,16 +33,37 @@ export const getStyles = (theme: GrafanaTheme) => {
         }
       }
     `,
-    emailFieldWrapper: css`
-      margin-bottom: ${spacing.md};
-    `,
     buttonWrapper: css`
       display: flex;
       justify-content: flex-end;
+      margin-top: ${spacing.md};
+    `,
+    editProfileWrapper: css`
+      margin-top: ${spacing.md};
     `,
     externalLink: css`
       color: ${colors.linkExternal};
+      font-weight: ${typography.weight.semibold};
       text-decoration: none;
+    `,
+    platformAccessTokenWrapper: css`
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    `,
+    platformAccessTokenFieldWrapper: css`
+      flex: 1;
+      > * {
+        // removes the margin-bottom from the last text field
+        // TODO: fix that in TextInputField (and the other input fields) - consider using field groups
+        margin-bottom: 0 !important;
+      }
+    `,
+    platformAccessTokenButtonWrapper: css`
+      > * {
+        // overrides the default padding for LinkButton
+        padding: 0 0 0 ${spacing.md};
+      }
     `,
   };
 };

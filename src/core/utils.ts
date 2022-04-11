@@ -2,7 +2,9 @@ import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { logger } from '@percona/platform-core';
 import { AxiosErrorResponse, RequestErrorData } from 'core/api/types';
-import { Messages } from 'core/api';
+import { OKTA_TOKEN_STORE_LOCALSTORAGE_KEY } from 'core/constants';
+import { Messages as APIMessages } from 'core/api';
+import { Messages } from './messages';
 
 export const openNewTab = (url: string) => {
   window.open(url, '_blank', 'noreferrer noopener');
@@ -19,7 +21,7 @@ export const isAxiosError = <T = any>(x: any): x is AxiosError<T> => typeof x.is
 export const isApiError = (x: any): x is RequestErrorData => typeof x.code === 'number';
 
 export const getErrorMessage = (response: AxiosErrorResponse): string =>
-  response?.data?.message ?? Messages.genericAPIFailure;
+  response?.data?.message ?? APIMessages.genericAPIFailure;
 
 export const logError = (err: any) => logger.error(err?.response?.data?.message || err);
 
@@ -38,3 +40,34 @@ export const omit = (keys: string[]) => (obj: AnObject) =>
 
     return acc;
   }, {});
+
+export const getPlatformAccessToken = (): string => {
+  try {
+    const oktaTokenStorageRaw = localStorage.getItem(OKTA_TOKEN_STORE_LOCALSTORAGE_KEY);
+
+    if (oktaTokenStorageRaw === null) {
+      toast.error(Messages.platformAccessTokenNotFound);
+
+      return '';
+    }
+
+    const oktaTokenStorage = JSON.parse(oktaTokenStorageRaw);
+
+    return oktaTokenStorage.accessToken.accessToken;
+  } catch (e) {
+    console.error(e);
+    toast.error(Messages.platformAccessTokenNotFound);
+
+    return '';
+  }
+};
+
+export const copyToClipboard = async (text: string) => {
+  if (!navigator.clipboard) {
+    toast.error(Messages.clipboardNotAccessible);
+
+    return;
+  }
+
+  await navigator.clipboard.writeText(text);
+};
