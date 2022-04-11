@@ -26,4 +26,11 @@ export const getStyles = ({ border, colors, spacing, typography }: GrafanaTheme)
     border-radius: ${border.radius.lg};
     padding: ${spacing.lg};
   `,
+  linkWrapper: css`
+    text-align: right;
+    padding: ${spacing.sm}
+  `,
+  externalLink: css`
+    color: ${colors.linkExternal};
+  `,
 });

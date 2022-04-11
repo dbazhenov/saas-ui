@@ -4,9 +4,12 @@ import { IconLink } from 'components';
 import { Routes } from 'core/routes';
 import dotCircle from 'assets/dot-circle.svg';
 import dashboard from 'assets/dashboard.svg';
+import organization from 'assets/percona-sidebar-organization.svg';
+import instances from 'assets/percona-sidebar-instances.svg';
 import sidebarBlog from 'assets/percona-sidebar-blog.svg';
 import sidebarDocs from 'assets/percona-sidebar-docs.svg';
 import sidebarForum from 'assets/percona-sidebar-forum.svg';
+import help from 'assets/percona-sidebar-help.svg';
 import { ResourceLink } from 'components/ResourceLink';
 import { getStyles } from './SideMenu.styles';
 import { Messages } from './SideMenu.messages';
@@ -33,6 +36,20 @@ export const SideMenu: FC = () => {
         >
           {Messages.dashboard}
         </IconLink>
+        <IconLink
+          icon={organization}
+          to={Routes.organization}
+          alt={Messages.organization}
+        >
+          {Messages.organization}
+        </IconLink>
+        <IconLink
+          icon={instances}
+          to={Routes.instances}
+          alt={Messages.instances}
+        >
+          {Messages.instances}
+        </IconLink>
       </section>
       <section data-testid="side-menu-resources-section" className={styles.section}>
         <header className={styles.navSectionLabel}>{Messages.resources}</header>
@@ -43,6 +60,7 @@ export const SideMenu: FC = () => {
           />
           <ResourceLink text={Messages.blogs} icon={sidebarBlog} href={resourcesLinks.blogs} />
           <ResourceLink text={Messages.forum} icon={sidebarForum} href={resourcesLinks.forum} />
+          <ResourceLink text={Messages.help} icon={help} href={resourcesLinks.help} />
       </section>
     </nav>
   );

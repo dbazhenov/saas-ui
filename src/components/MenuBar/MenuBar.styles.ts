@@ -2,20 +2,16 @@ import { css } from 'emotion';
 import { GrafanaTheme } from '@grafana/data';
 
 export const getStyles = (theme: GrafanaTheme) => {
-  const { border, colors, spacing } = theme;
+  const { border, colors, spacing, isLight, typography } = theme;
 
   const link = css`
-    padding: 0 ${spacing.md};
-    text-decoration: none;
-    color: ${colors.text};
-    font-weight: 'regular';
-
-    img {
-      margin-right: 15px;
+    &:hover,
+    &:active {
+      background-color: ${isLight ? colors.bg3 : colors.bg1};
     }
   `;
 
-  const menuBorderColor = theme.isLight ? colors.border1 : colors.border2;
+  const menuBorderColor = isLight ? colors.border1 : colors.border2;
 
   return {
     menuBar: css`
@@ -37,6 +33,7 @@ export const getStyles = (theme: GrafanaTheme) => {
 
           li {
             height: 100%;
+            min-width: 60px;
             position: relative;
 
             & > * {
@@ -47,6 +44,16 @@ export const getStyles = (theme: GrafanaTheme) => {
             }
           }
         }
+      }
+    `,
+    logo: css`
+      padding: 0 ${spacing.md};
+      text-decoration: none;
+      color: ${colors.text};
+      font-weight: ${typography.weight.regular};
+
+      img {
+        margin-right: 15px;
       }
     `,
     leftSide: css`

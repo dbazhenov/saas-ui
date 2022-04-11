@@ -47,7 +47,7 @@ export const MenuBar: FC = () => {
             <nav>
               <ul>
                 <li>
-                  <Link to={Routes.root} data-testid="menu-bar-home-link" className={styles.link}>
+                  <Link to={Routes.root} data-testid="menu-bar-home-link" className={styles.logo}>
                     <img className={styles.perconaLogo} src={logo} alt={Messages.logoAlt} data-testid="menu-bar-percona-logo" />
                     <h1>{Messages.portal}</h1>
                   </Link>
