@@ -1,8 +1,7 @@
 import {getUser} from 'pages/auth/getUser';
 import signUpPage from 'pages/auth/signUp.page';
-import loginPage from 'pages/loginPage';
 import signInPage from 'pages/auth/signIn.page';
-import { commonPage } from 'pages/common.page';
+import commonPage from 'pages/common.page';
 
 context('Sign Up', () => {
     let newUser;
@@ -11,8 +10,8 @@ context('Sign Up', () => {
     beforeEach(() => {
         newUser = getUser();
         cy.visit('/');
-        cy.findByTestId(loginPage.locators.signUpLink).invoke('removeAttr', 'target').click();
-        cy.url().should('equal', signUpPage.constants.links.registerAddress);
+        cy.get(signInPage.locators.signUpLink).click();
+        cy.get(signUpPage.locators.registrationContainer).isVisible();
     });
 
     it('SAAS-T78 - Verify Sign Up on Percona Portal', () => {
@@ -31,7 +30,7 @@ context('Sign Up', () => {
         /*
             Due to timing issue cypress was finding link in sign up form.
             That is why we are looking inside registration complete container
-         */
+        */
         cy.get(signUpPage.locators.registrationCompleteContainer).then((element) => {
             cy.get(signUpPage.locators.registrationCompleteBackLink, {withinSubject: element})
                 .hasText(signUpPage.constants.messages.verificationEmailBackToSignIn)
@@ -56,9 +55,9 @@ context('Sign Up', () => {
             });
         cy.url().should('contain', signUpPage.constants.links.loginAddress);
         cy.visit('');
-        cy.findByTestId(loginPage.locators.loginButton).click();
+        signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
+        cy.get(signInPage.locators.signInButton).isEnabled().click();    
         cy.logoutUser();
-        cy.findByTestId(loginPage.locators.loginButton).click();
         signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
         cy.get(signInPage.locators.signInButton).isEnabled().click();    
         commonPage.methods.commonPageLoaded();        
@@ -74,7 +73,7 @@ context('Sign Up', () => {
     });
 
     it('SAAS-T113 - Verify Sign up redirects to Okta widget', () => {
-        cy.url().should('equal', signUpPage.constants.links.registerAddress);
+        cy.url().should('contain', signUpPage.constants.links.loginAddress);
         cy.get(signUpPage.locators.inputEmail)
             .children()
             .hasAttr('placeholder', signUpPage.constants.labels.emailPlaceholder);
@@ -90,7 +89,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.termsOfServiceLabel).should((element) => {
             const trimmedText = element.text().replace(/\s\s+/g, ' ').trim();
 
-            expect(trimmedText).to.equal(signUpPage.constants.messages.termsOfServiceText);
+            expect(trimmedText).to.contain(signUpPage.constants.messages.termsOfServiceText);
         })
             .isVisible().find('a').hasAttr('href', signUpPage.constants.links.platformTerms)
             .next().hasAttr('href', signUpPage.constants.links.platformPrivacy);
@@ -109,6 +108,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({});
         cy.reload();
+        cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm({
             email: 'email@test.com.test',
             firstName: newUser.firstName,
@@ -128,6 +128,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({firstName: true, lastName: true});
         cy.reload();
+        cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm({
             email: newUser.email,
             lastName: newUser.lastName,
@@ -137,6 +138,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({firstName: true});
         cy.reload();
+        cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm({
             email: newUser.email,
             firstName: newUser.firstName,
@@ -146,6 +148,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({lastName: true});
         cy.reload();
+        cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm({
             firstName: newUser.firstName,
             lastName: newUser.label,
@@ -155,6 +158,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({email: true});
         cy.reload();
+        cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm(newUser);
         cy.get(signUpPage.locators.termsOfService).check({force: true});
         cy.get(signUpPage.locators.registerButton).isEnabled();

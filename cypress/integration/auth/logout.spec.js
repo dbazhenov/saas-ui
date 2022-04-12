@@ -1,6 +1,6 @@
-import { loginButton } from 'pages/auth/selectors';
-import { dropdownMenu, logoutButton, profileIcon } from 'pages/main/selectors';
 import { getUser } from 'pages/auth/getUser';
+import commonPage from 'pages/common.page';
+import signInPage from 'pages/auth/signIn.page';
 
 const newUser = getUser();
 
@@ -11,9 +11,8 @@ context('Logout', () => {
   });
 
   it('SAAS-T80 - should be able to logout', () => {
-    profileIcon().click();
-    dropdownMenu().isVisible();
-    logoutButton().click();
-    loginButton().isVisible();
+    commonPage.methods.uiLogoutUser();
+    cy.visit('');
+    signInPage.methods.isSignInPageDisplayed();
   });
 });
