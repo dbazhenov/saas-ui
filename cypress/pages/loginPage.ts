@@ -6,6 +6,7 @@ const loginPage = {
   },
   locators: {
     signUpLink: 'signup-link',
+    loginButton: 'login-button',
   },
   methods: {},
 };

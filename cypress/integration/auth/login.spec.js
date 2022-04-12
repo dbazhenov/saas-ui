@@ -1,7 +1,9 @@
+import { loginButton, loginHelpLink, resetPasswordLink, signUpLink } from 'pages/auth/selectors';
 import { pageDetailsMap, Pages } from 'pages/common/constants';
 import { getUser } from 'pages/auth/getUser';
-import signInPage from 'pages/auth/signIn.page';
-import commonPage from 'pages/common.page';
+import { profileIcon } from 'pages/main/selectors';
+import { FORGOT_PASSWORD_LINK, HELP_LINK, SIGNUP_LINK } from 'pages/auth/constants';
+import { timeouts as TIMEOUTS } from '../../fixtures/timeouts';
 
 const newUser = getUser();
 
@@ -20,20 +22,25 @@ context('Login', () => {
   });
 
   it('SAAS-T200 - should be able to see landing page form', () => {
-    cy.get(signInPage.locators.emailInput).isVisible();
-    cy.get(signInPage.locators.nextButton)
-      .isEnabled()
-      .should('have.value', signInPage.constants.messages.nextButtonText);
-    cy.get(signInPage.locators.formHeader).hasText(signInPage.constants.messages.formHeaderText);
-    cy.get(signInPage.locators.needHelp).hasText(signInPage.constants.messages.needHelp).click();
-    cy.get(signInPage.locators.forgotPassword).hasText(signInPage.constants.messages.forgotPassword);
-    cy.get(signInPage.locators.helpLink).hasText(signInPage.constants.messages.helpLink);
-    cy.get(signInPage.locators.signUpLink).hasText(signInPage.constants.messages.signUpLink);
+    loginButton().isVisible().hasText('Login with Percona Account');
+    signUpLink().isVisible().hasAttr('href', SIGNUP_LINK).hasAttr('target', '_blank').hasText('Sign up');
+    resetPasswordLink()
+      .isVisible()
+      .hasAttr('href', FORGOT_PASSWORD_LINK)
+      .hasAttr('target', '_blank')
+      .hasText('Reset password');
+    loginHelpLink().isVisible().hasAttr('href', HELP_LINK).hasAttr('target', '_blank').hasText('Help');
   });
 
   it('SAAS-T111 SAAS-T81 - should be able to login', () => {
-    signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
-    cy.get(signInPage.locators.signInButton).click();
-    commonPage.methods.commonPageLoaded();
+    loginButton().click();
+    cy.get('#idp-discovery-username').should('be.visible').type(newUser.email);
+    cy.get('#idp-discovery-submit').click();
+    cy.get('#okta-signin-password').type(newUser.password);
+    cy.get('#okta-signin-submit').hasAttr('value', 'Sign In').click().wait(TIMEOUTS.FIVE_SEC);
+
+    cy.findByTestId('getting-started-container', { timeout: TIMEOUTS.TEN_SEC }).should('be.visible');
+    cy.url().should('be.equal', `${Cypress.config('baseUrl')}/`);
+    profileIcon().isVisible();
   });
 });

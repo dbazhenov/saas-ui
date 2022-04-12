@@ -1,5 +1,5 @@
 import { getUser } from 'pages/auth/getUser';
-import commonPage from 'pages/common.page';
+import { commonPage } from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
 import {LeftMainMenuLinks} from 'pages/helpers/commonPage.helper';
 

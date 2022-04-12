@@ -1,35 +1,22 @@
-import { fillOutSignInUserDetails, isSignInPageDisplayed } from './helpers/signIn.helper';
+import { fillOutSignInUserDetails } from './helpers/signIn.helper';
 
 const signInPage = {
-  constants: {
-    labels: {},
-    messages: {
-      forgotPassword: 'Forgot password?',
-      formHeaderText: 'Sign in to Percona Platform',
-      helpLink: 'Help',
-      needHelp: 'Need help signing in?',
-      nextButtonText: 'Next',
-      signUpLink: 'Create one',
+    constants: {
+      labels: {},
+      messages: {},
+      links: {},
+    },
+    locators: {
+        emailInput: '[id=idp-discovery-username]',
+        passwordInput: '[id=okta-signin-password]',
+        signInButton: '[id=okta-signin-submit]',
     },
     links: {},
-  },
-  locators: {
-    emailInput: '[id=idp-discovery-username]',
-    forgotPassword: '[data-se=forgot-password]',
-    formHeader: '[data-se=o-form-head]',
-    helpLink: '[data-se=help-link]',
-    needHelp: '[data-se=needhelp]',
-    nextButton: '[id=idp-discovery-submit]',
-    passwordInput: '[id=okta-signin-password]',
-    signInButton: '[id=okta-signin-submit]',
-    signUpLink: '.registration-link',
-  },
-  links: {},
-  methods: {
-    fillOutSignInUserDetails: (email?: string, password?: string) =>
-      fillOutSignInUserDetails(email, password),
-    isSignInPageDisplayed: () => isSignInPageDisplayed(),
-  },
-};
+    methods: {
+        fillOutSignInUserDetails: (email?: string, password?: string) => {
+          fillOutSignInUserDetails(email, password);
+        },
+    },
+  };
 
 export default signInPage;

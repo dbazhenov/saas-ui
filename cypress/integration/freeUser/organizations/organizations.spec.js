@@ -27,7 +27,8 @@ context('Free user', () => {
     const date = new Date().toLocaleDateString();
 
     cy.contains(gettingStartedPage.constants.labels.addOrganization).isVisible().click();
-    cy.intercept('POST', '**/company:search').as('companySearch').wait('@companySearch');
+    cy.intercept('**/company:search').as('searchCompany').wait('@searchCompany');
+    cy.findByTestId(organizationPage.locators.createOrgForm).isVisible();
     cy.findByTestId(organizationPage.locators.createOrgNameInput)
       .as('orgNameField')
       .hasAttr('placeholder', organizationPage.constants.labels.orgNamePlaceholder)

@@ -54,7 +54,6 @@ const signUpPage = {
     registrationCompleteDesc: '.desc',
     registrationCompleteBackLink: '[data-se="back-link"]',
     formErrorContainer: '[data-se="o-form-error-container"]',
-    registrationContainer: '#okta-sign-in',
   },
   methods: {
     fillOutSignUpForm: (user: User) => fillOutSignUpForm(user),
