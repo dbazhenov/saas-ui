@@ -75,7 +75,10 @@ export const getServiceNowOrganizationAction = createAsyncThunk<
     try {
       const { data } = await OrgAPI.getServiceNowOrganization(payload);
 
+      await dispatch(getOrganizationAction(data.org.id));
       await dispatch(searchOrgMembersAction({ orgId: data.org.id }));
+
+      toast.info(Messages.fromCustomerPortal, { autoClose: false });
 
       return data;
     } catch (err) {

@@ -19,7 +19,7 @@ export const getStyles = (theme: GrafanaTheme) => {
     header: css`
       align-items: center;
       display: flex;
-      font-size: ${typography.heading.h2};
+      font-size: ${typography.heading.h4};
 
       > h2 {
         margin: ${spacing.md} 0;

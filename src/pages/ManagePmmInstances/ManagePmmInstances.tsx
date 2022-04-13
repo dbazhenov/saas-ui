@@ -24,7 +24,7 @@ export const ManagePmmInstancesPage: FC = () => {
   }, [dispatch, orgId]);
 
   useEffect(() => {
-    if (!inventory.length && orgId) {
+    if (inventory == null && orgId) {
       dispatch(getInventoryAction(orgId));
     }
   }, [dispatch, inventory, orgId]);

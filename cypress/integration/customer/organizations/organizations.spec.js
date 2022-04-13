@@ -1,3 +1,4 @@
+import dashboardPage from 'pages/dashboard.page';
 import { organizationPage } from 'pages/organization.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
 import { timeouts } from '../../../fixtures/timeouts';
@@ -22,12 +23,10 @@ context('Percona Customer', () => {
 
       // login as admin and verify organization is created automatically
       cy.loginByOktaApi(snAccount.admin1.email, snAccount.admin1.password);
+      cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
+      cy.checkPopUpMessage(organizationPage.constants.messages.customerOrgFound);
       openViewOrganizationPage();
       verifyOrganizationName(snAccount.name);
-      cy.findByTestId('info-wrapper').should(
-        'have.text',
-        organizationPage.constants.messages.customerOrgFound,
-      );
     });
 
     it('SAAS-T207 SAAS-T218 technical user is added to members if org exists', () => {
@@ -35,6 +34,7 @@ context('Percona Customer', () => {
 
       // login as technical and access View Organization
       cy.loginByOktaApi(snAccount.technical.email, snAccount.technical.password);
+      cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
       cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
         .should('be.visible')
         .click();

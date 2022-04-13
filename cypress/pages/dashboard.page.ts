@@ -30,6 +30,7 @@ const dashboardPage = {
     },
   },
   locators: {
+    ticketTable: 'table',
     ticketSection: 'dashboard-ticket-section',
     tableHeader: 'table-thead-tr',
     tableBody: 'table-tbody-tr',

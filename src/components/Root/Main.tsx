@@ -4,7 +4,6 @@ import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { PublicRoute } from 'components';
 import {
   DashboardPage,
-  GettingStartedPage,
   LoginPage,
   ManageOrganizationPage,
   ManagePmmInstancesPage,
@@ -17,7 +16,7 @@ export const Main: FC = () => (
   <Switch>
     <Route path={Routes.loginCallback} component={LoginCallback} />
     <SecureRoute exact path={Routes.root}>
-      <GettingStartedPage />
+      <DashboardPage />
     </SecureRoute>
     <PublicRoute exact path={Routes.login}>
       <LoginPage />
@@ -30,9 +29,6 @@ export const Main: FC = () => (
     </SecureRoute>
     <SecureRoute exact path={Routes.instances}>
       <ManagePmmInstancesPage />
-    </SecureRoute>
-    <SecureRoute exact path={Routes.dashboard}>
-      <DashboardPage />
     </SecureRoute>
     <SecureRoute>
       <NotFound />

@@ -32,7 +32,7 @@ export enum OrganizationViewTabs {
 type OrganizationInfo = GetOrganizationResponse;
 export interface OrgsState {
   entitlements: OrganizationEntitlement[];
-  inventory: PmmInstance[];
+  inventory: PmmInstance[] | null;
   isOrgFromPortal: boolean;
   currentOrg: OrganizationInfo;
   orgs: Organization[];

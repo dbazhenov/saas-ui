@@ -1,14 +1,13 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { Icon, IconButton, Spinner, useStyles } from '@grafana/ui';
+import { IconButton, Spinner, useStyles } from '@grafana/ui';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import {
   enterOrganizationEditing,
   getCurrentOrgCreationDate,
   getCurrentOrgName,
   getFirstOrgId,
-  getIsOrgFromPortal,
   getIsOrgPending,
   getOrganizationAction,
   setOrgDetailsSeen,
@@ -24,7 +23,6 @@ export const OrganizationView: FC = () => {
   const orgName = useSelector(getCurrentOrgName);
   const companyName = useSelector(getUserCompanyName);
   const orgCreationDate = useSelector(getCurrentOrgCreationDate);
-  const isOrgFromPortal = useSelector(getIsOrgFromPortal);
   const pending = useSelector(getIsOrgPending);
   const [displayName, setDisplayName] = useState<string>();
 
@@ -70,12 +68,6 @@ export const OrganizationView: FC = () => {
                   <span>
                     {Messages.creationDate}: <strong>{orgCreationDate}</strong>
                   </span>
-                )}
-                {!isOrgFromPortal && (
-                  <div data-testid="info-wrapper" className={styles.infoWrapper}>
-                    <Icon className={styles.icon} name="info-circle" />
-                    <span>{Messages.fromCustomerPortal}</span>
-                  </div>
                 )}
                 {!companyName && (
                   <div className={styles.actions}>

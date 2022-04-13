@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import { useStyles } from '@grafana/ui';
 import { IconLink } from 'components';
 import { Routes } from 'core/routes';
-import dotCircle from 'assets/dot-circle.svg';
 import dashboard from 'assets/dashboard.svg';
 import organization from 'assets/percona-sidebar-organization.svg';
 import instances from 'assets/percona-sidebar-instances.svg';
@@ -23,15 +22,8 @@ export const SideMenu: FC = () => {
       <section data-testid="side-menu-main-section" className={styles.section}>
         <header className={styles.navSectionLabel}>{Messages.main}</header>
         <IconLink
-          icon={dotCircle}
-          to={Routes.root}
-          alt={Messages.gettingStarted}
-        >
-          {Messages.gettingStarted}
-        </IconLink>
-        <IconLink
           icon={dashboard}
-          to={Routes.dashboard}
+          to={Routes.root}
           alt={Messages.dashboard}
         >
           {Messages.dashboard}

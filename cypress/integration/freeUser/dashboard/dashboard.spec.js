@@ -1,7 +1,5 @@
 import { getUser } from 'pages/auth/getUser';
-import { commonPage } from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
-import {LeftMainMenuLinks} from 'pages/helpers/commonPage.helper';
 
 context('Dashboard Tests for Free user', () => {
   let newUser;
@@ -15,7 +13,6 @@ context('Dashboard Tests for Free user', () => {
   });
 
   it('SAAS-T198 - Verify free account user is not able to get organization tickets', () => {
-    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
     // Wait for loading overlays to disappear only then table can become visible
     dashboardPage.methods.waitForDashboardToLoad();
     // Check if table is not present.
@@ -23,7 +20,6 @@ context('Dashboard Tests for Free user', () => {
   });
 
   it('SAAS-T225 Verify Free account user is able to view Contacts (static)', () => {
-    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
     dashboardPage.methods.waitForDashboardToLoad();
     cy.contains(dashboardPage.constants.labels.perconaContacts).should('be.visible');
     cy.findByTestId(dashboardPage.locators.emailContactLink)

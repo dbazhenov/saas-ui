@@ -1,4 +1,5 @@
 import { getUser } from 'pages/auth/getUser';
+import dashboardPage from 'pages/dashboard.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
 import { organizationPage } from 'pages/organization.page';
 import { timeouts } from '../../../fixtures/timeouts';
@@ -24,6 +25,7 @@ context('Members tests for the Free Users', () => {
 
     it('SAAS-T158 Verify organization admin is able to edit member roles', () => {
         cy.loginByOktaApi(admin1User.email, admin1User.password);
+        dashboardPage.methods.waitForDashboardToLoad();
         // Navigate to the members page
         cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
             .should('be.visible')
@@ -60,6 +62,7 @@ context('Members tests for the Free Users', () => {
 
     it('SAAS-T175 Verify Technical User can view list of Org members in read-only mode', () => {
         cy.loginByOktaApi(technical1User.email, technical1User.password);
+        dashboardPage.methods.waitForDashboardToLoad();
         // Navigate to the members page
         cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
             .should('be.visible')
@@ -105,6 +108,7 @@ context('Members tests for the Free Users', () => {
 
     it('SAAS-T215 Verify admin is able to remove users from organization', () => {
         cy.loginByOktaApi(admin1User.email, admin1User.password);
+        dashboardPage.methods.waitForDashboardToLoad();
         // Navigate to the members page
         cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
           .should('be.visible')

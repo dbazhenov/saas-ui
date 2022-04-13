@@ -1,4 +1,5 @@
 import { getUser } from 'pages/auth/getUser';
+import dashboardPage from 'pages/dashboard.page';
 import { MESSAGES } from 'pages/common/constants';
 import { organizationPage } from 'pages/organization.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
@@ -26,9 +27,8 @@ context('Free user', () => {
   it('SAAS-T136 SAAS-T139 SAAS-T159 create organization', () => {
     const date = new Date().toLocaleDateString();
 
+    dashboardPage.methods.waitForDashboardToLoad();
     cy.contains(gettingStartedPage.constants.labels.addOrganization).isVisible().click();
-    cy.intercept('**/company:search').as('searchCompany').wait('@searchCompany');
-    cy.findByTestId(organizationPage.locators.createOrgForm).isVisible();
     cy.findByTestId(organizationPage.locators.createOrgNameInput)
       .as('orgNameField')
       .hasAttr('placeholder', organizationPage.constants.labels.orgNamePlaceholder)

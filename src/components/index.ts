@@ -5,3 +5,4 @@ export * from './Root';
 export * from './Routes';
 export * from './SideMenu';
 export * from './TestContainer';
+export * from './GettingStarted';

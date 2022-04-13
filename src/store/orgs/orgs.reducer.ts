@@ -22,7 +22,7 @@ import {
 
 const DEFAULT_STATE: OrgsState = {
   entitlements: [],
-  inventory: [],
+  inventory: null,
   isOrgFromPortal: false,
   members: [],
   orgs: [],

@@ -1,8 +1,7 @@
 import { getUser } from 'pages/auth/getUser';
-import { commonPage } from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
-import { LeftMainMenuLinks } from 'pages/helpers/commonPage.helper';
-import { createOrgAndAddUsers, getOrgAndAddUsers } from './helper';
+import { organizationPage } from 'pages/organization.page';
+import { createOrgAndAddUsers } from './helper';
 
 context('Dashboard Tests for customers', () => {
   let users = [];
@@ -13,7 +12,6 @@ context('Dashboard Tests for customers', () => {
     cy.get('@snAccount').then((account) => {
       users.push(account.admin1, account.technical);
       users.forEach((user) => cy.oktaCreateUser(user));
-      createOrgAndAddUsers(users[0], [{ email: users[1].email, role: 'Technical' }]);
     });
   });
 
@@ -21,7 +19,7 @@ context('Dashboard Tests for customers', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.loginByOktaApi(user.email, user.password);
-      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
+      cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
       cy.findByTestId(dashboardPage.locators.ticketSection)
         .find('a')
         .hasAttr('target', '_blank')
@@ -35,7 +33,6 @@ context('Dashboard Tests for customers', () => {
       cy.log(`Running test for ${user.email} user`);
       cy.intercept('POST', '**/tickets:search').as('userTickets');
       cy.loginByOktaApi(user.email, user.password);
-      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
       // Table header exists with correct fields
       cy.findByTestId(dashboardPage.locators.tableHeader)
         .get('th')
@@ -68,7 +65,6 @@ context('Dashboard Tests for customers', () => {
         body: { tickets: [] },
       });
       cy.loginByOktaApi(user.email, user.password);
-      commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
       // Check if table is empty.
       cy.findByTestId(dashboardPage.locators.noDataTable).should('exist');
       cy.removeCurrentUserAccessToken();
@@ -79,9 +75,8 @@ context('Dashboard Tests for customers', () => {
     const nonSnUser = getUser();
 
     cy.oktaCreateUser(nonSnUser);
-    getOrgAndAddUsers(users[0], [{ email: nonSnUser.email, role: 'Admin' }]);
+    createOrgAndAddUsers(users[0], [{ email: nonSnUser.email, role: 'Admin' }]);
     cy.loginByOktaApi(nonSnUser.email, nonSnUser.password);
-    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
     // Wait for loading overlays to disappear only then table can become visible
     dashboardPage.methods.waitForDashboardToLoad();
     // Check if table is not present.
@@ -90,14 +85,12 @@ context('Dashboard Tests for customers', () => {
   });
 
   it('SAAS-T224 - Verify Percona Customer user is able to view Contacts (dynamic)', () => {
+    cy.intercept('GET', /\/v1\/orgs\/([a-zA-Z0-9]+){8}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){8}$/g).as('organizationDetails');
     cy.loginByOktaApi(users[0].email, users[0].password);
-    cy.retrieveCurrentUserAccessToken().then((token) =>
-        cy.apiGetOrg(token).then((res) => {
-          cy.intercept('GET', `**/${res.body.orgs[0].id}`).as('organizationDetails');
-        }),
-    );
-    commonPage.methods.leftMainMenuClick(LeftMainMenuLinks.dashboard);
+    cy.checkPopUpMessage(organizationPage.constants.messages.customerOrgFound);
     dashboardPage.methods.waitForDashboardToLoad();
+    cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
+    cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
     cy.window()
         .then((win) => cy.stub(win.navigator.clipboard, 'writeText'))
         .as('clipBoardContent');
