@@ -1,13 +1,63 @@
 import { OktaAuth } from '@okta/okta-auth-js';
-import { OAUTH_CLIENT_ID, OAUTH_ISSUER_URI, PORTAL_ORIGIN } from './constants';
+import {
+  OAUTH_CLIENT_ID,
+  OAUTH_HOST,
+  OAUTH_ISSUER_URI,
+  PORTAL_ORIGIN,
+  PRIVACY_PMM_URL,
+  TERMS_OF_SERVICE_URL,
+} from './constants';
+import { Messages } from './messages';
 
 export const authConfig = {
+  baseUrl: `https://${OAUTH_HOST}`,
   clientId: OAUTH_CLIENT_ID,
-  issuer: OAUTH_ISSUER_URI,
-  pkce: true,
-  postLogoutRedirectUri: `${PORTAL_ORIGIN}`,
   redirectUri: `${PORTAL_ORIGIN}/login/callback`,
+  issuer: OAUTH_ISSUER_URI,
+  features: {
+    registration: true,
+    rememberMe: true,
+    idpDiscovery: true,
+  },
+  authParams: {
+    pkce: true,
+  },
+  colors: {
+    brand: '#4c15a5',
+  },
+  i18n: {
+    en: {
+      'primaryauth.title': Messages.signIn,
+      'primaryauth.username.placeholder': Messages.workEmail,
+      'primaryauth.username.tooltip': Messages.workEmail,
+      'registration.signup.text': Messages.linkToSignUp,
+      'registration.form.title': Messages.signUpTitle,
+      'registration.form.submit': Messages.signUpButton,
+    },
+  },
+  helpLinks: {
+    custom: [
+      {
+        text: 'Terms of Service',
+        href: TERMS_OF_SERVICE_URL,
+        target: '_blank',
+      },
+      {
+        text: 'Privacy Policy',
+        href: PRIVACY_PMM_URL,
+        target: '_blank',
+      },
+    ],
+  },
   scopes: ['openid', 'profile', 'email', 'percona'],
+  postLogoutRedirectUri: `${PORTAL_ORIGIN}`,
+  idpDiscovery: {
+    requestContext: `${PORTAL_ORIGIN}/login/callback`,
+  },
+  idps: [
+    { type: 'GOOGLE', id: process.env.REACT_APP_GOOGLE_IDP_ID },
+    { type: 'GITHUB', id: process.env.REACT_APP_GITHUB_IDP_ID },
+  ],
 };
 
 export const oktaAuth = new OktaAuth(authConfig);

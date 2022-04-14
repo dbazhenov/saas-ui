@@ -10,7 +10,7 @@ import { ThemeContext } from '@grafana/ui';
 import { Main } from 'components';
 import { store } from 'store';
 import { getCurrentTheme } from 'store/theme';
-import { oktaAuth, history } from 'core';
+import { history, oktaAuth } from 'core';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import './styles/global.css';
