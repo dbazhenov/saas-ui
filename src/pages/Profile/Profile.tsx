@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStyles, LinkButton } from '@grafana/ui';
+import { useStyles, Label, LinkButton } from '@grafana/ui';
 import { toast } from 'react-toastify';
 import { LoaderButton, TextInputField, validators } from '@percona/platform-core';
 import { Routes } from 'core/routes';
@@ -12,6 +12,7 @@ import { getPlatformAccessToken, copyToClipboard } from 'core';
 import { PrivateLayout } from 'components/Layouts';
 import { getStyles } from './Profile.styles';
 import { Messages } from './Profile.messages';
+import { CONNECT_PMM_DOC_LINK } from './Profile.constants';
 
 const { required, maxLength } = validators;
 const nameValidators = [required, maxLength(MAX_NAME_LENGTH)];
@@ -72,15 +73,32 @@ export const ProfilePage: FC = () => {
               </div>
               <TextInputField disabled label={Messages.emailLabel} name="email" />
               <div className={styles.platformAccessTokenWrapper}>
-                <div className={styles.platformAccessTokenFieldWrapper}>
-                  <TextInputField disabled label={Messages.platformAccessToken} name="platformAccessToken" />
-                </div>
+                <Label className={styles.platformAccessTokenLabel}>{Messages.platformAccessToken}</Label>
                 <div className={styles.platformAccessTokenButtonWrapper}>
                   <LinkButton variant="link" onClick={handleCopyToClipboard}>{Messages.copyToClipboard}</LinkButton>
                 </div>
               </div>
+              <p className={styles.platformAccessTokenDescription}>
+                <span>{Messages.platformAccessTokenDescription}</span>
+                <a
+                  className={styles.externalLink}
+                  data-testid="profile-connect-pmm-doc-link"
+                  href={CONNECT_PMM_DOC_LINK}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  {Messages.platformAccessTokenConnect}
+                </a>
+                <span>.</span>
+              </p>
               <div className={styles.editProfileWrapper}>
-                <a href={Routes.editProfile} target="_blank" data-testid="profile-edit-button" className={styles.externalLink} rel="noreferrer noopener">
+                <a
+                  href={Routes.editProfile}
+                  target="_blank"
+                  data-testid="profile-edit-button"
+                  className={styles.externalLink}
+                  rel="noreferrer noopener"
+                >
                   {Messages.editProfile}
                 </a>
               </div>

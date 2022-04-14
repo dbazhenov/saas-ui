@@ -40,6 +40,7 @@ export const getStyles = (theme: GrafanaTheme) => {
     `,
     editProfileWrapper: css`
       margin-top: ${spacing.md};
+      margin-left: ${spacing.xxs};
     `,
     externalLink: css`
       color: ${colors.linkExternal};
@@ -51,19 +52,20 @@ export const getStyles = (theme: GrafanaTheme) => {
       align-items: center;
       justify-content: space-between;
     `,
-    platformAccessTokenFieldWrapper: css`
-      flex: 1;
-      > * {
-        // removes the margin-bottom from the last text field
-        // TODO: fix that in TextInputField (and the other input fields) - consider using field groups
-        margin-bottom: 0 !important;
-      }
-    `,
     platformAccessTokenButtonWrapper: css`
       > * {
         // overrides the default padding for LinkButton
         padding: 0 0 0 ${spacing.md};
       }
+    `,
+    platformAccessTokenLabel: css`
+      font-size: ${typography.size.base};
+      margin-bottom: 0;
+    `,
+    platformAccessTokenDescription: css`
+      margin: ${spacing.sm} 0 ${spacing.xl} ${spacing.xxs};
+      text-align: justify;
+      line-height: ${typography.lineHeight.md};
     `,
   };
 };
