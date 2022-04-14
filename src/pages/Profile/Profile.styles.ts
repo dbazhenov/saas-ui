@@ -63,6 +63,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       margin-bottom: 0;
     `,
     platformAccessTokenDescription: css`
+      color: ${colors.text};
       margin: ${spacing.sm} 0 ${spacing.xl} ${spacing.xxs};
       text-align: justify;
       line-height: ${typography.lineHeight.md};
