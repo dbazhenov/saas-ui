@@ -10,6 +10,7 @@ const signInPage = {
       needHelp: 'Need help signing in?',
       nextButtonText: 'Next',
       signUpLink: 'Create one',
+      unableToSignIn: 'Unable to sign in',
     },
     links: {},
   },
@@ -23,6 +24,7 @@ const signInPage = {
     passwordInput: '[id=okta-signin-password]',
     signInButton: '[id=okta-signin-submit]',
     signUpLink: '.registration-link',
+    unableToSignIn: '[data-se="o-form-error-container"]',
   },
   links: {},
   methods: {

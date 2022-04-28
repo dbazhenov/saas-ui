@@ -63,7 +63,7 @@ Cypress.Commands.add('getTable', { prevSubject: true }, (subj, options = {}) => 
 
 // Logs user out of the Portal
 Cypress.Commands.add('logoutUser', () => {
-  profileIcon().click();
+  profileIcon().click({ force: true });
   dropdownMenu().isVisible();
-  logoutButton().click();
+  logoutButton().click({ force: true });
 });

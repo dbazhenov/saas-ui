@@ -43,6 +43,7 @@ const dashboardPage = {
     contactMessage: 'contact-message',
     customerContactName: 'customer-contact-name',
     customerContactIcon: 'customer-contact-email-icon',
+    gettingStartedContainer: 'getting-started-container',
   },
   methods: {
     waitForDashboardToLoad: () => waitForDashboardToLoad(),

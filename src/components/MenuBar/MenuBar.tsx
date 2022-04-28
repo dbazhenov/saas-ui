@@ -59,7 +59,7 @@ export const MenuBar: FC = () => {
             <nav>
               <ul>
                 <li>
-                  <div className={styles.menuIcon} onMouseUp={changeTheme}>
+                  <div className={styles.menuIcon} onMouseUp={changeTheme} data-testid="theme-switch">
                     {theme.isLight && <ThemeDark width={22} height={22} />}
                     {theme.isDark && <ThemeLight width={22} height={22} />}
                   </div>

@@ -20,7 +20,7 @@ export const SideMenu: FC = () => {
   return (
     <nav data-testid="side-menu" className={styles.sideMenu}>
       <section data-testid="side-menu-main-section" className={styles.section}>
-        <header className={styles.navSectionLabel}>{Messages.main}</header>
+        <header className={styles.navSectionLabel} data-testid="main-header">{Messages.main}</header>
         <IconLink
           icon={dashboard}
           to={Routes.root}
@@ -44,7 +44,7 @@ export const SideMenu: FC = () => {
         </IconLink>
       </section>
       <section data-testid="side-menu-resources-section" className={styles.section}>
-        <header className={styles.navSectionLabel}>{Messages.resources}</header>
+        <header className={styles.navSectionLabel} data-testid="resources-header">{Messages.resources}</header>
           <ResourceLink
             text={Messages.documentation}
             icon={sidebarDocs}

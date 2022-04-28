@@ -1,6 +1,6 @@
 import commonPage from 'pages/common.page';
 
-export const leftMainMenuClick = (target: LeftMainMenuLinks) => {
+export const leftMenuNavigation = (target: LeftMainMenuLinks) => {
   cy.findAllByTestId(commonPage.locators.sideMenuLink).get(target).click();
 };
 
@@ -15,6 +15,7 @@ export const uiLogoutUser = () => {
 };
 
 export enum LeftMainMenuLinks {
-  gettingStarted = 'a[href*="/"]',
-  dashboard = 'a[href*="/dashboard"]',
+  dashboard = 'a[href="/"][data-testid="nav-link"]',
+  organization = 'a[href="/organization"][data-testid="nav-link"]',
+  pmmInstances = 'a[href="/pmm-instances"][data-testid="nav-link"]',
 }

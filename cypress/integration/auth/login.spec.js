@@ -2,6 +2,7 @@ import { pageDetailsMap, Pages } from 'pages/common/constants';
 import { getUser } from 'pages/auth/getUser';
 import signInPage from 'pages/auth/signIn.page';
 import commonPage from 'pages/common.page';
+import dashboardPage from 'pages/dashboard.page';
 
 const newUser = getUser();
 
@@ -31,9 +32,19 @@ context('Login', () => {
     cy.get(signInPage.locators.signUpLink).hasText(signInPage.constants.messages.signUpLink);
   });
 
-  it('SAAS-T111 SAAS-T81 - should be able to login', () => {
+  it('SAAS-T82 Verify successful login on Percona Portal', () => {
     signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
     cy.get(signInPage.locators.signInButton).click();
     commonPage.methods.commonPageLoaded();
+    cy.url().should('include', Cypress.config('baseUrl'));
+    cy.findByTestId(dashboardPage.locators.gettingStartedContainer).isVisible();
+  });
+
+  it('SAAS-T86 Verify unsuccessful login on Percona Portal', () => {
+    signInPage.methods.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
+    cy.get(signInPage.locators.signInButton).click();
+    cy.get(signInPage.locators.unableToSignIn).hasText(signInPage.constants.messages.unableToSignIn);
+    cy.findByTestId(dashboardPage.locators.gettingStartedContainer).should('not.exist');
+    cy.url().should('include', '/login');
   });
 });
