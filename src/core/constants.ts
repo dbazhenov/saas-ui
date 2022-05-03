@@ -24,6 +24,13 @@ export const OAUTH_ISSUER_URI = IS_PRODUCTION
   ? process.env.REACT_APP_OAUTH_PROD_ISSUER_URI
   : process.env.REACT_APP_OAUTH_DEV_ISSUER_URI;
 
+export const GOOGLE_IDP_ID = IS_PRODUCTION
+  ? process.env.REACT_APP_PROD_GOOGLE_IDP_ID
+  : process.env.REACT_APP_DEV_GOOGLE_IDP_ID;
+export const GITHUB_IDP_ID = IS_PRODUCTION
+  ? process.env.REACT_APP_PROD_GITHUB_IDP_ID
+  : process.env.REACT_APP_DEV_GITHUB_IDP_ID;
+
 export const STATE_LOCALSTORAGE_KEY = 'state';
 
 export const THEME_STORAGE_KEY = 'percona.saas.theme';

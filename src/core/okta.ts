@@ -6,6 +6,8 @@ import {
   PORTAL_ORIGIN,
   PRIVACY_PMM_URL,
   TERMS_OF_SERVICE_URL,
+  GOOGLE_IDP_ID,
+  GITHUB_IDP_ID,
 } from './constants';
 import { Messages } from './messages';
 
@@ -55,8 +57,8 @@ export const authConfig = {
     requestContext: `${PORTAL_ORIGIN}/login/callback`,
   },
   idps: [
-    { type: 'GOOGLE', id: process.env.REACT_APP_GOOGLE_IDP_ID },
-    { type: 'GITHUB', id: process.env.REACT_APP_GITHUB_IDP_ID },
+    { type: 'GOOGLE', id: GOOGLE_IDP_ID },
+    { type: 'GITHUB', id: GITHUB_IDP_ID },
   ],
 };
 
