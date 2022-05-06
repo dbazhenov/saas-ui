@@ -1,3 +1,5 @@
 /// <reference types="cypress" />
 
-export const popUp = () => cy.findByRole('alert');
+import { timeouts } from '../../fixtures/timeouts';
+
+export const popUp = () => cy.findByRole('alert', { timeout: timeouts.ONE_MIN });

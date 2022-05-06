@@ -2,10 +2,14 @@ import { getUser } from 'pages/auth/getUser';
 import dashboardPage from 'pages/dashboard.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
 import { organizationPage } from 'pages/organization.page';
+import activationPage from 'pages/auth/activation.page';
+import signInPage from 'pages/auth/signIn.page';
+import signUpPage from 'pages/auth/signUp.page';
 import { timeouts } from '../../../fixtures/timeouts';
 import { createOrgAndAddUsers } from '../../customer/dashboard/helper';
 
 context('Members tests for the Free Users', () => {
+  const mailosaurServerId = Cypress.env('mailosaur_ui_tests_server_id');
   let admin1User;
   let admin2User;
   let technical1User;
@@ -18,8 +22,8 @@ context('Members tests for the Free Users', () => {
     cy.oktaCreateUser(admin2User);
     cy.oktaCreateUser(technical1User);
     createOrgAndAddUsers(admin1User, [
-      { email: admin2User.email, role: 'Admin' },
-      { email: technical1User.email, role: 'Technical' },
+      { email: admin2User.email, role: organizationPage.constants.userRoles.admin },
+      { email: technical1User.email, role: organizationPage.constants.userRoles.technical },
     ]);
   });
 
@@ -37,8 +41,14 @@ context('Members tests for the Free Users', () => {
       .parent()
       .within(() => cy.findByTestId(organizationPage.locators.editMemberIcon).should('be.disabled'));
     const emails = [technical1User.email, admin2User.email];
-    const oldValues = ['Technical', 'Admin'];
-    const newValues = ['Admin', 'Technical'];
+    const oldValues = [
+      organizationPage.constants.userRoles.technical,
+      organizationPage.constants.userRoles.admin,
+    ];
+    const newValues = [
+      organizationPage.constants.userRoles.admin,
+      organizationPage.constants.userRoles.technical,
+    ];
 
     // Change user roles from Technical to Admin and Admin to Technical
     emails.forEach((email, index) => {
@@ -73,17 +83,17 @@ context('Members tests for the Free Users', () => {
       {
         Name: `${admin1User.firstName} ${admin1User.lastName}`,
         Email: admin1User.email,
-        Role: 'Admin',
+        Role: organizationPage.constants.userRoles.admin,
       },
       {
         Name: `${admin2User.firstName} ${admin2User.lastName}`,
         Email: admin2User.email,
-        Role: 'Admin',
+        Role: organizationPage.constants.userRoles.admin,
       },
       {
         Name: `${technical1User.firstName} ${technical1User.lastName}`,
         Email: technical1User.email,
-        Role: 'Technical',
+        Role: organizationPage.constants.userRoles.technical,
       },
     ];
 
@@ -161,7 +171,6 @@ context('Members tests for the Free Users', () => {
       .click({ force: true });
     organizationPage.methods.verifyOrganizationTab();
     organizationPage.methods.openMembersTab();
-
     cy.findByTestId(organizationPage.locators.inviteMemberButton).click();
     cy.findByTestId(organizationPage.locators.modalEmailInput).type(otherOrgUser.email);
     cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
@@ -172,5 +181,151 @@ context('Members tests for the Free Users', () => {
     cy.findByTestId(organizationPage.locators.modalEmailInput).type(admin2User.email);
     cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
     cy.checkPopUpMessage(organizationPage.constants.messages.userAlreadyMemberOfOrg);
+  });
+
+  it('SAAS-T238 Verify inviting non-registered users to the organziation', () => {
+    cy.log(
+      'Also covers: SAAS-T240 Verify non-registered user invited to the org is appearing in the members list',
+    );
+    const newUser = getUser();
+
+    newUser.email = signUpPage.methods.getMailosaurEmailAddress(newUser);
+    cy.loginByOktaApi(admin1User.email, admin1User.password);
+    dashboardPage.methods.waitForDashboardToLoad();
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click({ force: true });
+    organizationPage.methods.verifyOrganizationTab();
+    organizationPage.methods.openMembersTab();
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({ force: true });
+    cy.findByTestId(organizationPage.locators.inviteMemberModal.emailInput).type(newUser.email);
+    cy.contains('div', organizationPage.constants.userRoles.technical).click();
+    cy.contains('div', organizationPage.constants.userRoles.admin).click();
+    cy.findByTestId(organizationPage.locators.inviteMemberModal.submitButton).click();
+    cy.checkPopUpMessage(organizationPage.constants.messages.userSuccessfullyInvited);
+    cy.findByTestId(organizationPage.locators.userNotActivated).isVisible();
+    cy.logoutUser();
+    cy.mailosaurGetMessage(
+      mailosaurServerId,
+      { sentTo: newUser.email, subject: 'Welcome to Test Organization' },
+      { timeout: 20000 },
+    ).then((message) => cy.mailosaurDeleteMessage(message.id));
+    cy.mailosaurGetMessage(
+      mailosaurServerId,
+      { sentTo: newUser.email, subject: organizationPage.constants.labels.inviteEmailSubject },
+      { timeout: 20000 },
+    ).then((message) => {
+      const activateLink = message.html.links.find((link) => link.text.trim() === 'Activate');
+
+      cy.document().then((doc) => doc.location.replace(activateLink.href));
+      cy.mailosaurDeleteMessage(message.id);
+    });
+    activationPage.methods.activateUser(newUser.password);
+    cy.url().should('contain', signUpPage.constants.links.loginAddress);
+    cy.visit('');
+    signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
+    cy.get(signInPage.locators.signInButton).isEnabled().click();
+    const usersTable = [
+      { Email: newUser.email },
+      { Email: admin1User.email },
+      { Email: admin2User.email },
+      { Email: technical1User.email },
+    ];
+
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click({ force: true });
+    organizationPage.methods.openMembersTab();
+    cy.findByTestId('table')
+      .getTable({ onlyColumns: ['Email'] })
+      .then((table) => {
+        expect(table.length).to.be.equal(usersTable.length);
+        usersTable.forEach((tableUser) => expect(table).to.deep.include(tableUser));
+      });
+    cy.logoutUser();
+    cy.loginByOktaApi(admin1User.email, admin1User.password);
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click({ force: true });
+    organizationPage.methods.verifyOrganizationTab();
+    organizationPage.methods.openMembersTab();
+    cy.contains('td', newUser.email)
+      .parent()
+      .within(() => cy.findByTestId(organizationPage.locators.editMemberIcon).click({ force: true }));
+    cy.contains('div', organizationPage.constants.userRoles.admin).click();
+    cy.contains('div', organizationPage.constants.userRoles.technical).click();
+    cy.findByTestId(organizationPage.locators.ediMemberSubmitButton).click();
+    cy.checkPopUpMessage(organizationPage.constants.messages.memberEditedSuccessfully);
+    cy.contains('td', newUser.email)
+      .parent()
+      .within(() => cy.findByTestId(organizationPage.locators.deleteMemberIcon).click({ force: true }));
+    cy.findByTestId(organizationPage.locators.deleteMemberSubmitButton).click();
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({ force: true });
+    cy.findByTestId(organizationPage.locators.inviteMemberModal.emailInput).type(newUser.email);
+    cy.findByTestId(organizationPage.locators.inviteMemberModal.submitButton).click();
+  });
+
+  it('SAAS-T239 Verify inviting non-registered members to the organziation failed', () => {
+    const newUser = getUser();
+    const unauthorizedCode = 401;
+    const badRequestCode = 400;
+    const forbiddenCode = 403;
+
+    Cypress.Commands.add(
+      'apiInviteOrgMemberWithoutFailOnError',
+      (accessToken, orgId, member = { username: '', role: '' }) => {
+        cy.request({
+          method: 'POST',
+          url: `v1/orgs/${orgId}/members`,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: member,
+          failOnStatusCode: false,
+        });
+      },
+    );
+    cy.getUserAccessToken(admin1User.email, admin1User.password).then((token) => {
+      cy.apiGetOrg(token).then((responseOrg) => {
+        cy.apiInviteOrgMemberWithoutFailOnError('Wrong Token', responseOrg.body.orgs[0].id, {
+          username: newUser.email,
+          role: organizationPage.constants.userRoles.admin,
+        }).then((response) => {
+          expect(response.status).to.equal(unauthorizedCode);
+          expect(response.body.message).to.equal('Invalid credentials.');
+        });
+        cy.apiInviteOrgMemberWithoutFailOnError(token, responseOrg.body.orgs[0].id, {
+          role: organizationPage.constants.userRoles.admin,
+        }).then((response) => {
+          expect(response.status).to.equal(badRequestCode);
+          expect(response.body.message).to.equal(
+            /* prettier-ignore */
+            'invalid field Username: value \'\' must not be an empty string',
+          );
+        });
+        cy.apiInviteOrgMemberWithoutFailOnError(token, responseOrg.body.orgs[0].id, {
+          username: newUser.email,
+        }).then((response) => {
+          expect(response.status).to.equal(badRequestCode);
+          expect(response.body.message).to.equal('Invalid organization member role.');
+        });
+        cy.apiInviteOrgMemberWithoutFailOnError(token, `${responseOrg.body.orgs[0].id}InvalidId`, {
+          username: newUser.email,
+          role: organizationPage.constants.userRoles.admin,
+        }).then((response) => {
+          expect(response.status).to.equal(forbiddenCode);
+          expect(response.body.message).to.equal(
+            'User must belong to the requested organization to perform this action.',
+          );
+        });
+        cy.apiInviteOrgMemberWithoutFailOnError(token, responseOrg.body.orgs[0].id, {
+          username: 'Invalid Email',
+          role: organizationPage.constants.userRoles.admin,
+        }).then((response) => {
+          expect(response.status).to.equal(badRequestCode);
+          expect(response.body.message).to.equal('Failed to invite user');
+        });
+      });
+    });
   });
 });

@@ -57,7 +57,7 @@ context('Sign Up', () => {
         cy.visit('');
         signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
         cy.get(signInPage.locators.signInButton).isEnabled().click();    
-        cy.logoutUser();
+        commonPage.methods.uiLogoutUser();
         signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
         cy.get(signInPage.locators.signInButton).isEnabled().click();    
         commonPage.methods.commonPageLoaded();        

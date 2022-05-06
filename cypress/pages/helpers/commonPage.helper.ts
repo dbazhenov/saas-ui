@@ -10,8 +10,28 @@ export const commonPageLoaded = () => {
 };
 
 export const uiLogoutUser = () => {
-  cy.findByTestId(commonPage.locators.profileToggle).click();
+  clickAndVerifyProfileMenu();
   cy.findByTestId(commonPage.locators.logoutButton).click();
+};
+
+// eslint-disable-next-line no-magic-numbers
+const clickAndVerifyProfileMenu = async (attempts: number = 0) => {
+  const logoutButtonSelector = 'span[data-testid=menu-bar-profile-dropdown-logout]';
+
+  // eslint-disable-next-line no-magic-numbers
+  if (attempts > 4) {
+    throw new Error('User dropdown was not displayed after 5 retries');
+  }
+
+  cy.findByTestId(commonPage.locators.profileToggle)
+    .click({ force: true })
+    .then(() => {
+      // eslint-disable-next-line no-magic-numbers
+      if (Cypress.$(logoutButtonSelector).length < 1) {
+        // eslint-disable-next-line no-plusplus, no-param-reassign
+        clickAndVerifyProfileMenu(++attempts);
+      }
+    });
 };
 
 export enum LeftMainMenuLinks {

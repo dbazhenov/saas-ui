@@ -33,7 +33,7 @@ export const MembersList: FC = () => {
                   <span className={styles.fullName}>{fullName}</span>
                 </div>
               ) : (
-                <div className={styles.clockIconWrapper}>
+                <div className={styles.clockIconWrapper} data-testid="user-not-activated">
                   <Clock className={styles.clockIcon} />
                 </div>
               )}

@@ -5,7 +5,7 @@ import { timeouts } from '../../../fixtures/timeouts';
 export const openViewOrganizationPage = () => {
   cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
     .should('be.visible')
-    .click();
+    .click({ force: true });
   cy.contains(organizationPage.constants.labels.orgNameLabel, { timeout: timeouts.HALF_MIN }).should(
     'be.visible',
   );
