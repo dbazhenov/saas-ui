@@ -6,8 +6,8 @@ export const verifyOrganizationTab = () => {
 };
 
 export const openMembersTab = () => {
-  cy.findAllByTestId(organizationPage.locators.manageOrgTab , { timeout: timeouts.HALF_MIN })
+  cy.findAllByTestId(organizationPage.locators.manageOrgTab, { timeout: timeouts.HALF_MIN })
     .contains(organizationPage.constants.labels.membersTabLabel)
-    .click();
+    .click({ force: true });
   cy.findAllByTestId(organizationPage.locators.orgTableRow).isVisible();
 };

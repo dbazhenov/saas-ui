@@ -20,7 +20,7 @@ context('Dashboard Tests for customers', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.loginByOktaApi(user.email, user.password);
-      cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.TWO_MIN }).isVisible();
+      cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
       cy.findByTestId(dashboardPage.locators.ticketSection)
         .find('a')
         .hasAttr('target', '_blank')
@@ -67,7 +67,7 @@ context('Dashboard Tests for customers', () => {
       });
       cy.loginByOktaApi(user.email, user.password);
       // Check if table is empty.
-      cy.findByTestId(dashboardPage.locators.noDataTable).should('exist');
+      cy.findByTestId(dashboardPage.locators.noDataTable, { timeout: timeouts.ONE_MIN }).should('exist');
       cy.removeCurrentUserAccessToken();
     });
   });
@@ -93,8 +93,7 @@ context('Dashboard Tests for customers', () => {
     cy.loginByOktaApi(users[0].email, users[0].password);
     cy.checkPopUpMessage(organizationPage.constants.messages.customerOrgFound);
     dashboardPage.methods.waitForDashboardToLoad();
-    cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
-    cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
+    cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
     cy.window()
       .then((win) => cy.stub(win.navigator.clipboard, 'writeText'))
       .as('clipBoardContent');

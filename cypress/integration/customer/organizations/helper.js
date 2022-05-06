@@ -18,10 +18,6 @@ export const verifyOrganizationName = (name) => {
 };
 
 export const prepareOrganizationWithAdminAndTechnical = (snAccount) => {
-  // create users
-  cy.oktaCreateUser(snAccount.admin1);
-  cy.oktaCreateUser(snAccount.technical);
-
   // create org by admin
   cy.getUserAccessToken(snAccount.admin1.email, snAccount.admin1.password).then((adminAccessToken) => {
     cy.apiCreateOrg(adminAccessToken);

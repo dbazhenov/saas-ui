@@ -1,5 +1,6 @@
 import dashboardPage from 'pages/dashboard.page';
 import { organizationPage } from 'pages/organization.page';
+import { timeouts } from '../../../fixtures/timeouts';
 import { openViewOrganizationPage, prepareOrganizationWithAdminAndTechnical } from './helper';
 
 context('Percona Customer', () => {
@@ -9,15 +10,17 @@ context('Percona Customer', () => {
     before(() => {
       cy.generateServiceNowAccount().then((account) => {
         snAccount = account;
-        prepareOrganizationWithAdminAndTechnical(snAccount);
-        // create 3rd user
+        // create users
+        cy.oktaCreateUser(snAccount.admin1);
         cy.oktaCreateUser(snAccount.admin2);
+        cy.oktaCreateUser(snAccount.technical);
+        prepareOrganizationWithAdminAndTechnical(snAccount);
       });
     });
 
     it('SAAS-T223 SAAS-T174 members list', () => {
       cy.loginByOktaApi(snAccount.admin2.email, snAccount.admin2.password);
-      cy.findByTestId(dashboardPage.locators.ticketTable).isVisible();
+      cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
       openViewOrganizationPage();
       organizationPage.methods.openMembersTab();
 

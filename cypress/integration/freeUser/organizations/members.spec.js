@@ -29,7 +29,7 @@ context('Members tests for the Free Users', () => {
     // Navigate to the members page
     cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
       .should('be.visible')
-      .click();
+      .click({ force: true });
     // Edit button for logged-in user should be disabled
     organizationPage.methods.verifyOrganizationTab();
     organizationPage.methods.openMembersTab();
@@ -66,7 +66,7 @@ context('Members tests for the Free Users', () => {
     // Navigate to the members page
     cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
       .should('be.visible')
-      .click();
+      .click({ force: true });
     organizationPage.methods.verifyOrganizationTab();
     organizationPage.methods.openMembersTab();
     const usersTable = [
@@ -124,7 +124,7 @@ context('Members tests for the Free Users', () => {
     // Navigate to the members page
     cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
       .should('be.visible')
-      .click();
+      .click({ force: true });
     organizationPage.methods.verifyOrganizationTab();
     organizationPage.methods.openMembersTab();
     // Edit button for logged in user should be disabled
@@ -158,7 +158,7 @@ context('Members tests for the Free Users', () => {
     dashboardPage.methods.waitForDashboardToLoad();
     cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
       .should('be.visible')
-      .click();
+      .click({ force: true });
     organizationPage.methods.verifyOrganizationTab();
     organizationPage.methods.openMembersTab();
 
