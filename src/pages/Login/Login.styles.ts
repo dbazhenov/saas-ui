@@ -11,7 +11,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       background-size: cover;
       height: 100vh;
       box-sizing: border-box;
-      padding: 70px;
+      padding: 50px;
       display: flex;
       justify-content: flex-end;
     `,
@@ -124,7 +124,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       }
 
       .okta-form-title {
-        font-size: 30px !important;
+        font-size: 20px !important;
         color: ${palette.black} !important;
       }
     `,
