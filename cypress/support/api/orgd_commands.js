@@ -23,6 +23,19 @@ Cypress.Commands.add('apiGetOrg', (accessToken) => {
   });
 });
 
+Cypress.Commands.add('apiDeleteOrg', (orgId, accessToken) => {
+  cy.request({
+    method: 'DELETE',
+    url: `/v1/orgs/${orgId}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }).then((response) => {
+      // eslint-disable-next-line no-magic-numbers
+      expect(response.status).to.equal(200);
+    });
+});
+
 Cypress.Commands.add('apiInviteOrgMember', (accessToken, orgId, member = { username: '', role: '' }) => {
   cy.request({
     method: 'POST',

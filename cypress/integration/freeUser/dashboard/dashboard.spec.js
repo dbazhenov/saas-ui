@@ -12,6 +12,10 @@ context('Dashboard Tests for Free user', () => {
     });
   });
 
+  afterEach(() => {
+    cy.cleanUpAfterTest([newUser], newUser);
+  });
+
   it('SAAS-T198 - Verify free account user is not able to get organization tickets', () => {
     // Wait for loading overlays to disappear only then table can become visible
     dashboardPage.methods.waitForDashboardToLoad();

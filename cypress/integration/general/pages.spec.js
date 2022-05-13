@@ -3,6 +3,7 @@ import commonPage from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
 import errorPage from 'pages/error.page';
 import { LeftMainMenuLinks } from 'pages/helpers/commonPage.helper';
+import { organizationPage } from 'pages/organization.page';
 import { createOrgAndAddUsers } from '../../integration/customer/dashboard/helper';
 
 context('Pages Tests', () => {
@@ -17,7 +18,13 @@ context('Pages Tests', () => {
     cy.oktaCreateUser(adminUser);
     cy.oktaCreateUser(technicalUser);
     users.push(adminUser, technicalUser);
-    createOrgAndAddUsers(adminUser, [{ email: technicalUser.email, role: 'Technical' }]);
+    createOrgAndAddUsers(adminUser, [
+      { email: technicalUser.email, role: organizationPage.constants.userRoles.technical },
+    ]);
+  });
+
+  afterEach(() => {
+    cy.cleanUpAfterTest([adminUser, technicalUser], adminUser);
   });
 
   it('SAAS-T118 - Verify access to a non-existent private route returns 404 page', () => {

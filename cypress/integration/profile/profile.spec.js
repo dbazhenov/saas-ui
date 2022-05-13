@@ -30,7 +30,7 @@ context('User Profile', () => {
 
   afterEach(() => {
     cy.get('@user').then((newUser) => {
-      cy.oktaDeleteUserByEmail(newUser.email);
+      cy.cleanUpAfterTest([newUser]);
     });
   });
 

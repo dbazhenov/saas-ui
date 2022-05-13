@@ -9,12 +9,17 @@ context('Percona Customer', () => {
   let users = [];
 
   beforeEach(() => {
-    users = [];
+    
     cy.generateServiceNowAccount().then((account) => {
       snAccount = account;
       users.push(account.admin1, account.technical);
       users.forEach((user) => cy.oktaCreateUser(user));
     });
+  });
+
+  afterEach(() => {
+    cy.cleanUpAfterTest(users, users[0]);
+    users = [];
   });
 
   it('SAAS-T160 organization is created automatically for admin', () => {
@@ -26,7 +31,7 @@ context('Percona Customer', () => {
     verifyOrganizationName(snAccount.name);
   });
 
-  it.only('SAAS-T207 SAAS-T218 technical user is added to members if org exists', () => {
+  it('SAAS-T207 SAAS-T218 technical user is added to members if org exists', () => {
     // Temporary workaround until SAAS-917 is fixed
     cy.getUserAccessToken(snAccount.admin1.email, snAccount.admin1.password).then((token) =>
       cy.apiCreateOrg(token),

@@ -10,6 +10,10 @@ context('Logout', () => {
     cy.loginByOktaApi(newUser.email, newUser.password);
   });
 
+  afterEach(() => {
+    cy.cleanUpAfterTest([newUser]);
+  });
+
   it('SAAS-T80 - should be able to logout', () => {
     commonPage.methods.uiLogoutUser();
     cy.visit('');

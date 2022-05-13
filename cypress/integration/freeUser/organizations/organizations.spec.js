@@ -21,9 +21,16 @@ context('Organization Tests for Free user', () => {
     // create org by admin
     cy.getUserAccessToken(adminUserWithOrg.email, adminUserWithOrg.password).then((accessToken) => {
       cy.apiCreateOrg(accessToken, orgName).then((org) => {
-        cy.apiInviteOrgMember(accessToken, org.org.id, { username: technicalUser.email, role: 'Technical' });
+        cy.apiInviteOrgMember(accessToken, org.org.id, {
+          username: technicalUser.email,
+          role: organizationPage.constants.userRoles.technical,
+        });
       });
     });
+  });
+
+  afterEach(() => {
+    cy.cleanUpAfterTest([adminUserWithOrg, adminUser, technicalUser], adminUserWithOrg);
   });
 
   it('SAAS-T136 SAAS-T139 SAAS-T159 create organization', () => {
@@ -61,10 +68,13 @@ context('Organization Tests for Free user', () => {
       .should('be.visible')
       .click({ force: true });
 
-    cy.findAllByTestId(organizationPage.locators.editOrgButton).should('be.visible').click();
+    cy.findAllByTestId(organizationPage.locators.editOrgButton).should('be.visible').click({ force: true });
     cy.findByTestId(organizationPage.locators.editOrgSubmitButton).isDisabled();
 
-    cy.findByTestId(organizationPage.locators.orgNameInput).clear({ force: true });
+    // necessary due to element being re rendered. Will be removed after loading overlay fix
+    // eslint-disable-next-line cypress/no-unnecessary-waiting, no-magic-numbers
+    cy.wait(5);
+    cy.findByTestId(organizationPage.locators.orgNameInput).clear();
     cy.findByTestId(organizationPage.locators.orgNameInputError).contains(
       organizationPage.constants.labels.requiredField,
     );

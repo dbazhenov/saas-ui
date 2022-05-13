@@ -60,7 +60,8 @@ context('Sign Up', () => {
         commonPage.methods.uiLogoutUser();
         signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
         cy.get(signInPage.locators.signInButton).isEnabled().click();    
-        commonPage.methods.commonPageLoaded();        
+        commonPage.methods.commonPageLoaded();  
+        cy.cleanUpAfterTest([newUser]);      
     });
 
     it('SAAS-T85 - Verify Sign Up if user already has Percona account', () => {
@@ -70,6 +71,7 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.registerButton).isEnabled().click();
         cy.get(signUpPage.locators.registrationAlert)
             .hasText(signUpPage.constants.messages.emailAlreadyRegistered);
+        cy.cleanUpAfterTest([newUser]);
     });
 
     it('SAAS-T113 - Verify Sign up redirects to Okta widget', () => {

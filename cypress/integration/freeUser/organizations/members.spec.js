@@ -27,6 +27,10 @@ context('Members tests for the Free Users', () => {
     ]);
   });
 
+  afterEach(() => {
+    cy.cleanUpAfterTest([admin1User, admin2User, technical1User], admin1User);
+  });
+
   it('SAAS-T158 Verify organization admin is able to edit member roles', () => {
     cy.loginByOktaApi(admin1User.email, admin1User.password);
     dashboardPage.methods.waitForDashboardToLoad();

@@ -8,12 +8,16 @@ context('Dashboard Tests for customers', () => {
   let users = [];
 
   beforeEach(() => {
-    users = [];
     cy.generateServiceNowAccount();
     cy.get('@snAccount').then((account) => {
       users.push(account.admin1, account.technical);
       users.forEach((user) => cy.oktaCreateUser(user));
     });
+  });
+
+  afterEach(() => {
+    cy.cleanUpAfterTest(users, users[0]);
+    users = [];
   });
 
   it('SAAS-T233 - Verify "open new ticket" link for Percona customer', () => {
