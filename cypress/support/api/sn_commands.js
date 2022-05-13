@@ -12,7 +12,7 @@ Cypress.Commands.add('generateServiceNowAccount', () => {
     };
 
     contacts.forEach(({ email }) => {
-      if (email.startsWith('admin')) {
+      if (email.startsWith('ui_tests_admin')) {
         // eslint-disable-next-line chai-friendly/no-unused-expressions
         snAccount.admin1 ? (snAccount.admin2 = getUser(email)) : (snAccount.admin1 = getUser(email));
       } else {
