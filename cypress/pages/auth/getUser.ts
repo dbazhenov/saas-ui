@@ -7,8 +7,11 @@ Using generate-password lib due to a bug in a faker when passing a regex to a pa
 https://github.com/Marak/faker.js/issues/826
 */
 
-const getFakeEmail = (firstName: string, lastName: string) =>
-  `${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Date.now()}.${faker.datatype.number()}@test.com`;
+const getFakeEmail = (firstName: string, lastName: string) => {
+  const random = faker.datatype.number();
+
+  return `ui_tests_${firstName.toLowerCase()}.${lastName.toLowerCase()}.${Date.now()}.${random}@test.com`;
+};
 
 const getPassword = () =>
   generate({
