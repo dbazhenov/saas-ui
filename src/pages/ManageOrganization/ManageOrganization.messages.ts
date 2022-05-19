@@ -10,4 +10,5 @@ export const Messages = {
   orgCreateSuccess: 'Your organization has been created.',
   orgEditSuccess: 'Your organization has been updated.',
   organization: 'Organization',
+  removeInstanceSuccess: 'The instance has been successfully removed from the list',
 };

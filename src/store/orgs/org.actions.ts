@@ -14,7 +14,12 @@ import {
   RemoveMemberPayload,
   OrganizationViewTabs,
 } from 'store/types';
-import { GetOrganizationResponse, CreateOrganizationResponse, OrganizationEntitlement, OrganizationResponse } from 'core/api/types';
+import {
+  GetOrganizationResponse,
+  CreateOrganizationResponse,
+  OrganizationEntitlement,
+  OrganizationResponse,
+} from 'core/api/types';
 import { Messages as OrgMessages } from 'pages/ManageOrganization/ManageOrganization.messages';
 import { OrgTicket } from 'pages/Dashboard/TicketList/TicketList.types';
 import { mapOrgTickets } from 'pages/Dashboard/TicketList/TicketList.utils';
@@ -36,6 +41,23 @@ export const getInventoryAction = createAsyncThunk<PmmInstance[], string>(
     }
   },
 );
+
+export const removePmmInstanceAction = createAsyncThunk<
+  void,
+  string,
+  { state: AppState; rejectValue: unknown }
+>('ORGS:INVENTORY/DISCONNECT_PMM_INSTANCE', async (pmmInstanceId, { dispatch, getState }) => {
+  try {
+    await OrgAPI.removeOrgPmmInstance(pmmInstanceId);
+    toast.success(OrgMessages.removeInstanceSuccess);
+
+    const orgId = getFirstOrgId(getState());
+
+    await dispatch(getInventoryAction(orgId));
+  } catch (err) {
+    displayAndLogError(err);
+  }
+});
 
 export const getEntitlementsAction = createAsyncThunk<OrganizationEntitlement[], string>(
   'ORGS:ENTITLEMENTS/SEARCH',
@@ -72,22 +94,21 @@ export const getServiceNowOrganizationAction = createAsyncThunk<
   string,
   { state: AppState; rejectValue: unknown }
 >('ORGS:SN_ORGANIZATION/GET', async (payload, { dispatch, rejectWithValue }) => {
-    try {
-      const { data } = await OrgAPI.getServiceNowOrganization(payload);
+  try {
+    const { data } = await OrgAPI.getServiceNowOrganization(payload);
 
-      await dispatch(getOrganizationAction(data.org.id));
-      await dispatch(searchOrgMembersAction({ orgId: data.org.id }));
+    await dispatch(getOrganizationAction(data.org.id));
+    await dispatch(searchOrgMembersAction({ orgId: data.org.id }));
 
-      toast.info(Messages.fromCustomerPortal, { autoClose: false });
+    toast.info(Messages.fromCustomerPortal, { autoClose: false });
 
-      return data;
-    } catch (err) {
-      displayAndLogError(err);
+    return data;
+  } catch (err) {
+    displayAndLogError(err);
 
-      return rejectWithValue(err);
-    }
-  },
-);
+    return rejectWithValue(err);
+  }
+});
 
 export const createOrganizationAction = createAsyncThunk<
   OrganizationResponse,
@@ -117,7 +138,7 @@ export const setOrgDetailsSeen = createAction('ORGS:DETAILS/SET_SEEN/true');
 
 export const editOrganizationAction = createAsyncThunk<
   OrganizationResponse,
-  { orgId: string, name: string },
+  { orgId: string; name: string },
   { rejectValue: unknown }
 >('ORGS:ORGANIZATION/EDIT', async (payload, { dispatch, rejectWithValue }) => {
   try {

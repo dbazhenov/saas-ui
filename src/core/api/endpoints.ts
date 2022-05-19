@@ -22,5 +22,6 @@ export const ENDPOINTS = {
     searchOrgTickets: (orgId: string) => `/v1/orgs/${orgId}/tickets:search`,
     searchOrgEntitlements: (orgId: string) => `/v1/orgs/${orgId}/entitlements:search`,
     searchOrgInventory: (orgId: string) => `/v1/orgs/${orgId}/inventory:search`,
+    disconnectOrgPmmInstance: (pmmInstanceId: string) => `v1/orgs/inventory/${pmmInstanceId}:disconnect`,
   },
 };

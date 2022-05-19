@@ -1,14 +1,28 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { Column } from 'react-table';
+import { useDispatch, useSelector } from 'react-redux';
 import { Table } from '@percona/platform-core';
 import { Button, useStyles } from '@grafana/ui';
+import { getAuth } from 'store/auth';
 import { PmmInstance } from 'store/types';
+import { getUserRoleAction } from 'store/orgs';
 import { getStyles } from './PmmInstanceList.styles';
 import { Messages } from './PmmInstanceList.messages';
 import { PmmInstanceListProps } from './PmmInstanceList.types';
+import { PmmInstanceActions } from './PmmInstanceActions';
 
 export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loading }) => {
   const styles = useStyles(getStyles);
+  const dispatch = useDispatch();
+  const { orgRole } = useSelector(getAuth);
+
+  // FIXME: this should be done elsewhere
+  useEffect(() => {
+    if (orgRole === '') {
+      dispatch(getUserRoleAction());
+    }
+  }, [dispatch, orgRole]);
+
   const columns = useMemo<Column<PmmInstance>[]>(
     () => [
       {
@@ -29,7 +43,14 @@ export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loadin
             <Button variant="link">{url}</Button>
           </a>
         ),
-        width: '30%',
+        width: '25%',
+      },
+      {
+        Header: Messages.actions,
+        accessor: (instance: PmmInstance) => (
+          <PmmInstanceActions instance={instance} />
+        ),
+        width: '5%',
       },
     ],
     [styles],

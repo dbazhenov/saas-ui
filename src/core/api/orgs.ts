@@ -40,6 +40,9 @@ export const searchOrgTickets = (orgId: string) =>
 export const searchOrgInventory = (orgId: string) =>
   Api.post<RequestBody, SearchOrganizationInventoryResponse>(Org.searchOrgInventory(orgId));
 
+export const removeOrgPmmInstance = (pmmInstanceId: string) =>
+  Api.post<RequestBody, void>(Org.disconnectOrgPmmInstance(pmmInstanceId));
+
 export const searchOrgEntitlements = (orgId: string) =>
   Api.post<RequestBody, SearchOrganizationEntitlementsResponse>(Org.searchOrgEntitlements(orgId));
 
