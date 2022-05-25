@@ -35,6 +35,8 @@ export const authConfig = {
       'registration.signup.text': Messages.linkToSignUp,
       'registration.form.title': Messages.signUpTitle,
       'registration.form.submit': Messages.signUpButton,
+      'socialauth.google.label': Messages.signInGoogle,
+      'socialauth.github.label': Messages.signInGithub,
     },
   },
   helpLinks: {

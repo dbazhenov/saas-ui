@@ -53,11 +53,11 @@ const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
             />
             <label htmlFor="input099" data-se-for-name="tos" className={cx('tos-label', { checked })}>
               {Messages.iHaveAgreed}
-              <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer">
+              <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener">
                 {Messages.tos}
               </a>
               {Messages.and}
-              <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer">
+              <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener">
                 {Messages.privacyPolicy}
               </a>
               &nbsp;*
@@ -69,15 +69,33 @@ const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
   );
 };
 
-interface ContextProps {
-  controller: string;
-}
+const socialToS = (widgetRef: HTMLDivElement) => {
+  const container = widgetRef.querySelector('.primary-auth-container');
 
-const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
-  if (controller !== 'registration' || widgetRef.querySelector('.tos-label')) {
+  if (!container) {
     return;
   }
 
+  const tosWrapper = document.createElement('div');
+
+  container.append(tosWrapper);
+  ReactDOM.render(
+    <p className="tos-label">
+      {Messages.byContinuing}
+      <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener">
+        {Messages.tos}
+      </a>
+      {Messages.and}
+      <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener">
+        {Messages.privacyPolicy}
+      </a>
+      .
+    </p>,
+    tosWrapper,
+  );
+};
+
+const signUpToS = (widgetRef: HTMLDivElement) => {
   const fieldset = widgetRef.querySelector('.o-form-fieldset-container');
   const requiredLabel = widgetRef.querySelector('.required-fields-label');
 
@@ -98,6 +116,22 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
 
   container.insertBefore(tosWrapper, requiredLabel);
   ReactDOM.render(<ToSCheckbox submitBtn={submit} />, tosWrapper);
+};
+
+interface ContextProps {
+  controller: string;
+}
+
+const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
+  if (widgetRef.querySelector('.tos-label')) {
+    return;
+  }
+
+  if (controller === 'registration') {
+    signUpToS(widgetRef);
+  } else if (controller === 'idp-discovery') {
+    socialToS(widgetRef);
+  }
 };
 
 export const OktaSignInWidget = ({

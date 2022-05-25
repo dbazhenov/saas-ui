@@ -9,4 +9,6 @@ export const Messages = {
   platformAccessTokenNotFound: 'Platform access token not found in local storage.',
   clipboardNotAccessible:
     'Clipboard not accessible. You should consider using an updated modern browser and browsing using HTTPS.',
+  signInGoogle: 'Continue with Google',
+  signInGithub: 'Continue with GitHub',
 };

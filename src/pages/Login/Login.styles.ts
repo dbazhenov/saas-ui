@@ -117,6 +117,14 @@ export const getStyles = (theme: GrafanaTheme) => {
             border-color: #9372c9 !important;
           }
         }
+
+        .tos-label a {
+          color: #007dc1;
+        }
+      }
+
+      .primary-auth-container .tos-label {
+        font-size: 13px !important;
       }
 
       .okta-sign-in-header {
@@ -126,6 +134,10 @@ export const getStyles = (theme: GrafanaTheme) => {
       .okta-form-title {
         font-size: 20px !important;
         color: ${palette.black} !important;
+      }
+
+      .auth-footer {
+        margin-top: ${spacing.md} !important;
       }
     `,
     authCenter: css`
