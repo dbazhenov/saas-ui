@@ -129,7 +129,7 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
 
   if (controller === 'registration') {
     signUpToS(widgetRef);
-  } else if (controller === 'idp-discovery') {
+  } else if (['idp-discovery', 'primary-auth'].includes(controller)) {
     socialToS(widgetRef);
   }
 };
