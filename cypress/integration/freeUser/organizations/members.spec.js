@@ -1,4 +1,4 @@
-import { getUser } from 'pages/auth/getUser';
+import { getUser, getUserWithMailosaurEmail } from 'pages/auth/getUser';
 import dashboardPage from 'pages/dashboard.page';
 import { gettingStartedPage } from 'pages/gettingStarted.page';
 import { organizationPage } from 'pages/organization.page';
@@ -13,7 +13,9 @@ context('Members tests for the Free Users', () => {
   let admin1User;
   let admin2User;
   let technical1User;
-
+  let newAdminUser; 
+  let newTechnicalUser;
+  
   beforeEach(() => {
     admin1User = getUser();
     admin2User = getUser();
@@ -22,13 +24,22 @@ context('Members tests for the Free Users', () => {
     cy.oktaCreateUser(admin2User);
     cy.oktaCreateUser(technical1User);
     createOrgAndAddUsers(admin1User, [
-      { email: admin2User.email, role: organizationPage.constants.userRoles.admin },
-      { email: technical1User.email, role: organizationPage.constants.userRoles.technical },
+      { email: admin2User.email, role: 'Admin' },
+      { email: technical1User.email, role: 'Technical' },
     ]);
   });
 
   afterEach(() => {
     cy.cleanUpAfterTest([admin1User, admin2User, technical1User], admin1User);
+    if(newAdminUser) {
+      cy.oktaDeleteUserByEmail(newAdminUser.email);
+      newAdminUser = undefined;
+    }
+
+    if(newTechnicalUser) {
+      cy.oktaDeleteUserByEmail(newTechnicalUser.email);
+      newTechnicalUser = undefined;
+    }
   });
 
   it('SAAS-T158 Verify organization admin is able to edit member roles', () => {
@@ -72,6 +83,134 @@ context('Members tests for the Free Users', () => {
           expect(row).to.deep.contain(newValues[index]);
         });
     });
+  });
+
+  it.skip('SAAS-T169 Verify Technical User can not invite Org members', () => {
+    cy.loginByOktaApi(admin1User.email, admin1User.password);
+    // cy.loginByOktaApi(technical1User.email, technical1User.password);
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click();
+    cy.findByTestId('table').then(() =>
+      cy.findByTestId(organizationPage.locators.inviteMemberButton).should('not.exist'),
+    );
+  });
+
+  it.skip('SAAS-T170 Verify email validation on Invite Member modal', () => {
+    const emailAddresses = [
+      'plainaddress',
+      '#@%^%#$@#$@#.com',
+      '@example.com',
+      'Joe Smith <email@example.com>',
+      'email.example.com',
+      'email@example@example.com',
+      // '.email@example.com',
+      // 'email.@example.com',
+      // 'email..email@example.com',
+      'あいうえお@example.com',
+      'email@example.com (Joe Smith)',
+      'email@example',
+      'email@-example.com',
+      // 'email@example.web',
+      // 'email@111.222.333.44444',
+      'email@example..com',
+      // 'Abc..123@example.com',
+    ];
+
+    cy.loginByOktaApi(admin1User.email, admin1User.password);
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click();
+    cy.findByTestId('table').then(() =>
+      cy.findByTestId(organizationPage.locators.inviteMemberButton).should('be.visible'),
+    );
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click();
+    emailAddresses.forEach((emailAddress) => {
+      cy.findByTestId(organizationPage.locators.modalEmailInput).clear().type(emailAddress);
+      cy.findByTestId(organizationPage.locators.modalEmailError).hasText(
+        organizationPage.constants.messages.emailValidationError,
+      );
+      cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).isDisabled();
+    });
+  });
+
+  it('SAAS-T149 - Verify admin can invite other members to organization (free account)', () => {
+    newAdminUser = getUserWithMailosaurEmail();
+    newTechnicalUser = getUserWithMailosaurEmail();
+    cy.oktaCreateUser(newAdminUser);
+    cy.oktaCreateUser(newTechnicalUser);
+    cy.loginByOktaApi(admin1User.email, admin1User.password);
+
+    cy.contains(gettingStartedPage.constants.labels.viewOrganization, { timeout: timeouts.HALF_MIN })
+      .should('be.visible')
+      .click({ force: true });
+    organizationPage.methods.openMembersTab();
+
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({force: true});
+    cy.findByTestId(organizationPage.locators.modalEmailInput).type(newAdminUser.email);
+    cy.contains('div', organizationPage.constants.userRoles.technical).click();
+    cy.contains('div', organizationPage.constants.userRoles.admin).click();
+    cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
+    cy.checkPopUpMessage(organizationPage.constants.messages.userSuccessfullyInvited);
+
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({force: true});
+    cy.findByTestId(organizationPage.locators.modalEmailInput).type(newTechnicalUser.email);
+    cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
+    cy.checkPopUpMessage(organizationPage.constants.messages.userSuccessfullyInvited);
+
+    cy.mailosaurGetMessage(mailosaurServerId, { sentTo: newAdminUser.email }, { timeout: 20000 }).then(
+      (message) => {
+        expect(message.metadata.headers.find(({ field }) => field === 'Subject').value).to.be.equal(
+          'Welcome to Test Organization',
+        );
+        cy.mailosaurDeleteMessage(message.id);
+      },
+    );
+
+    cy.mailosaurGetMessage(mailosaurServerId, { sentTo: newTechnicalUser.email }, { timeout: 20000 }).then(
+      (message) => {
+        expect(message.metadata.headers.find(({ field }) => field === 'Subject').value).to.be.equal(
+          'Welcome to Test Organization',
+        );
+        cy.mailosaurDeleteMessage(message.id);
+      },
+    );
+
+    const usersTable = [
+      {
+        Name: `${admin1User.firstName} ${admin1User.lastName}`,
+        Email: admin1User.email,
+        Role: organizationPage.constants.userRoles.admin,
+      },
+      {
+        Name: `${admin2User.firstName} ${admin2User.lastName}`,
+        Email: admin2User.email,
+        Role: organizationPage.constants.userRoles.admin,
+      },
+      {
+        Name: `${technical1User.firstName} ${technical1User.lastName}`,
+        Email: technical1User.email,
+        Role: organizationPage.constants.userRoles.technical,
+      },
+      {
+        Name: `${newAdminUser.firstName} ${newAdminUser.lastName}`,
+        Email: newAdminUser.email,
+        Role: organizationPage.constants.userRoles.admin,
+      },
+      {
+        Name: `${newTechnicalUser.firstName} ${newTechnicalUser.lastName}`,
+        Email: newTechnicalUser.email,
+        Role: organizationPage.constants.userRoles.technical,
+      },
+    ];
+
+    cy.findByTestId('table')
+      .getTable({ onlyColumns: ['Name', 'Email', 'Role'] })
+      .then((table) => {
+        // eslint-disable-next-line no-magic-numbers
+        expect(table.length).to.be.equal(usersTable.length);
+        usersTable.forEach((tableUser) => expect(table).to.deep.include(tableUser));
+      });
   });
 
   it('SAAS-T175 Verify Technical User can view list of Org members in read-only mode', () => {

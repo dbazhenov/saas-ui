@@ -8,6 +8,7 @@ export const organizationPage = {
       creationDateLabel: 'Creation Date',
       membersTabLabel: 'Members',
       organizationTabLabel: 'Organization',
+      inviteMemberModalHeader: 'Invite Member',
       requiredField: 'Required field',
       inviteEmailSubject: 'Welcome to Percona Platform!',
     },
@@ -17,6 +18,7 @@ export const organizationPage = {
     },
     messages: {
       customerOrgFound: 'We found your organization on Percona Customer Portal and used it',
+      emailValidationError: 'Invalid email address',
       orgCreatedSuccessfully: 'Your organization has been created.',
       orgEditedSuccessfully: 'Your organization has been updated.',
       /* prettier-ignore */

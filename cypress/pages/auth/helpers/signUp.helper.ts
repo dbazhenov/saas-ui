@@ -18,7 +18,7 @@ export const fillOutSignUpForm = (user: User) => {
 };
 
 export const getMailosaurEmailAddress = (user: User): string =>
-  `ui_tests_${user.firstName + user.lastName}@${Cypress.env('mailosaur_ui_tests_server_id')}.mailosaur.net`;
+  `ui_tests_${user.firstName}${user.lastName}@${Cypress.env('mailosaur_ui_tests_server_id')}.mailosaur.net`;
 
 export interface SignUpFormErrors {
   email?: boolean;

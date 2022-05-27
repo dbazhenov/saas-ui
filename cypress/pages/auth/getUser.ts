@@ -1,6 +1,7 @@
 import faker from 'faker';
 import { generate } from 'generate-password';
 import { User } from 'pages/common/interfaces/Auth';
+import signUpPage from './signUp.page';
 
 /*
 Using generate-password lib due to a bug in a faker when passing a regex to a password function.
@@ -28,6 +29,18 @@ export const getUser = (email: string = ''): User => {
 
   return {
     email: email || getFakeEmail(firstName, lastName),
+    password: getPassword(),
+    firstName,
+    lastName,
+  };
+};
+
+export const getUserWithMailosaurEmail = (): User => {
+  const firstName = faker.name.firstName();
+  const lastName = faker.name.lastName();
+
+  return {
+    email: signUpPage.methods.getMailosaurEmailAddress({ firstName, lastName, email: '', password: '' }),
     password: getPassword(),
     firstName,
     lastName,

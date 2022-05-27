@@ -1,12 +1,13 @@
 import commonPage from 'pages/common.page';
+import { timeouts } from '../../fixtures/timeouts';
 
 export const leftMenuNavigation = (target: LeftMainMenuLinks) => {
   cy.findAllByTestId(commonPage.locators.sideMenuLink).get(target).click();
 };
 
 export const commonPageLoaded = () => {
-  cy.findByTestId(commonPage.locators.perconaLogo);
-  cy.findByTestId(commonPage.locators.profileToggle);
+  cy.findByTestId(commonPage.locators.perconaLogo, { timeout: timeouts.ONE_MIN });
+  cy.findByTestId(commonPage.locators.profileToggle, { timeout: timeouts.ONE_MIN });
 };
 
 export const uiLogoutUser = () => {
