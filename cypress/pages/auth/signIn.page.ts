@@ -11,6 +11,8 @@ const signInPage = {
       nextButtonText: 'Next',
       signUpLink: 'Create one',
       unableToSignIn: 'Unable to sign in',
+      tosAgree:
+        "By continuing with Google and GitHub, I agree to Percona's Terms of Service and Privacy Policy.",
     },
     links: {},
   },

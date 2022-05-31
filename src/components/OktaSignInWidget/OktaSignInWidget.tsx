@@ -1,137 +1,88 @@
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 // @ts-ignore
 import OktaSignIn from '@okta/okta-signin-widget';
 import { useStyles } from '@grafana/ui';
 import { getStyles } from 'pages/Login/Login.styles';
-import { cx } from 'emotion';
 import ReactDOM from 'react-dom';
 import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';
 import { Messages } from './OktaSignInWidget.messages';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 
-const disabledCls = 'link-button-disabled';
-
-interface ToSCheckboxProps {
-  submitBtn: HTMLInputElement;
+interface ContextProps {
+  controller: string;
 }
 
-const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
-  const [checked, setChecked] = useState(false);
-
-  const handleCheck = useCallback(
-    ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setChecked(eChecked);
-
-      if (eChecked) {
-        submitBtn.classList.remove(disabledCls);
-        submitBtn.removeAttribute('disabled');
-      } else {
-        submitBtn.classList.add(disabledCls);
-        submitBtn.setAttribute('disabled', 'true');
-      }
-    },
-    [submitBtn],
-  );
-
-  useEffect(() => {
-    submitBtn.classList.add(disabledCls);
-    submitBtn.setAttribute('disabled', 'true');
-  }, [submitBtn]);
-
-  return (
-    <div data-se="o-form-fieldset" className="o-form-fieldset o-form-label-top">
-      <div data-se="o-form-input-container" className="o-form-input">
-        <span data-se="o-form-input-tos" className="o-form-input-name-tos">
-          <div className="custom-checkbox">
-            <input
-              type="checkbox"
-              name="tos"
-              id="input099"
-              checked={checked}
-              onChange={handleCheck}
-              value={checked ? 'on' : 'off'}
-            />
-            <label htmlFor="input099" data-se-for-name="tos" className={cx('tos-label', { checked })}>
-              {Messages.iHaveAgreed}
-              <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener">
-                {Messages.tos}
-              </a>
-              {Messages.and}
-              <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener">
-                {Messages.privacyPolicy}
-              </a>
-              &nbsp;*
-            </label>
-          </div>
-        </span>
-      </div>
-    </div>
-  );
-};
-
-const socialToS = (widgetRef: HTMLDivElement) => {
-  const container = widgetRef.querySelector('.primary-auth-container');
-
-  if (!container) {
-    return;
-  }
-
-  const tosWrapper = document.createElement('div');
-
-  container.append(tosWrapper);
-  ReactDOM.render(
-    <p className="tos-label">
-      {Messages.byContinuing}
-      <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener">
-        {Messages.tos}
-      </a>
-      {Messages.and}
-      <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener">
-        {Messages.privacyPolicy}
-      </a>
-      .
-    </p>,
-    tosWrapper,
-  );
-};
-
-const signUpToS = (widgetRef: HTMLDivElement) => {
+const getSignUpTosWrapper = (widgetRef: HTMLDivElement) => {
   const fieldset = widgetRef.querySelector('.o-form-fieldset-container');
   const requiredLabel = widgetRef.querySelector('.required-fields-label');
 
   if (!fieldset || !requiredLabel) {
-    return;
+    return undefined;
   }
 
   const container = requiredLabel.parentNode;
 
   if (!container) {
-    return;
+    return undefined;
   }
 
-  const submit = widgetRef.querySelector('.button-primary') as HTMLInputElement;
   const tosWrapper = document.createElement('div');
 
   tosWrapper.id = 'tos-wrapper';
 
   container.insertBefore(tosWrapper, requiredLabel);
-  ReactDOM.render(<ToSCheckbox submitBtn={submit} />, tosWrapper);
+
+  return tosWrapper;
 };
 
-interface ContextProps {
-  controller: string;
-}
+const getSocialTosWrapper = (widgetRef: HTMLDivElement) => {
+  const container = widgetRef.querySelector('.primary-auth-container');
+
+  if (!container) {
+    return undefined;
+  }
+
+  const tosWrapper = document.createElement('div');
+
+  container.append(tosWrapper);
+
+  return tosWrapper;
+};
 
 const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
   if (widgetRef.querySelector('.tos-label')) {
     return;
   }
 
+  let tosWrapper;
+  let actionText;
+
   if (controller === 'registration') {
-    signUpToS(widgetRef);
+    tosWrapper = getSignUpTosWrapper(widgetRef);
+    actionText = Messages.byCreating;
   } else if (['idp-discovery', 'primary-auth'].includes(controller)) {
-    socialToS(widgetRef);
+    tosWrapper = getSocialTosWrapper(widgetRef);
+    actionText = Messages.byContinuing;
   }
+
+  if (!tosWrapper) {
+    return;
+  }
+
+  ReactDOM.render(
+    <p className="tos-label" data-testid="tos-label">
+      {actionText}
+      <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener" data-testid="tos-link">
+        {Messages.tos}
+      </a>
+      {Messages.and}
+      <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
+        {Messages.privacyPolicy}
+      </a>
+      .
+    </p>,
+    tosWrapper,
+  );
 };
 
 export const OktaSignInWidget = ({

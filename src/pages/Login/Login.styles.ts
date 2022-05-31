@@ -118,13 +118,17 @@ export const getStyles = (theme: GrafanaTheme) => {
           }
         }
 
-        .tos-label a {
-          color: #007dc1;
+        #tos-wrapper {
+          margin-bottom: 12px;
         }
-      }
 
-      .primary-auth-container .tos-label {
-        font-size: 13px !important;
+        .tos-label {
+          font-size: 13px !important;
+
+          a {
+            color: #007dc1;
+          }
+        }
       }
 
       .okta-sign-in-header {

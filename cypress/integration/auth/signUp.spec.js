@@ -19,7 +19,7 @@ context('Sign Up', () => {
         cy.log('This test also covers: SAAS-T122 - Verify confirmation email is sent during Portal registration');
         newUser.email = signUpPage.methods.getMailosaurEmailAddress(newUser);
         signUpPage.methods.fillOutSignUpForm(newUser);
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
+        cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
         cy.get(signUpPage.locators.registerButton).isEnabled().click();
         cy.get(signUpPage.locators.registrationCompleteTitle)
             .should('be.visible')
@@ -67,7 +67,7 @@ context('Sign Up', () => {
     it('SAAS-T85 - Verify Sign Up if user already has Percona account', () => {
         cy.oktaCreateUser(newUser);
         signUpPage.methods.fillOutSignUpForm(newUser);
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
+        cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
         cy.get(signUpPage.locators.registerButton).isEnabled().click();
         cy.get(signUpPage.locators.registrationAlert)
             .hasText(signUpPage.constants.messages.emailAlreadyRegistered);
@@ -76,6 +76,7 @@ context('Sign Up', () => {
 
     it('SAAS-T113 - Verify Sign up redirects to Okta widget', () => {
         cy.url().should('contain', signUpPage.constants.links.loginAddress);
+        cy.get(signInPage.locators.signUpLink).click();
         cy.get(signUpPage.locators.inputEmail)
             .children()
             .hasAttr('placeholder', signUpPage.constants.labels.emailPlaceholder);
@@ -88,14 +89,9 @@ context('Sign Up', () => {
         cy.get(signUpPage.locators.inputLastName)
             .children()
             .hasAttr('placeholder', signUpPage.constants.labels.lastNamePlaceholder);
-        cy.get(signUpPage.locators.termsOfServiceLabel).should((element) => {
-            const trimmedText = element.text().replace(/\s\s+/g, ' ').trim();
-
-            expect(trimmedText).to.contain(signUpPage.constants.messages.termsOfServiceText);
-        })
-            .isVisible().find('a').hasAttr('href', signUpPage.constants.links.platformTerms)
-            .next().hasAttr('href', signUpPage.constants.links.platformPrivacy);
-        cy.get(signUpPage.locators.registerButton).isDisabled();
+        cy.findByTestId(signUpPage.locators.tosLink).hasAttr('href', signUpPage.constants.links.platformTerms);
+        cy.findByTestId(signUpPage.locators.privacyPolicyLink).hasAttr('href', signUpPage.constants.links.platformPrivacy);
+        cy.get(signUpPage.locators.registerButton).isEnabled();
     });
 
     it('SAAS-T115 - Verify validation for email on Sign Up', () => {
@@ -106,7 +102,7 @@ context('Sign Up', () => {
             password: newUser.password,
         });
         cy.get(signUpPage.locators.inputEmail).next().hasText(signUpPage.constants.messages.invalidEmail);
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
+        cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({});
         cy.reload();
@@ -118,15 +114,13 @@ context('Sign Up', () => {
             password: newUser.password,
         });
         cy.contains(signUpPage.constants.messages.invalidEmail).should('not.exist');
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
+        cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
         cy.get(signUpPage.locators.registerButton).isEnabled();
-        cy.get(signUpPage.locators.termsOfService).uncheck({force: true});
-        cy.get(signUpPage.locators.registerButton).isDisabled();
     });
 
     it('SAAS-T121 - Verify Sign Up to Platform is not possible without Last Name and First Name', () => {
         signUpPage.methods.fillOutSignUpForm({email: newUser.email, password: newUser.password});
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
+        cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({firstName: true, lastName: true});
         cy.reload();
@@ -136,7 +130,6 @@ context('Sign Up', () => {
             lastName: newUser.lastName,
             password: newUser.password,
         });
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({firstName: true});
         cy.reload();
@@ -146,7 +139,6 @@ context('Sign Up', () => {
             firstName: newUser.firstName,
             password: newUser.password,
         });
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({lastName: true});
         cy.reload();
@@ -156,16 +148,12 @@ context('Sign Up', () => {
             lastName: newUser.label,
             password: newUser.password,
         });
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
         cy.get(signUpPage.locators.registerButton).click();
         signUpPage.methods.verifyValidationSignUp({email: true});
         cy.reload();
         cy.get(signInPage.locators.signUpLink).click();
         signUpPage.methods.fillOutSignUpForm(newUser);
-        cy.get(signUpPage.locators.termsOfService).check({force: true});
         cy.get(signUpPage.locators.registerButton).isEnabled();
-        cy.get(signUpPage.locators.termsOfService).uncheck({force: true});
-        cy.get(signUpPage.locators.registerButton).isDisabled();
     });
 
 });
