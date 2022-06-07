@@ -30,7 +30,7 @@ export const Main: FC = () => (
     <SecureRoute exact path={Routes.instances}>
       <ManagePmmInstancesPage />
     </SecureRoute>
-    <SecureRoute>
+    <SecureRoute path="*">
       <NotFound />
     </SecureRoute>
   </Switch>
