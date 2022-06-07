@@ -3,7 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { TestContainer } from 'components/TestContainer';
 import { IconLink } from './IconLink';
 
-const pixel = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+const pixel =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 const testAltText = 'test';
 const testText = 'Test';
 

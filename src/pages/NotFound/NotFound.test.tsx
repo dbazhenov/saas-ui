@@ -8,13 +8,21 @@ import { Messages } from './NotFound.messages';
 
 describe('NotFound', () => {
   test('has the 404 image', () => {
-    const { container } = render(<TestContainer><NotFound /></TestContainer>);
+    const { container } = render(
+      <TestContainer>
+        <NotFound />
+      </TestContainer>,
+    );
 
     expect(container.querySelector(dataTestId('404-image'))).not.toBeNull();
   });
 
   test('links to root', () => {
-    const { container } = render(<TestContainer><NotFound /></TestContainer>);
+    const { container } = render(
+      <TestContainer>
+        <NotFound />
+      </TestContainer>,
+    );
     const anchor = container.querySelector('a');
     const button = anchor?.querySelector(dataTestId('404-home-button'));
 
@@ -24,7 +32,11 @@ describe('NotFound', () => {
   });
 
   test('link contains only the configured text', () => {
-    const { container } = render(<TestContainer><NotFound /></TestContainer>);
+    const { container } = render(
+      <TestContainer>
+        <NotFound />
+      </TestContainer>,
+    );
     const anchor = container.querySelector('a');
 
     expect(anchor?.textContent).toEqual(Messages.homepage);

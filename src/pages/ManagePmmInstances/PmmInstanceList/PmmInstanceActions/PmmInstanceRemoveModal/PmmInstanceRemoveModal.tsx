@@ -18,14 +18,8 @@ export const PmmInstanceRemoveModal: FC<PmmInstallRemoveModalProps> = ({
   const pending = useSelector(getIsOrgPending);
 
   return (
-    <Modal
-      title={Messages.deleteMemberTitle}
-      isVisible={isVisible}
-      onClose={onClose}
-    >
-      <p className={styles.deleteMessage}>
-       {Messages.removeInstance(instance.name)}
-      </p>
+    <Modal title={Messages.deleteMemberTitle} isVisible={isVisible} onClose={onClose}>
+      <p className={styles.deleteMessage}>{Messages.removeInstance(instance.name)}</p>
       <Form onSubmit={onSubmit}>
         {({ handleSubmit }: FormRenderProps) => (
           <form onSubmit={handleSubmit} className={styles.deleteForm} data-testid="delete-member-form">

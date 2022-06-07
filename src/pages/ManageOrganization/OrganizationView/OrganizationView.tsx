@@ -55,7 +55,7 @@ export const OrganizationView: FC = () => {
     <div data-testid="create-organization-wrapper" className={containerStyles}>
       {pending ? (
         <Spinner />
-      ): (
+      ) : (
         <>
           <OrganizationLogo />
           <div className={styles.orgDetails}>

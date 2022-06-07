@@ -38,7 +38,11 @@ export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loadin
       {
         Header: Messages.url,
         accessor: 'url',
-        Cell: ({ row: { original: { url } } }) => (
+        Cell: ({
+          row: {
+            original: { url },
+          },
+        }) => (
           <a href={url} className={styles.instanceServerLink} target="_blank" rel="noreferrer">
             <Button variant="link">{url}</Button>
           </a>
@@ -47,9 +51,7 @@ export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loadin
       },
       {
         Header: Messages.actions,
-        accessor: (instance: PmmInstance) => (
-          <PmmInstanceActions instance={instance} />
-        ),
+        accessor: (instance: PmmInstance) => <PmmInstanceActions instance={instance} />,
         width: '5%',
       },
     ],

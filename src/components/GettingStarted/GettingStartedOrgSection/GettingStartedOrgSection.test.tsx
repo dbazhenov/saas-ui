@@ -37,8 +37,12 @@ xdescribe('Getting Started Organization Section', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect((mockPost)).toBeCalledTimes(1); });
-    waitFor(() => { expect((mockPost)).toBeCalledWith(ENDPOINTS.Org.getUserOganizations); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
+    waitFor(() => {
+      expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getUserOganizations);
+    });
   });
 
   test('shows a link to create an organization if no organizations are returned by the API for the user', async () => {
@@ -62,7 +66,9 @@ xdescribe('Getting Started Organization Section', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect((mockPost)).toBeCalledTimes(1); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
     expect(await screen.findByText(Messages.viewOrganization));
   });
 
@@ -75,8 +81,12 @@ xdescribe('Getting Started Organization Section', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
-    waitFor(() => { expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getUserCompany); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
+    waitFor(() => {
+      expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getUserCompany);
+    });
   });
 
   test('shows a link to view the details if user has no orgs but has company in ServiceNow', async () => {
@@ -91,7 +101,9 @@ xdescribe('Getting Started Organization Section', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
     expect(await screen.findByText(Messages.viewOrganization));
   });
 });

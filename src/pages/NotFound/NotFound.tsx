@@ -10,9 +10,7 @@ import { getStyles } from './NotFound.styles';
 import { Messages } from './NotFound.messages';
 
 export const NotFound: FC = () => {
-  const {
-    isDark,
-  } = useSelector(getCurrentTheme);
+  const { isDark } = useSelector(getCurrentTheme);
   const styles = useStyles(getStyles);
   const logo = isDark ? darkLogo : lightLogo;
 

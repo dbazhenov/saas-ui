@@ -53,9 +53,9 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
     // every time location changes
     .addCase(LOCATION_CHANGE, (state) => {
       state.isOrgFromPortal = !!state.currentOrg.org || !!state.orgs.length;
-      state.viewActiveTab = (
-        state.orgDetailsSeen ? OrganizationViewTabs.members : OrganizationViewTabs.organization
-      );
+      state.viewActiveTab = state.orgDetailsSeen
+        ? OrganizationViewTabs.members
+        : OrganizationViewTabs.organization;
     })
     // Inventory
     .addCase(getInventoryAction.pending, (state) => {

@@ -13,7 +13,8 @@ export const Messages = {
     },
     {
       name: 'A single account',
-      description: ' for key resources like the knowledge base, support tickets, and guidance from Percona experts',
+      description:
+        ' for key resources like the knowledge base, support tickets, and guidance from Percona experts',
     },
   ],
   bulletArrow: 'Bullet point arrow icon',

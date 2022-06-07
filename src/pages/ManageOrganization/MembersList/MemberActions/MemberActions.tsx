@@ -45,10 +45,13 @@ export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
     setIsEditModalVisible(true);
   };
 
-  const handleEditMemberSubmit = useCallback((formData: EditMemberFormFields) => {
-    setIsEditModalVisible(false);
-    dispatch(editOrgMemberAction({ orgId, memberId, role: formData.role.value! }));
-  }, [dispatch, orgId, memberId]);
+  const handleEditMemberSubmit = useCallback(
+    (formData: EditMemberFormFields) => {
+      setIsEditModalVisible(false);
+      dispatch(editOrgMemberAction({ orgId, memberId, role: formData.role.value! }));
+    },
+    [dispatch, orgId, memberId],
+  );
 
   return (
     <>

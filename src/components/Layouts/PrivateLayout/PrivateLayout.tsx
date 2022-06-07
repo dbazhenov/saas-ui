@@ -11,9 +11,7 @@ export const PrivateLayout: FC = ({ children }) => {
       <MenuBar />
       <div className={styles.mainWrapper}>
         <SideMenu />
-        <section className={styles.contentWrapper}>
-          {children}
-        </section>
+        <section className={styles.contentWrapper}>{children}</section>
       </div>
     </main>
   );

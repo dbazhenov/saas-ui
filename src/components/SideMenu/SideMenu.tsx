@@ -20,39 +20,27 @@ export const SideMenu: FC = () => {
   return (
     <nav data-testid="side-menu" className={styles.sideMenu}>
       <section data-testid="side-menu-main-section" className={styles.section}>
-        <header className={styles.navSectionLabel} data-testid="main-header">{Messages.main}</header>
-        <IconLink
-          icon={dashboard}
-          to={Routes.root}
-          alt={Messages.dashboard}
-        >
+        <header className={styles.navSectionLabel} data-testid="main-header">
+          {Messages.main}
+        </header>
+        <IconLink icon={dashboard} to={Routes.root} alt={Messages.dashboard}>
           {Messages.dashboard}
         </IconLink>
-        <IconLink
-          icon={organization}
-          to={Routes.organization}
-          alt={Messages.organization}
-        >
+        <IconLink icon={organization} to={Routes.organization} alt={Messages.organization}>
           {Messages.organization}
         </IconLink>
-        <IconLink
-          icon={instances}
-          to={Routes.instances}
-          alt={Messages.instances}
-        >
+        <IconLink icon={instances} to={Routes.instances} alt={Messages.instances}>
           {Messages.instances}
         </IconLink>
       </section>
       <section data-testid="side-menu-resources-section" className={styles.section}>
-        <header className={styles.navSectionLabel} data-testid="resources-header">{Messages.resources}</header>
-          <ResourceLink
-            text={Messages.documentation}
-            icon={sidebarDocs}
-            href={resourcesLinks.documentation}
-          />
-          <ResourceLink text={Messages.blogs} icon={sidebarBlog} href={resourcesLinks.blogs} />
-          <ResourceLink text={Messages.forum} icon={sidebarForum} href={resourcesLinks.forum} />
-          <ResourceLink text={Messages.help} icon={help} href={resourcesLinks.help} />
+        <header className={styles.navSectionLabel} data-testid="resources-header">
+          {Messages.resources}
+        </header>
+        <ResourceLink text={Messages.documentation} icon={sidebarDocs} href={resourcesLinks.documentation} />
+        <ResourceLink text={Messages.blogs} icon={sidebarBlog} href={resourcesLinks.blogs} />
+        <ResourceLink text={Messages.forum} icon={sidebarForum} href={resourcesLinks.forum} />
+        <ResourceLink text={Messages.help} icon={help} href={resourcesLinks.help} />
       </section>
     </nav>
   );

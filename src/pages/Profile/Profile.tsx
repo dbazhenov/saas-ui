@@ -49,11 +49,16 @@ export const ProfilePage: FC = () => {
     <PrivateLayout>
       <main className={styles.wrapper}>
         <Form
-          initialValues={{email, firstName, lastName, platformAccessToken }}
+          initialValues={{ email, firstName, lastName, platformAccessToken }}
           onSubmit={handleUpdateProfileSubmit}
         >
           {({ handleSubmit, valid, pristine }: FormRenderProps) => (
-            <form name="profile-form" data-testid="profile-form" className={styles.form} onSubmit={handleSubmit}>
+            <form
+              name="profile-form"
+              data-testid="profile-form"
+              className={styles.form}
+              onSubmit={handleSubmit}
+            >
               <legend className={styles.legend}>{Messages.profile}</legend>
               <div className={styles.nameFields}>
                 <TextInputField
@@ -75,7 +80,9 @@ export const ProfilePage: FC = () => {
               <div className={styles.platformAccessTokenWrapper}>
                 <Label className={styles.platformAccessTokenLabel}>{Messages.platformAccessToken}</Label>
                 <div className={styles.platformAccessTokenButtonWrapper}>
-                  <LinkButton variant="link" onClick={handleCopyToClipboard}>{Messages.copyToClipboard}</LinkButton>
+                  <LinkButton variant="link" onClick={handleCopyToClipboard}>
+                    {Messages.copyToClipboard}
+                  </LinkButton>
                 </div>
               </div>
               <p className={styles.platformAccessTokenDescription}>
@@ -103,7 +110,11 @@ export const ProfilePage: FC = () => {
                 </a>
               </div>
               <div className={styles.buttonWrapper}>
-                <LoaderButton data-qa="profile-submit-button" type="submit" disabled={!valid || pending || pristine}>
+                <LoaderButton
+                  data-qa="profile-submit-button"
+                  type="submit"
+                  disabled={!valid || pending || pristine}
+                >
                   {pending ? Messages.loading : Messages.save}
                 </LoaderButton>
               </div>
@@ -114,4 +125,3 @@ export const ProfilePage: FC = () => {
     </PrivateLayout>
   );
 };
-

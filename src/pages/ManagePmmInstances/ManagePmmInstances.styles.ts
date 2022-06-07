@@ -28,7 +28,7 @@ export const getStyles = ({ border, colors, spacing, typography }: GrafanaTheme)
   `,
   linkWrapper: css`
     text-align: right;
-    padding: ${spacing.sm}
+    padding: ${spacing.sm};
   `,
   externalLink: css`
     color: ${colors.linkExternal};

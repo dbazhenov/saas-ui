@@ -8,24 +8,13 @@ import { getStyles } from './MemberDeleteModal.styles';
 import { Messages } from './MemberDeleteModal.messages';
 import { MemberDeleteModalProps } from './MemberDeleteModal.types';
 
-export const MemberDeleteModal: FC<MemberDeleteModalProps> = ({
-  member,
-  isVisible,
-  onClose,
-  onSubmit,
-}) => {
+export const MemberDeleteModal: FC<MemberDeleteModalProps> = ({ member, isVisible, onClose, onSubmit }) => {
   const styles = useStyles(getStyles);
   const pending = useSelector(getIsOrgPending);
 
   return (
-    <Modal
-      title={Messages.deleteMemberTitle}
-      isVisible={isVisible}
-      onClose={onClose}
-    >
-      <p className={styles.deleteMessage}>
-       {Messages.deleteMember(member.email)}
-      </p>
+    <Modal title={Messages.deleteMemberTitle} isVisible={isVisible} onClose={onClose}>
+      <p className={styles.deleteMessage}>{Messages.deleteMember(member.email)}</p>
       <Form onSubmit={onSubmit}>
         {({ handleSubmit }: FormRenderProps) => (
           <form onSubmit={handleSubmit} className={styles.deleteForm} data-testid="delete-member-form">

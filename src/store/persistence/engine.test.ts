@@ -33,7 +33,9 @@ xdescribe('Persistence Engine', () => {
   });
 
   test('saveState fails', () => {
-    setItem.mockImplementation(() => { throw TEST_ERROR; });
+    setItem.mockImplementation(() => {
+      throw TEST_ERROR;
+    });
 
     saveState(TEST_STATE);
 
@@ -62,7 +64,9 @@ xdescribe('Persistence Engine', () => {
   });
 
   test('loadState fails', () => {
-    getItem.mockImplementation(() => { throw TEST_ERROR; });
+    getItem.mockImplementation(() => {
+      throw TEST_ERROR;
+    });
 
     const state = loadState();
 

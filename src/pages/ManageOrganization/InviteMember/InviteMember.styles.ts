@@ -4,11 +4,11 @@ import { GrafanaTheme } from '@grafana/data';
 export const getStyles = (theme: GrafanaTheme) => {
   const { spacing, typography } = theme;
 
-   return ({
+  return {
     container: css`
       display: flex;
       flex-direction: column;
-      padding-top: ${spacing.md}
+      padding-top: ${spacing.md};
     `,
     inviteButton: css`
       align-self: flex-end;
@@ -33,5 +33,5 @@ export const getStyles = (theme: GrafanaTheme) => {
       margin-top: ${spacing.xl};
       align-self: flex-end;
     `,
-  });
+  };
 };

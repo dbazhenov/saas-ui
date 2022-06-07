@@ -2,7 +2,8 @@ import { OrganizationTicketsResponse } from 'core/api/types';
 import { OrgTicket } from './TicketList.types';
 
 export const mapOrgTickets = (tickets: OrganizationTicketsResponse[]): OrgTicket[] =>
-  tickets.map(({
+  tickets.map(
+    ({
       number,
       short_description: description,
       priority,
@@ -13,14 +14,14 @@ export const mapOrgTickets = (tickets: OrganizationTicketsResponse[]): OrgTicket
       url,
       state: status,
     }) => ({
-    number,
-    description,
-    priority,
-    date,
-    department,
-    requester,
-    taskType,
-    url,
-    status,
-  }));
-
+      number,
+      description,
+      priority,
+      date,
+      department,
+      requester,
+      taskType,
+      url,
+      status,
+    }),
+  );

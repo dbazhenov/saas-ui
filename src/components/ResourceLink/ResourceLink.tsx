@@ -10,8 +10,8 @@ export const ResourceLink: FC<ResourceLinkProps> = ({ text, href, icon }) => {
   return (
     <a href={href} target="_blank" rel="noreferrer noopener" className={styles.link}>
       <SidebarItem alt={text} icon={icon}>
-      {text}
-      <Icon name="external-link-alt" className={styles.icon} />
+        {text}
+        <Icon name="external-link-alt" className={styles.icon} />
       </SidebarItem>
     </a>
   );

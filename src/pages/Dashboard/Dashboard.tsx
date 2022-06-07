@@ -4,7 +4,17 @@ import { LinkButton, useStyles } from '@grafana/ui';
 import { PrivateLayout } from 'components/Layouts';
 import { GettingStarted } from 'components';
 import { getUserCompanyAction, getUserCompanyName } from 'store/auth';
-import { getCurrentOrgName, getFirstOrgId, getOrgs, getOrgInventory, getInventoryAction, getOrganizationAction, getServiceNowOrganizationAction, getTicketUrl, getIsOrgPending } from 'store/orgs';
+import {
+  getCurrentOrgName,
+  getFirstOrgId,
+  getOrgs,
+  getOrgInventory,
+  getInventoryAction,
+  getOrganizationAction,
+  getServiceNowOrganizationAction,
+  getTicketUrl,
+  getIsOrgPending,
+} from 'store/orgs';
 import { getStyles } from './Dashboard.styles';
 import { Contacts } from './Contacts';
 import { TicketList } from './TicketList';

@@ -35,7 +35,7 @@ export const MenuBar: FC = () => {
 
   const DropdownToggle = forwardRef<HTMLDivElement, DropdownToggleProps>((props, ref) => (
     <div ref={ref} {...props} data-testid="menu-bar-profile-dropdown-toggle" className={styles.menuIcon}>
-      <Profile width={22} height={22}/>
+      <Profile width={22} height={22} />
     </div>
   ));
 
@@ -48,7 +48,12 @@ export const MenuBar: FC = () => {
               <ul>
                 <li>
                   <Link to={Routes.root} data-testid="menu-bar-home-link" className={styles.logo}>
-                    <img className={styles.perconaLogo} src={logo} alt={Messages.logoAlt} data-testid="menu-bar-percona-logo" />
+                    <img
+                      className={styles.perconaLogo}
+                      src={logo}
+                      alt={Messages.logoAlt}
+                      data-testid="menu-bar-percona-logo"
+                    />
                     <h1>{Messages.portal}</h1>
                   </Link>
                 </li>

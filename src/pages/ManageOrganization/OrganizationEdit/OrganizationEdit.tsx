@@ -20,9 +20,12 @@ export const OrganizationEdit: FC<OrganizationEditProps> = ({ loading }) => {
   const orgName = useSelector(getCurrentOrgName);
   const orgId = useSelector(getCurrentOrgId);
 
-  const handleEditOrgSubmit = useCallback(({ organizationName }: EditOrganizationPayload) => {
-    dispatch(editOrganizationAction({ orgId, name: organizationName }));
-  }, [dispatch, orgId]);
+  const handleEditOrgSubmit = useCallback(
+    ({ organizationName }: EditOrganizationPayload) => {
+      dispatch(editOrganizationAction({ orgId, name: organizationName }));
+    },
+    [dispatch, orgId],
+  );
 
   const handleEditOrgCancel = useCallback(() => {
     dispatch(exitOrganizationEditing());
@@ -41,7 +44,8 @@ export const OrganizationEdit: FC<OrganizationEditProps> = ({ loading }) => {
               placeholder={Messages.orgNamePlaceholder}
               name="organizationName"
               initialValue={orgName}
-              validators={[validators.required]} />
+              validators={[validators.required]}
+            />
             <div className={styles.actions}>
               <LoaderButton
                 data-testid="edit-organization-cancel-button"

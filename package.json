@@ -90,6 +90,7 @@
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-jest": "^24.1.0",
     "eslint-plugin-no-inline-styles": "^1.0.5",
+    "eslint-plugin-prettier": "^3.3.1",
     "faker": "^5.5.3",
     "generate-password": "^1.6.1",
     "jest-canvas-mock": "^2.2.0",

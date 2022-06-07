@@ -20,7 +20,9 @@ export const CustomerContact: FC = () => {
       <span className={styles.title}>{Messages.title}</span>
       <div className={styles.nameWrapper}>
         <Icon name="user" size="lg" />
-        <span data-testid="customer-contact-name" className={styles.name}>{name}</span>
+        <span data-testid="customer-contact-name" className={styles.name}>
+          {name}
+        </span>
         <IconButton
           data-testid="customer-contact-email-icon"
           className={styles.icon}

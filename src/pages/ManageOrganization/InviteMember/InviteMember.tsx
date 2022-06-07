@@ -31,10 +31,13 @@ export const InviteMember: FC = () => {
     setIsModalVisible(true);
   };
 
-  const handleInviteMemberSubmit = useCallback(({ email, role }: InviteMemberFormFields) => {
-    setIsModalVisible(false);
-    dispatch(inviteOrgMemberAction({ orgId, username: email, role: role.value! }));
-  }, [dispatch, orgId]);
+  const handleInviteMemberSubmit = useCallback(
+    ({ email, role }: InviteMemberFormFields) => {
+      setIsModalVisible(false);
+      dispatch(inviteOrgMemberAction({ orgId, username: email, role: role.value! }));
+    },
+    [dispatch, orgId],
+  );
 
   return (
     <div data-testid="invite-member-wrapper" className={styles.container}>
@@ -44,13 +47,9 @@ export const InviteMember: FC = () => {
         className={styles.inviteButton}
         onClick={handleInviteMemberClick}
       >
-          {Messages.inviteMember}
+        {Messages.inviteMember}
       </Button>
-      <Modal
-        title={Messages.inviteMember}
-        isVisible={isModalVisible}
-        onClose={handleModalClose}
-      >
+      <Modal title={Messages.inviteMember} isVisible={isModalVisible} onClose={handleModalClose}>
         <Form onSubmit={handleInviteMemberSubmit} initialValues={initialValues}>
           {({ handleSubmit, valid, pristine }: FormRenderProps) => (
             <form onSubmit={handleSubmit} className={styles.inviteForm} data-testid="invite-member-form">

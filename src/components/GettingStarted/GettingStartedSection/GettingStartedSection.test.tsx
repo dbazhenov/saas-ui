@@ -13,14 +13,23 @@ describe('Getting Started Section', () => {
   test('renders the passed attributes', async () => {
     render(
       <TestContainer>
-        <GettingStartedSection description={testDescription} title={testTitle} isTicked linkIcon="plus-circle" linkTo="/" linkText={testLinkText} />
+        <GettingStartedSection
+          description={testDescription}
+          title={testTitle}
+          isTicked
+          linkIcon="plus-circle"
+          linkTo="/"
+          linkText={testLinkText}
+        />
       </TestContainer>,
     );
 
     const link = await screen.findByTestId('getting-started-section-link');
 
     expect(await screen.findByTestId('getting-started-section-header')).toHaveTextContent(testTitle);
-    expect(await screen.findByTestId('getting-started-section-description')).toHaveTextContent(testDescription);
+    expect(await screen.findByTestId('getting-started-section-description')).toHaveTextContent(
+      testDescription,
+    );
     expect(link).toHaveTextContent(testLinkText);
     expect(link).toBeEnabled();
   });

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Advisor } from './Advisor';
 
-
 describe('Advisor', () => {
   test('renders Advisor with label and checked icon', async () => {
     render(<Advisor label="Test label" hasAdvisor />);

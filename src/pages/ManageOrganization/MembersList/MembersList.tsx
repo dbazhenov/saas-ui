@@ -54,9 +54,7 @@ export const MembersList: FC = () => {
       },
       {
         Header: Messages.actions,
-        accessor: (member: OrgMember) => (
-          <MemberActions member={member} />
-        ),
+        accessor: (member: OrgMember) => <MemberActions member={member} />,
         width: '5%',
       },
     ],

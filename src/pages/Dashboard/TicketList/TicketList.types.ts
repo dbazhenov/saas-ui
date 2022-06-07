@@ -8,6 +8,6 @@ export interface OrgTicket {
   department: string;
   requester: string;
   taskType: string;
-  url: string
+  url: string;
   status: OrgTicketStatus;
 }

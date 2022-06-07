@@ -16,8 +16,9 @@
       }
     }
   },
-  "plugins": ["react-hooks", "jest", "eslint-plugin-no-inline-styles"],
+  "plugins": ["react-hooks", "jest", "eslint-plugin-no-inline-styles", "prettier"],
   "rules": {
+    "prettier/prettier": "error", 
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "semi": ["error", "always"],
     "comma-dangle": [
@@ -33,7 +34,6 @@
     "no-restricted-imports": "error",
     "no-param-reassign": ["error", { "ignorePropertyModificationsForRegex": ["^acc$"] }],
     "react/jsx-curly-brace-presence": ["error"],
-    "react/jsx-curly-newline": ["error", "never"],
     "react/jsx-boolean-value": ["error"],
     "react/jsx-filename-extension": ["off"],
     // It's a bad practice, but in certain use cases we have no choice
@@ -65,7 +65,6 @@
     "jsx-a11y/label-has-associated-control": ["error"],
     "no-dupe-args": ["error"],
     "no-new-object": ["error"],
-    "no-magic-numbers": ["error"],
     "padding-line-between-statements": [
       "error",
       { "blankLine": "always", "prev": "*", "next": "return" },

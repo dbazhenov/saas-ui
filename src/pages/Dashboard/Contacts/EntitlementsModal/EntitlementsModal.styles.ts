@@ -10,7 +10,7 @@ const NEXT_CHILD = 1;
 // to be used as header there
 export const getStyles = ({ palette, typography, spacing }: GrafanaTheme) => ({
   modalWrapper: (entitlements: OrganizationEntitlement[]) => css`
-    div[data-testid="modal-body"] {
+    div[data-testid='modal-body'] {
       height: 90vh;
       max-height: none;
       max-width: none;
@@ -18,21 +18,22 @@ export const getStyles = ({ palette, typography, spacing }: GrafanaTheme) => ({
       width: 90vw;
     }
 
-    div[data-testid="modal-header"] {
+    div[data-testid='modal-header'] {
       font-size: ${typography.size.lg};
       font-weight: ${typography.weight.bold};
     }
 
-    div[data-testid="modal-content"] {
+    div[data-testid='modal-content'] {
       max-height: calc(90vh - ${spacing.xl});
     }
 
-    div[class$="collapse__header-label"] {
+    div[class$='collapse__header-label'] {
       position: relative;
     }
 
-    ${entitlements.map(({ end_date }, i) => (
-      `div[data-testid="modal-content"] {
+    ${entitlements.map(
+      ({ end_date }, i) =>
+        `div[data-testid="modal-content"] {
         div[class$="panel-container"]:nth-child(${i + NEXT_CHILD}) {
           div[class$="collapse__header-label"] {
             width: 100%;
@@ -46,9 +47,8 @@ export const getStyles = ({ palette, typography, spacing }: GrafanaTheme) => ({
             }
           }
         }
-      }`    
-    ))}
-
+      }`,
+    )}
   `,
   wrapper: css`
     padding-left: ${spacing.xl};

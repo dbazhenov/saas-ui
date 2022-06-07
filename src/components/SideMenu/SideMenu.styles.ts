@@ -14,7 +14,7 @@ export const getStyles = (theme: GrafanaTheme) => {
     navSectionLabel: css`
       color: ${colors.textWeak};
       font-size: ${typography.size.sm};
-      margin-bottom: ${spacing.md}
+      margin-bottom: ${spacing.md};
     `,
     section: css`
       &:not(:first-child) {

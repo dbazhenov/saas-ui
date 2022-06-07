@@ -41,21 +41,32 @@ export const TicketList: FC = () => {
       {
         Header: Messages.columns.status,
         accessor: 'status',
-        Cell: ({ row: { original: { status } } }) => <TicketStatus status={status} />,
+        Cell: ({
+          row: {
+            original: { status },
+          },
+        }) => <TicketStatus status={status} />,
       },
       {
         Header: Messages.columns.date,
         accessor: 'date',
-        Cell: ({ row: { original: { date } } }) => new Date(date).toLocaleDateString(),
+        Cell: ({
+          row: {
+            original: { date },
+          },
+        }) => new Date(date).toLocaleDateString(),
       },
     ],
     [],
   );
-  const getRowProps = useCallback(({ id, original: { url } }: Row<OrgTicket>) => ({
-    key: id,
-    className: styles.row,
-    onClick: () => openNewTab(url),
-  }), [styles]);
+  const getRowProps = useCallback(
+    ({ id, original: { url } }: Row<OrgTicket>) => ({
+      key: id,
+      className: styles.row,
+      onClick: () => openNewTab(url),
+    }),
+    [styles],
+  );
 
   useEffect(() => {
     dispatch(getOrgTicketsAction());

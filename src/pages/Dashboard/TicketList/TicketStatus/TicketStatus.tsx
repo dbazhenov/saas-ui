@@ -7,5 +7,9 @@ export const TicketStatus: FC<TicketStatusProps> = ({ status }: TicketStatusProp
   const theme = useTheme();
   const styles = getStyles(theme, status);
 
-  return <span className={styles.status}><i className="fa fa-dot-circle-o" /> {status}</span>;
+  return (
+    <span className={styles.status}>
+      <i className="fa fa-dot-circle-o" /> {status}
+    </span>
+  );
 };

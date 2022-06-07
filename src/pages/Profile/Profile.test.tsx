@@ -7,13 +7,21 @@ import { ProfilePage } from './Profile';
 
 xdescribe('Profile Page', () => {
   test('has save button disabled at start-up', async () => {
-    render(<TestContainer><ProfilePage /></TestContainer>);
+    render(
+      <TestContainer>
+        <ProfilePage />
+      </TestContainer>,
+    );
 
     expect(await screen.findByTestId('profile-submit-button')).toBeDisabled();
   });
 
   test('displays form values it gets from the store', async () => {
-    render(<TestContainer><ProfilePage /></TestContainer>);
+    render(
+      <TestContainer>
+        <ProfilePage />
+      </TestContainer>,
+    );
 
     expect(await screen.findByRole('form')).toHaveFormValues({
       firstName: 'Firstname',
@@ -22,7 +30,11 @@ xdescribe('Profile Page', () => {
   });
 
   test('calls the update profile API on save button click', async () => {
-    render(<TestContainer><ProfilePage /></TestContainer>);
+    render(
+      <TestContainer>
+        <ProfilePage />
+      </TestContainer>,
+    );
 
     const firstNameInput = await screen.findByTestId('firstName-text-input');
     const saveButton = await screen.findByTestId('profile-submit-button');

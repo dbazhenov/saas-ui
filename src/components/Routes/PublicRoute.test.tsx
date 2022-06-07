@@ -30,7 +30,16 @@ xdescribe('PublicRoute', () => {
 
   test('shows children if the user is not authenticated', async () => {
     await act(async () => {
-      render(<TestContainer><Switch><PublicRoute path="/public" exact><div data-test>test</div></PublicRoute></Switch></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Switch>
+            <PublicRoute path="/public" exact>
+              <div data-test>test</div>
+            </PublicRoute>
+          </Switch>
+        </TestContainer>,
+        container,
+      );
       history.replace('/public');
     });
 
@@ -39,12 +48,21 @@ xdescribe('PublicRoute', () => {
 
   test('redirect to login if unauthenticated', async () => {
     getAuth.mockImplementation(() => ({
-      email:'test@test.test',
+      email: 'test@test.test',
       pending: false,
     }));
 
     await act(async () => {
-      render(<TestContainer><Switch><PublicRoute path="/public"><div data-test>test</div></PublicRoute></Switch></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Switch>
+            <PublicRoute path="/public">
+              <div data-test>test</div>
+            </PublicRoute>
+          </Switch>
+        </TestContainer>,
+        container,
+      );
       history.replace('/public');
     });
 

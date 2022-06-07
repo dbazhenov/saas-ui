@@ -8,14 +8,16 @@ import { ManageOrganizationPage } from '.';
 
 const mockPost = jest.fn().mockResolvedValue({
   orgs: [{ id: '1337' }],
-  members: [{
-    'member_id': 'test-uid',
-    'username': 'test@test.com',
-    'first_name': 'Test',
-    'last_name': 'User',
-    'role': 'Admin',
-    'status': 'ACTIVE',
-  }],
+  members: [
+    {
+      member_id: 'test-uid',
+      username: 'test@test.com',
+      first_name: 'Test',
+      last_name: 'User',
+      role: 'Admin',
+      status: 'ACTIVE',
+    },
+  ],
 });
 
 const toastError = jest.spyOn(toast, 'error');
@@ -44,7 +46,7 @@ xdescribe('Manage Organization', () => {
         <ManageOrganizationPage />
       </TestContainer>,
     );
-    const activeTabContent = await (screen.findByTestId('manage-organization-tab-content'));
+    const activeTabContent = await screen.findByTestId('manage-organization-tab-content');
 
     expect(activeTabContent).not.toBeEmptyDOMElement();
   });
@@ -66,8 +68,12 @@ xdescribe('Manage Organization', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
-    waitFor(() => { expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getOrganization); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
+    waitFor(() => {
+      expect(mockPost).toBeCalledWith(ENDPOINTS.Org.getOrganization);
+    });
   });
 
   test('shows create form if no organizations are returned by the API for the user', async () => {
@@ -77,7 +83,9 @@ xdescribe('Manage Organization', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
     const createOrgContainer = await screen.findByTestId('create-organization');
 
     expect(createOrgContainer).toBeInTheDocument();
@@ -101,19 +109,23 @@ xdescribe('Manage Organization', () => {
 
     userEvent.click(saveButton);
 
-    waitFor(() => { expect(toastSuccess).toBeCalledTimes(1); });
+    waitFor(() => {
+      expect(toastSuccess).toBeCalledTimes(1);
+    });
   });
 
   test('shows the members tab if an organization exists', async () => {
     mockPost.mockResolvedValue({
-      members: [{
-        'member_id': 'test-uid',
-        'username': 'test@test.com',
-        'first_name': 'Test',
-        'last_name': 'User',
-        'role': 'Admin',
-        'status': 'ACTIVE',
-      }],
+      members: [
+        {
+          member_id: 'test-uid',
+          username: 'test@test.com',
+          first_name: 'Test',
+          last_name: 'User',
+          role: 'Admin',
+          status: 'ACTIVE',
+        },
+      ],
     });
 
     render(
@@ -122,7 +134,9 @@ xdescribe('Manage Organization', () => {
       </TestContainer>,
     );
 
-    waitFor(() => { expect(mockPost).toBeCalledTimes(1); });
+    waitFor(() => {
+      expect(mockPost).toBeCalledTimes(1);
+    });
     const viewOrgContainer = await screen.findByTestId('manage-organization-members-tab');
 
     expect(viewOrgContainer).toBeInTheDocument();

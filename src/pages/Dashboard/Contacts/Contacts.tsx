@@ -35,9 +35,12 @@ export const Contacts: FC = () => {
   const { firstName, lastName, pending: isUserPending } = user;
   const isPending = isUserPending || isOrgPending;
 
-  const viewEntitlements = useCallback((isVisible: boolean) => () => {
-    setIsEntilementsVisible(isVisible);
-  }, [setIsEntilementsVisible]);
+  const viewEntitlements = useCallback(
+    (isVisible: boolean) => () => {
+      setIsEntilementsVisible(isVisible);
+    },
+    [setIsEntilementsVisible],
+  );
 
   useEffect(() => {
     if (!orgId) {
@@ -60,17 +63,16 @@ export const Contacts: FC = () => {
   return (
     <section className={styles.cardsContainer}>
       <div className={styles.card}>
-        <Overlay
-          className={styles.cardOverlay}
-          isPending={isPending}
-        >
+        <Overlay className={styles.cardOverlay} isPending={isPending}>
           <p className={styles.cardTitle}>{Messages.yourAccount}</p>
           <p>
             <span className={styles.cardPoint}>{Messages.name}</span> {firstName} {lastName}
           </p>
-          {role && <p>
-            <span className={styles.cardPoint}>{Messages.role}</span> {role}
-          </p>}
+          {role && (
+            <p>
+              <span className={styles.cardPoint}>{Messages.role}</span> {role}
+            </p>
+          )}
           <p>
             <span className={styles.cardPoint}>{Messages.accountType}</span>
             &nbsp;
@@ -79,7 +81,15 @@ export const Contacts: FC = () => {
           {!isPending && !isCustomer && (
             <>
               <p>{Messages.perconaExperts}</p>
-              <LinkButton target="_blank" rel="noreferrer noopener" className={styles.contactBtn} variant="primary" href={LINKS.contactUs}>{Messages.contactUs}</LinkButton>
+              <LinkButton
+                target="_blank"
+                rel="noreferrer noopener"
+                className={styles.contactBtn}
+                variant="primary"
+                href={LINKS.contactUs}
+              >
+                {Messages.contactUs}
+              </LinkButton>
             </>
           )}
           {isCustomer && (
@@ -104,27 +114,55 @@ export const Contacts: FC = () => {
           <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
           <p>
             <span className={styles.label}>{Messages.needHelp}</span>
-            <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">{HELP_EMAIL}</a>
+            <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">
+              {HELP_EMAIL}
+            </a>
           </p>
           {CSContact.name ? (
             <CustomerContact />
           ) : (
             <>
               <p>{Messages.findUs}</p>
-              <p><a className={styles.externalLink} href={LINKS.forum} target="_blank" rel="noreferrer noopener" data-testid="forum-contact-link">{Messages.forums}</a></p>
-              <p><a className={styles.externalLink} href={LINKS.discord} target="_blank" rel="noreferrer noopener" data-testid="discord-contact-link">{Messages.discord}</a></p>
               <p>
-                {Messages.getInTouch} <a className={styles.externalLink} href={LINKS.contact} target="_blank" rel="noreferrer noopener" data-testid="contact-page-link">{Messages.contactsPage}</a>
+                <a
+                  className={styles.externalLink}
+                  href={LINKS.forum}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  data-testid="forum-contact-link"
+                >
+                  {Messages.forums}
+                </a>
+              </p>
+              <p>
+                <a
+                  className={styles.externalLink}
+                  href={LINKS.discord}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  data-testid="discord-contact-link"
+                >
+                  {Messages.discord}
+                </a>
+              </p>
+              <p>
+                {Messages.getInTouch}{' '}
+                <a
+                  className={styles.externalLink}
+                  href={LINKS.contact}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  data-testid="contact-page-link"
+                >
+                  {Messages.contactsPage}
+                </a>
               </p>
             </>
           )}
         </Overlay>
       </div>
       {isEntitlementsVisible && (
-        <EntitlementsModal
-          entitlements={entitlements}
-          onClose={viewEntitlements(false)}
-        />
+        <EntitlementsModal entitlements={entitlements} onClose={viewEntitlements(false)} />
       )}
     </section>
   );

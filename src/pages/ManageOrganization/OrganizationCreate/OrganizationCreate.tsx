@@ -14,9 +14,12 @@ export const OrganizationCreate: FC<OrganizationCreateProps> = ({ loading }) => 
   const styles = useStyles(getStyles);
   const dispatch = useDispatch();
 
-  const onCreateOrgSubmit = useCallback(({ organizationName }: CreateOrganizationPayload) => {
-    dispatch(createOrganizationAction(organizationName));
-  }, [dispatch]);
+  const onCreateOrgSubmit = useCallback(
+    ({ organizationName }: CreateOrganizationPayload) => {
+      dispatch(createOrganizationAction(organizationName));
+    },
+    [dispatch],
+  );
 
   return (
     <div data-testid="create-organization-wrapper" className={styles.container}>
@@ -30,7 +33,8 @@ export const OrganizationCreate: FC<OrganizationCreateProps> = ({ loading }) => 
               label={Messages.organizationName}
               placeholder={Messages.orgNamePlaceholder}
               name="organizationName"
-              validators={[validators.required]} />
+              validators={[validators.required]}
+            />
             <LoaderButton
               data-testid="create-organization-submit-button"
               type="submit"

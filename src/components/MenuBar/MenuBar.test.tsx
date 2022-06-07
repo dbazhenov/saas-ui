@@ -29,7 +29,11 @@ xdescribe('MenuBar', () => {
   });
 
   test('clicking on the profile logout button calls the logout API', async () => {
-    const { container } = render(<TestContainer><MenuBar /></TestContainer>);
+    const { container } = render(
+      <TestContainer>
+        <MenuBar />
+      </TestContainer>,
+    );
 
     act(() => {
       fireEvent.click(container.querySelector(dataTestId('menu-bar-profile-dropdown-toggle'))!);
@@ -43,12 +47,17 @@ xdescribe('MenuBar', () => {
   });
 
   test('unathenticated user should not see the profile menu', async () => {
-    (useSelector as jest.Mock<any, any>).mockImplementation((callback) => callback({
+    (useSelector as jest.Mock<any, any>).mockImplementation((callback) =>
+      callback({
         auth: { authenticated: false },
       }),
     );
 
-    const { container } = render(<TestContainer><MenuBar /></TestContainer>);
+    const { container } = render(
+      <TestContainer>
+        <MenuBar />
+      </TestContainer>,
+    );
 
     expect(container.querySelector(dataTestId('menu-bar-profile-dropdown-logout'))).toEqual(null);
   });

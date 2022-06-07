@@ -4,7 +4,7 @@ import { GrafanaTheme } from '@grafana/data';
 export const getStyles = (theme: GrafanaTheme) => {
   const { colors, spacing, typography } = theme;
 
-   return ({
+  return {
     container: css`
       align-items: center;
       display: flex;
@@ -39,5 +39,5 @@ export const getStyles = (theme: GrafanaTheme) => {
         margin-right: ${spacing.md};
       }
     `,
-  });
+  };
 };

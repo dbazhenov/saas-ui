@@ -38,14 +38,17 @@ export const ManagePmmInstancesPage: FC = () => {
         </header>
         <div className={styles.contentWrapper}>
           <div className={styles.linkWrapper}>
-            <a className={styles.externalLink} href={LINKS.howToConnectPMM} target="_blank" rel="noreferrer noopener" data-testid="forum-contact-link">
+            <a
+              className={styles.externalLink}
+              href={LINKS.howToConnectPMM}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="forum-contact-link"
+            >
               {Messages.howToLink}
             </a>
           </div>
-          <PmmInstanceList
-            pmmInstances={inventory || []}
-            loading={loading}
-          />
+          <PmmInstanceList pmmInstances={inventory || []} loading={loading} />
         </div>
       </div>
     </PrivateLayout>

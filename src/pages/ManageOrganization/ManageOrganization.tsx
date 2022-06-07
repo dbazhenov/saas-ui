@@ -61,48 +61,40 @@ export const ManageOrganizationPage: FC = () => {
     if (hasOrg && isOrgEditing) {
       return (
         <div data-testid="edit-organization">
-          <OrganizationEdit
-            loading={isOrgPending || isUserPending}
-          />
+          <OrganizationEdit loading={isOrgPending || isUserPending} />
         </div>
       );
     }
 
     return (
       <div data-testid="create-organization">
-        <OrganizationCreate
-          loading={isOrgPending || isUserPending}
-        />
+        <OrganizationCreate loading={isOrgPending || isUserPending} />
       </div>
     );
   }, [hasOrg, isOrgEditing, isOrgPending, isUserPending]);
 
-  const tabs = useMemo(() => [
-    {
-      label: Messages.members,
-      key: OrganizationViewTabs.members,
-      disabled: !members.length,
-      content: (
-        <div data-testid="manage-organization-members-tab">
-          {isUserAdmin && (
-            <InviteMember />
-          )}
-          <MembersList />
-        </div>
-      ),
-    },
-    {
-      label: Messages.organization,
-      key: OrganizationViewTabs.organization,
-      disabled: false,
-      content: (
-        <div data-testid="manage-organization-organization-tab">
-          {orgTabContent}
-        </div>
-      ),
-    },
-  ],
-  [members.length, isUserAdmin, orgTabContent]);
+  const tabs = useMemo(
+    () => [
+      {
+        label: Messages.members,
+        key: OrganizationViewTabs.members,
+        disabled: !members.length,
+        content: (
+          <div data-testid="manage-organization-members-tab">
+            {isUserAdmin && <InviteMember />}
+            <MembersList />
+          </div>
+        ),
+      },
+      {
+        label: Messages.organization,
+        key: OrganizationViewTabs.organization,
+        disabled: false,
+        content: <div data-testid="manage-organization-organization-tab">{orgTabContent}</div>,
+      },
+    ],
+    [members.length, isUserAdmin, orgTabContent],
+  );
 
   useEffect(() => {
     if (!members.length) {
@@ -130,9 +122,12 @@ export const ManageOrganizationPage: FC = () => {
     setActiveTabIndex(tabs.findIndex((tab) => tab.key === activeTab));
   }, [tabs, activeTab]);
 
-  const changeActiveTab = useCallback((index: number) => {
-    dispatch(setOrgViewActiveTab(tabs[index].key));
-  }, [dispatch, tabs]);
+  const changeActiveTab = useCallback(
+    (index: number) => {
+      dispatch(setOrgViewActiveTab(tabs[index].key));
+    },
+    [dispatch, tabs],
+  );
 
   const ActiveTab = useCallback(() => tabs.find((tab) => tab.key === activeTab)!.content, [tabs, activeTab]);
 

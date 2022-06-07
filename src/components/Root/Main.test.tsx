@@ -38,7 +38,12 @@ describe('Main Page', () => {
     }));
 
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
     });
 
     expect(container.innerHTML).toEqual('');
@@ -46,7 +51,12 @@ describe('Main Page', () => {
 
   xtest('shows a non-empty page after user data has been fetched', async () => {
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
     });
 
     expect(container.innerHTML).not.toEqual('');
@@ -55,7 +65,12 @@ describe('Main Page', () => {
   // TODO: fixme, doesn't make much sence
   xtest('calls the refresh session api at start-up', async () => {
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
     });
   });
 
@@ -65,7 +80,12 @@ describe('Main Page', () => {
     }));
 
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
       history.replace(NON_EXISTING_PAGE_PATH);
     });
     expect(history.location.pathname).toEqual('/login');
@@ -73,7 +93,12 @@ describe('Main Page', () => {
 
   xtest('keep the URL path if 404 is presented', async () => {
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
       history.replace(NON_EXISTING_PAGE_PATH);
     });
 
@@ -82,7 +107,12 @@ describe('Main Page', () => {
 
   xtest('redirect to NotFound if user is authenticated and the route does not exist', async () => {
     await act(async () => {
-      render(<TestContainer><Main /></TestContainer>, container);
+      render(
+        <TestContainer>
+          <Main />
+        </TestContainer>,
+        container,
+      );
       history.replace(NON_EXISTING_PAGE_PATH);
     });
     expect(container.querySelector(dataTestId('404-image'))).not.toBeNull();

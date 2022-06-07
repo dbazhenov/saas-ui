@@ -22,7 +22,7 @@ describe('Organization Edit', () => {
   test('the save button is disabled if the form is invalid', async () => {
     render(
       <TestContainer>
-        <OrganizationEdit/>
+        <OrganizationEdit />
       </TestContainer>,
     );
 

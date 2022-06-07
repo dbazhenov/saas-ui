@@ -15,10 +15,7 @@ export const PmmInstanceActions: FC<PmmInstanceActionsProps> = ({ instance }) =>
   const dispatch = useDispatch();
   const [isRemoveModalVisible, setIsRemoveModalVisible] = useState(false);
 
-  const isActionDisabled = useMemo(
-    () => orgRole !== MemberRole.admin,
-    [orgRole],
-  );
+  const isActionDisabled = useMemo(() => orgRole !== MemberRole.admin, [orgRole]);
 
   const handleRemoveModalClose = () => {
     setIsRemoveModalVisible(false);

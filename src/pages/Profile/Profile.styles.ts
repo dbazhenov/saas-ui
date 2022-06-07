@@ -4,7 +4,7 @@ import { GrafanaTheme } from '@grafana/data';
 export const getStyles = (theme: GrafanaTheme) => {
   const { colors, spacing, typography } = theme;
 
-   return {
+  return {
     wrapper: css`
       display: flex;
       justify-content: center;
