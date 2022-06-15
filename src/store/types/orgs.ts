@@ -37,7 +37,10 @@ export interface OrgsState {
   currentOrg: OrganizationInfo;
   orgs: Organization[];
   members: OrgMember[];
-  tickets: OrgTicket[];
+  tickets: {
+    list: OrgTicket[];
+    pending: boolean;
+  };
   pending: boolean;
   editing: boolean;
   viewActiveTab: OrganizationViewTabs;

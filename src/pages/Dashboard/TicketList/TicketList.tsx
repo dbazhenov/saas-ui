@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useMemo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useCallback, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import { Table } from '@percona/platform-core';
 import { useStyles } from '@grafana/ui';
 import { Column, Row } from 'react-table';
 import { openNewTab } from 'core';
-import { getOrgTickets, getIsOrgPending, getOrgTicketsAction } from 'store/orgs';
+import { getOrgTickets, getOrgTicketsPending } from 'store/orgs';
 import { OrgTicket } from './TicketList.types';
 import { Messages } from './TicketList.messages';
 import { TicketStatus } from './TicketStatus';
@@ -12,9 +12,8 @@ import { getStyles } from './TicketList.styles';
 
 export const TicketList: FC = () => {
   const styles = useStyles(getStyles);
-  const dispatch = useDispatch();
   const tickets = useSelector(getOrgTickets);
-  const isOrgPending = useSelector(getIsOrgPending);
+  const isLoadingTickets = useSelector(getOrgTicketsPending);
 
   const columns: Column<any>[] = useMemo(
     (): Array<Column<OrgTicket>> => [
@@ -68,13 +67,9 @@ export const TicketList: FC = () => {
     [styles],
   );
 
-  useEffect(() => {
-    dispatch(getOrgTicketsAction());
-  }, [dispatch]);
-
   return (
     <Table
-      pendingRequest={isOrgPending}
+      pendingRequest={isLoadingTickets}
       emptyMessage={Messages.emptyMessage}
       totalItems={tickets.length}
       columns={columns}

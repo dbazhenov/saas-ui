@@ -41,7 +41,10 @@ const DEFAULT_STATE: OrgsState = {
       new_ticket_url: '',
     },
   },
-  tickets: [],
+  tickets: {
+    list: [],
+    pending: true,
+  },
   pending: false,
   editing: false,
   viewActiveTab: OrganizationViewTabs.organization,
@@ -201,13 +204,13 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
     })
     // Get Tickets
     .addCase(getOrgTicketsAction.pending, (state) => {
-      state.pending = true;
+      state.tickets.pending = true;
     })
     .addCase(getOrgTicketsAction.fulfilled, (state, { payload }) => {
-      state.pending = false;
-      state.tickets = payload;
+      state.tickets.pending = false;
+      state.tickets.list = payload;
     })
     .addCase(getOrgTicketsAction.rejected, (state) => {
-      state.pending = false;
+      state.tickets.pending = false;
     });
 });

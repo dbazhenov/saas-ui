@@ -14,7 +14,9 @@ import {
   getServiceNowOrganizationAction,
   getTicketUrl,
   getIsOrgPending,
+  getOrgTicketsAction,
 } from 'store/orgs';
+import { SupportTicketOverview } from 'components/SupportTicketOverview/SupportTicketOverview';
 import { getStyles } from './Dashboard.styles';
 import { Contacts } from './Contacts';
 import { TicketList } from './TicketList';
@@ -59,6 +61,12 @@ export const DashboardPage: FC = () => {
   }, [dispatch, inventory, orgId]);
 
   useEffect(() => {
+    if (orgId) {
+      dispatch(getOrgTicketsAction());
+    }
+  }, [dispatch, orgId]);
+
+  useEffect(() => {
     setShowGettingStarted((!(companyName || orgId) || !inventory?.length) && !isPending);
   }, [orgId, companyName, inventory?.length, isPending]);
 
@@ -67,6 +75,7 @@ export const DashboardPage: FC = () => {
       <div className={styles.container} data-testid="dashboard-container">
         {showGettingStarted && <GettingStarted />}
         <Contacts />
+        <SupportTicketOverview />
         {companyName && orgId && (
           <section className={styles.ticketSection} data-testid="dashboard-ticket-section">
             <header className={styles.ticketListHeader}>

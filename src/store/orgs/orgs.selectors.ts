@@ -20,7 +20,9 @@ export const getOrgEntitlements = (state: AppState) => state.orgs.entitlements;
 
 export const getOrgMembers = (state: AppState) => state.orgs.members;
 
-export const getOrgTickets = (state: AppState) => state.orgs.tickets;
+export const getOrgTickets = (state: AppState) => state.orgs.tickets.list;
+
+export const getOrgTicketsPending = (state: AppState) => state.orgs.tickets.pending;
 
 export const getIsOrgFromPortal = (state: AppState) => state.orgs.isOrgFromPortal;
 

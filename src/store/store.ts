@@ -12,7 +12,7 @@ const preloadedState = loadState();
  * This middleware makes sure to call userInfo and wait until it completes to persist the user data.
  * This way we respect DRY in API calls, which otherwise would have to implement this behavior.
  */
-const authMiddleware = (store: any) => (next: any) => (action: AnyAction) => {
+export const authMiddleware = (store: any) => (next: any) => (action: AnyAction) => {
   const token = oktaAuth.getAccessToken();
 
   // We should only call .getUser when the user is authenticated, or it will fail
