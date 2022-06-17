@@ -12,7 +12,7 @@ import {
   getOrgMembers,
   getOrgs,
   getIsOrgEditing,
-  getServiceNowOrganizationAction,
+  createServiceNowOrganizationAction,
   getUserRoleAction,
   getOrgViewActiveTab,
   setOrgViewActiveTab,
@@ -114,7 +114,7 @@ export const ManageOrganizationPage: FC = () => {
     // if there are no orgs check for a linked company in ServiceNow
     // and add the org to orgd with the name of the company found in ServiceNow
     if (!orgs.length && !orgId && companyName) {
-      dispatch(getServiceNowOrganizationAction(companyName));
+      dispatch(createServiceNowOrganizationAction(companyName));
     }
   }, [dispatch, orgId, orgs.length, companyName]);
 

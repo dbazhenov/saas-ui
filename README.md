@@ -14,12 +14,6 @@ Run a local dev environment with one command:
 
 `make dev`
 
-When developing locally, you'll want to route your API requests to a dev server. To do so, add the following key to your `package.json`:
-
-```json
-"proxy": "https://portal-dev.percona.com"
-```
-
 ### Running E2E tests locally
 
 To execute E2E tests locally you need to set related environment variables first. By default `.env.local` file is used as a source,

@@ -12,7 +12,7 @@ export const ENDPOINTS = {
     createOrganization: '/v1/orgs',
     getOrganization: (orgId: string) => `/v1/orgs/${orgId}`,
     editOrganization: (orgId: string) => `/v1/orgs/${orgId}`,
-    getServiceNowOrganization: '/v1/orgs',
+    createServiceNowOrganization: '/v1/orgs',
     getUserOganizations: '/v1/orgs:search',
     getUserCompany: '/v1/orgs/company:search',
     editMember: (orgId: string, memberId: string) => `/v1/orgs/${orgId}/members/${memberId}`,

@@ -11,10 +11,10 @@ import {
   getOrgInventory,
   getInventoryAction,
   getOrganizationAction,
-  getServiceNowOrganizationAction,
   getTicketUrl,
   getIsOrgPending,
   getOrgTicketsAction,
+  createServiceNowOrganizationAction,
 } from 'store/orgs';
 import { SupportTicketOverview } from 'components/SupportTicketOverview/SupportTicketOverview';
 import { getStyles } from './Dashboard.styles';
@@ -50,7 +50,7 @@ export const DashboardPage: FC = () => {
     // if there are no orgs check for a linked company in ServiceNow
     // and add the org to orgd with the name of the company found in ServiceNow
     if (!orgs.length && !orgId && companyName) {
-      dispatch(getServiceNowOrganizationAction(companyName));
+      dispatch(createServiceNowOrganizationAction(companyName));
     }
   }, [dispatch, orgId, orgs.length, companyName]);
 

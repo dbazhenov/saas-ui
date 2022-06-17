@@ -11,7 +11,7 @@ import {
   getInventoryAction,
   getOrganizationAction,
   getOrgTicketsAction,
-  getServiceNowOrganizationAction,
+  createServiceNowOrganizationAction,
   inviteOrgMemberAction,
   removeOrgMemberAction,
   searchOrgMembersAction,
@@ -137,16 +137,16 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
       state.pending = false;
       state.isOrgFromPortal = false;
     })
-    // GetServiceNowOrganization
-    .addCase(getServiceNowOrganizationAction.pending, (state) => {
+    // createServiceNowOrganization
+    .addCase(createServiceNowOrganizationAction.pending, (state) => {
       state.pending = true;
     })
-    .addCase(getServiceNowOrganizationAction.fulfilled, (state, { payload }) => {
+    .addCase(createServiceNowOrganizationAction.fulfilled, (state, { payload }) => {
       state.pending = false;
       state.isOrgFromPortal = false;
       state.currentOrg.org = payload.org;
     })
-    .addCase(getServiceNowOrganizationAction.rejected, (state) => {
+    .addCase(createServiceNowOrganizationAction.rejected, (state) => {
       state.pending = false;
       state.isOrgFromPortal = false;
     })

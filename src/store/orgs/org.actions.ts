@@ -89,13 +89,13 @@ export const getOrganizationAction = createAsyncThunk<GetOrganizationResponse, s
   },
 );
 
-export const getServiceNowOrganizationAction = createAsyncThunk<
+export const createServiceNowOrganizationAction = createAsyncThunk<
   CreateOrganizationResponse,
   string,
   { state: AppState; rejectValue: unknown }
 >('ORGS:SN_ORGANIZATION/GET', async (payload, { dispatch, rejectWithValue }) => {
   try {
-    const { data } = await OrgAPI.getServiceNowOrganization(payload);
+    const { data } = await OrgAPI.createServiceNowOrganization(payload);
 
     await dispatch(getOrganizationAction(data.org.id));
     await dispatch(searchOrgMembersAction({ orgId: data.org.id }));
@@ -103,8 +103,12 @@ export const getServiceNowOrganizationAction = createAsyncThunk<
     toast.info(Messages.fromCustomerPortal, { autoClose: false });
 
     return data;
-  } catch (err) {
-    displayAndLogError(err);
+  } catch (err: any) {
+    if (err?.response?.status) {
+      toast.info(Messages.adminFirst, { autoClose: false });
+    } else {
+      displayAndLogError(err);
+    }
 
     return rejectWithValue(err);
   }

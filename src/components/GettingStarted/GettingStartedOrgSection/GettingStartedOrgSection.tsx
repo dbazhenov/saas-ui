@@ -2,19 +2,17 @@ import React, { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { getFirstOrgId, getIsOrgPending } from 'store/orgs';
 import { Routes } from 'core';
-import { getUserCompanyName } from 'store/auth';
 import { GettingStartedSection } from '../GettingStartedSection';
 import { Messages } from './GettingStartedOrgSection.messages';
 
 export const GettingStartedOrgSection: FC = () => {
   const orgId = useSelector(getFirstOrgId);
-  const companyName = useSelector(getUserCompanyName);
   const isOrgPending = useSelector(getIsOrgPending);
   const [hasOrg, setHasOrg] = useState<boolean>();
 
   useEffect(() => {
-    setHasOrg(!!(companyName || orgId));
-  }, [orgId, companyName]);
+    setHasOrg(!!orgId);
+  }, [orgId]);
 
   return (
     <GettingStartedSection
