@@ -18,6 +18,7 @@ export const ENDPOINTS = {
     editMember: (orgId: string, memberId: string) => `/v1/orgs/${orgId}/members/${memberId}`,
     removeMember: (orgId: string, memberId: string) => `/v1/orgs/${orgId}/members/${memberId}`,
     inviteMember: (orgId: string) => `/v1/orgs/${orgId}/members`,
+    bulkInviteMembers: (orgId: string) => `/v1/orgs/${orgId}/members:bulk`,
     searchOrgMember: (orgId: string) => `/v1/orgs/${orgId}/members:search`,
     searchOrgTickets: (orgId: string) => `/v1/orgs/${orgId}/tickets:search`,
     searchOrgEntitlements: (orgId: string) => `/v1/orgs/${orgId}/entitlements:search`,

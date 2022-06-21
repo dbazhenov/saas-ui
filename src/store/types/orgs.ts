@@ -1,6 +1,6 @@
 import { GetOrganizationResponse, OrganizationEntitlement } from 'core/api/types';
 import { OrgTicket } from 'pages/Dashboard/TicketList/TicketList.types';
-import { MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
+import { BulkInviteForm, MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
 
 export interface PmmInstance {
   id: string;
@@ -45,10 +45,21 @@ export interface OrgsState {
   editing: boolean;
   viewActiveTab: OrganizationViewTabs;
   orgDetailsSeen: boolean;
+  invitedUsersResponse: BulkInviteForm;
 }
 
 export interface InviteMemberPayload {
   orgId: string;
+  role: string;
+  username: string;
+}
+
+export interface BulkInviteMembersPayload {
+  orgId: string;
+  users: InvitedMember[];
+}
+
+export interface InvitedMember {
   role: string;
   username: string;
 }

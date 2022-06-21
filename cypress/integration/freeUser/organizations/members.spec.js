@@ -134,7 +134,7 @@ context('Members tests for the Free Users', () => {
     });
   });
 
-  it('SAAS-T149 - Verify admin can invite other members to organization (free account)', () => {
+  it.skip('SAAS-T149 - Verify admin can invite other members to organization (free account)', () => {
     newAdminUser = getUserWithMailosaurEmail();
     newTechnicalUser = getUserWithMailosaurEmail();
     cy.oktaCreateUser(newAdminUser);
@@ -302,7 +302,7 @@ context('Members tests for the Free Users', () => {
     });
   });
 
-  it('SAAS-T173 Verify OrgAdmin can not invite member of other organization', () => {
+  it.skip('SAAS-T173 Verify OrgAdmin can not invite member of other organization', () => {
     const otherOrgUser = getUser();
 
     cy.oktaCreateUser(otherOrgUser);
@@ -326,7 +326,7 @@ context('Members tests for the Free Users', () => {
     cy.checkPopUpMessage(organizationPage.constants.messages.userAlreadyMemberOfOrg);
   });
 
-  it('SAAS-T238 Verify inviting non-registered users to the organziation', () => {
+  it.skip('SAAS-T238 Verify inviting non-registered users to the organziation', () => {
     cy.log(
       'Also covers: SAAS-T240 Verify non-registered user invited to the org is appearing in the members list',
     );

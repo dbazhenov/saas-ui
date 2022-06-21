@@ -7,12 +7,13 @@ import * as OrgAPI from 'core/api/orgs';
 import {
   AppState,
   EditMemberPayload,
-  InviteMemberPayload,
   Organization,
   OrgMember,
   PmmInstance,
   RemoveMemberPayload,
   OrganizationViewTabs,
+  BulkInviteMembersPayload,
+  InviteMemberPayload,
 } from 'store/types';
 import {
   GetOrganizationResponse,
@@ -23,8 +24,15 @@ import {
 import { Messages as OrgMessages } from 'pages/ManageOrganization/ManageOrganization.messages';
 import { OrgTicket } from 'pages/Dashboard/TicketList/TicketList.types';
 import { mapOrgTickets } from 'pages/Dashboard/TicketList/TicketList.utils';
+import { BulkInviteForm, MemberRole } from 'pages/ManageOrganization/ManageOrganization.types';
+import { ROLES } from 'pages/ManageOrganization/ManageOrganization.constants';
 import { getCurrentUserRole, getFirstOrgId } from './orgs.selectors';
-import { transformInventory, transformOrganizations, transformOrgMembers } from './orgs.utils';
+import {
+  transformBulkInvitedUsers,
+  transformInventory,
+  transformOrganizations,
+  transformOrgMembers,
+} from './orgs.utils';
 
 export const getInventoryAction = createAsyncThunk<PmmInstance[], string>(
   'ORGS:INVENTORY/SEARCH',
@@ -240,6 +248,36 @@ export const inviteOrgMemberAction = createAsyncThunk<void, InviteMemberPayload>
   },
 );
 
+export const bulkInviteOrgMembersAction = createAsyncThunk<BulkInviteForm, BulkInviteMembersPayload>(
+  'ORGS:MEMBERS/INVITE',
+  async (payload, { dispatch, rejectWithValue }) => {
+    try {
+      const { data } = await OrgAPI.bulkInviteOrgMembers(payload);
+      const successfulUsers = payload.users.length - data.errors.length;
+
+      if (successfulUsers === 0) {
+        toast.error(OrgMessages.notUsersInvited);
+      } else if (successfulUsers === 1) {
+        toast.info(`${successfulUsers} ${OrgMessages.userInvited}`);
+      } else {
+        toast.info(`${successfulUsers} ${OrgMessages.usersInvited}`);
+      }
+
+      await dispatch(searchOrgMembersAction({ orgId: payload.orgId }));
+
+      if (data.errors.length !== 0) {
+        return { invitedUsers: transformBulkInvitedUsers(data.errors, payload) };
+      }
+
+      return { invitedUsers: transformBulkInvitedUsers([], payload) };
+    } catch (err: any) {
+      displayAndLogError(err);
+
+      return rejectWithValue(err);
+    }
+  },
+);
+
 export const removeOrgMemberAction = createAsyncThunk<void, RemoveMemberPayload>(
   'ORGS:MEMBER/REMOVE',
   async (payload, { dispatch }) => {
@@ -290,3 +328,16 @@ export const getOrgTicketsAction = createAsyncThunk<
     return rejectWithValue(err);
   }
 });
+
+export const clearBulkInvite = createAsyncThunk<BulkInviteForm, void>(
+  'ORGS:MEMBERS/CLEAR_BULK_INVITE',
+  (_) => ({
+    invitedUsers: [
+      {
+        username: '',
+        role: ROLES.find((role) => role.value === MemberRole.technical)!,
+        error: '',
+      },
+    ],
+  }),
+);

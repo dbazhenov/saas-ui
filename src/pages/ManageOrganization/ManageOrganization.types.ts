@@ -32,3 +32,16 @@ export interface InviteMemberFormFields {
   email: string;
   role: SelectableValue<MemberRole>;
 }
+export interface BulkInviteForm {
+  invitedUsers: BulkInviteFormFields[];
+}
+
+export interface BulkInviteFormFields {
+  username: string;
+  role: SelectableValue<MemberRole>;
+  error: string;
+}
+
+export interface InviteMembersFormFields {
+  invitedUsers: InviteMemberFormFields[];
+}

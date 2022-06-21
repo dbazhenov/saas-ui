@@ -3,6 +3,7 @@ export const Messages = {
   technicalUser: 'Technical',
   fetchError: 'An error occurred, please try again.',
   inviteMemberSuccess: 'The user has been successfully invited',
+  bulkInviteMemberSuccess: 'Users have been successfully invited',
   removeMemberSuccess: 'The user has been successfully removed from the organization',
   editMemberSuccess: "The user's role has been successfully updated",
   manageOrganization: 'Manage Organization',
@@ -11,4 +12,7 @@ export const Messages = {
   orgEditSuccess: 'Your organization has been updated.',
   organization: 'Organization',
   removeInstanceSuccess: 'The instance has been successfully removed from the list',
+  notUsersInvited: 'Error occured during invite process.',
+  userInvited: 'user successfully invited to join your organization',
+  usersInvited: 'users successfully invited to join your organization',
 };

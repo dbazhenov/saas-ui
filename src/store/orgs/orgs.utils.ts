@@ -1,5 +1,11 @@
-import { OrganizationMembersResponse, OrganizationResponse } from 'core/api/types';
-import { Organization, OrgMember, PmmInstance } from 'store/types';
+import {
+  OrganizationMembersResponse,
+  OrganizationResponse,
+  BulkInviteOrgMembersResponseUsers,
+} from 'core/api/types';
+import { BulkInviteFormFields, MemberRole } from 'pages/ManageOrganization/ManageOrganization.types';
+import { BulkInviteMembersPayload, Organization, OrgMember, PmmInstance } from 'store/types';
+import { ROLES } from 'pages/ManageOrganization/ManageOrganization.constants';
 
 export interface PmmInstanceResponse {
   pmm_server_id: string;
@@ -31,3 +37,30 @@ export const transformOrgMembers = (members: OrganizationMembersResponse[]): Org
     role: member.role,
     status: member.status,
   }));
+
+export const transformBulkInvitedUsers = (
+  users: BulkInviteOrgMembersResponseUsers[],
+  payload: BulkInviteMembersPayload,
+): BulkInviteFormFields[] => {
+  if (users.length) {
+    return users.map((user) => ({
+      username: user.username,
+      role: users.length
+        ? ROLES.find(
+            (role) =>
+              role.value ===
+              payload.users.find((plUser: { username: string }) => plUser.username === user.username)?.role!,
+          )!
+        : ROLES.find((role) => role.value === MemberRole.technical)!,
+      error: user.error,
+    }));
+  }
+
+  return [
+    {
+      username: '',
+      role: ROLES.find((role) => role.value === MemberRole.technical)!,
+      error: '',
+    },
+  ];
+};

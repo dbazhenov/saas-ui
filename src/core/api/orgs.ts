@@ -1,6 +1,12 @@
 import { Api, ENDPOINTS } from 'core/api';
-import { EditMemberPayload, RemoveMemberPayload, InviteMemberPayload } from 'store/types';
 import {
+  EditMemberPayload,
+  RemoveMemberPayload,
+  InviteMemberPayload,
+  BulkInviteMembersPayload,
+} from 'store/types';
+import {
+  BulkInviteOrgMembersResponse,
   CreateOrganizationResponse,
   EditOrganizationResponse,
   GetOrganizationResponse,
@@ -48,6 +54,9 @@ export const searchOrgEntitlements = (orgId: string) =>
 
 export const inviteOrgMember = ({ orgId, username, role }: InviteMemberPayload) =>
   Api.post<RequestBody, void>(Org.inviteMember(orgId), { username, role, orgId });
+
+export const bulkInviteOrgMembers = ({ orgId, users }: BulkInviteMembersPayload) =>
+  Api.post<RequestBody, BulkInviteOrgMembersResponse>(Org.bulkInviteMembers(orgId), { users });
 
 export const removeOrgMember = ({ orgId, memberId }: RemoveMemberPayload) =>
   Api.del<RequestBody, void>(Org.removeMember(orgId, memberId));

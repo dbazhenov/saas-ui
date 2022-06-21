@@ -1,5 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { LOCATION_CHANGE } from 'connected-react-router';
+import { ROLES } from 'pages/ManageOrganization/ManageOrganization.constants';
+import { MemberRole } from 'pages/ManageOrganization/ManageOrganization.types';
 import { OrgsState, OrganizationViewTabs } from 'store/types';
 import {
   createOrganizationAction,
@@ -18,6 +20,8 @@ import {
   searchOrgsAction,
   setOrgViewActiveTab,
   setOrgDetailsSeen,
+  bulkInviteOrgMembersAction,
+  clearBulkInvite,
 } from './org.actions';
 
 const DEFAULT_STATE: OrgsState = {
@@ -49,6 +53,15 @@ const DEFAULT_STATE: OrgsState = {
   editing: false,
   viewActiveTab: OrganizationViewTabs.organization,
   orgDetailsSeen: false,
+  invitedUsersResponse: {
+    invitedUsers: [
+      {
+        username: '',
+        role: ROLES.find((role) => role.value === MemberRole.technical)!,
+        error: '',
+      },
+    ],
+  },
 };
 
 export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => {
@@ -170,6 +183,21 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
     })
     .addCase(inviteOrgMemberAction.rejected, (state) => {
       state.pending = false;
+    })
+    // Bulk Invite OrgMember
+    .addCase(bulkInviteOrgMembersAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(bulkInviteOrgMembersAction.fulfilled, (state, { payload }) => {
+      state.pending = false;
+      state.invitedUsersResponse = payload;
+    })
+    .addCase(bulkInviteOrgMembersAction.rejected, (state) => {
+      state.pending = false;
+    })
+    .addCase(clearBulkInvite.fulfilled, (state, { payload }) => {
+      state.pending = false;
+      state.invitedUsersResponse = payload;
     })
     // Remove OrgMember
     .addCase(removeOrgMemberAction.pending, (state) => {

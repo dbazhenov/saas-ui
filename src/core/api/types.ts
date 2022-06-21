@@ -96,6 +96,14 @@ export interface EditOrganizationResponse {
   org: OrganizationResponse;
 }
 
+export interface BulkInviteOrgMembersResponse {
+  errors: BulkInviteOrgMembersResponseUsers[];
+}
+export interface BulkInviteOrgMembersResponseUsers {
+  username: string;
+  error: string;
+}
+
 export interface ContactsResponse {
   customer_success: {
     email: string;

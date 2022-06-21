@@ -36,6 +36,8 @@ export const getOrgViewActiveTab = (state: AppState) => state.orgs.viewActiveTab
 
 export const getOrgDetailsSeen = (state: AppState) => state.orgs.orgDetailsSeen;
 
+export const getBulkInviteUsers = (state: AppState) => state.orgs.invitedUsersResponse;
+
 export const getCustomerSuccessContact = createSelector(
   getCurrentOrgContacts,
   (contacts) => contacts.customer_success || {},
