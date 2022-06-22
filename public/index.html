@@ -5,37 +5,44 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Percona Platform Portal"
-    />
+    <meta name="description" content="Percona Platform Portal" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>Percona Platform Portal</title>
+    <!-- Google Tag Manager -->
     <script>
-      var head = document.querySelector('head');
-      var js = document.createElement("script");
-
+      let GTMId;
       if (window.location.hostname === '%REACT_APP_PROD_DOMAIN%') {
-        js.src = 'https://www.googletagmanager.com/gtag/js?id=UA-343802-23';
+        GTMId = 'GTM-NS9FNNQ';
       } else {
-        js.src = 'https://www.googletagmanager.com/gtag/js?id=UA-343802-16';
+        GTMId = 'GTM-N9S6D78';
       }
 
-      head.appendChild(js);
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', GTMId);
     </script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      if (window.location.hostname === '%REACT_APP_PROD_DOMAIN%') {
-        gtag('config', 'UA-343802-23');
-      } else {
-        gtag('config', 'UA-343802-16');
-      }
-    </script>
+    <!-- End Google Tag Manager -->
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+      <iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-NS9FNNQ"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      >
+      </iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
