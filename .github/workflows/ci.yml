@@ -143,5 +143,7 @@ jobs:
                 "repo": "${{ github.repository }}",
                 "tags": "{\"${{ env.REPO }}\": \"${{ needs.docker.outputs.docker_tag }}\"}",
                 "ui_tests_branch": "${{ github.head_ref }}",
-                "sha": "${{ github.event.pull_request.head.sha }}"
+                "sha": "${{ github.event.pull_request.head.sha }}",
+                "skip_ui_tests": "${{false}}",
+                "skip_api_tests": "${{true}}"
             }
