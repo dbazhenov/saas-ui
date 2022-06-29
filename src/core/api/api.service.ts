@@ -26,6 +26,17 @@ const getConfig = (config?: AxiosRequestConfig) => {
   };
 };
 
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response.status === 401) {
+      oktaAuth.signOut({ revokeAccessToken: true, revokeRefreshToken: true });
+    }
+
+    return error;
+  },
+);
+
 export const Api = {
   axios,
 
