@@ -114,17 +114,22 @@ Cypress.Commands.add('oktaGetUser', (userId = '') =>
 );
 
 Cypress.Commands.add('oktaDeleteUserById', (userId = '') => {
+  // Call needs to be made twice to delete user, first call just deactivates user.
+  deleteUserByIdCall(userId)
+  deleteUserByIdCall(userId)
+});
+
+const deleteUserByIdCall = (userId) => {
   cy.task('oktaRequest', {
     baseUrl: url,
     urlSuffix: `/api/v1/users/${userId}`,
     method: 'delete',
     token,
   }).then((response) => {
-    // eslint-disable-next-line no-magic-numbers
     expect(response.status).to.equal(204);
     expect(response.data).is.empty;
   });
-});
+}
 
 Cypress.Commands.add('oktaDeleteUserByEmail', (email) => {
   expect(email).to.not.be.undefined;
