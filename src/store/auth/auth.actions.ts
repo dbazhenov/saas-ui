@@ -6,6 +6,7 @@ import { HTTP_STATUS, Messages } from 'core/api';
 import { GetProfileResponse } from 'core/api/types';
 import { AppState, UpdateProfilePayload } from 'store/types';
 import { logger } from '@percona/platform-core';
+import { setOrgTicketsLoadingAction } from 'store/orgs';
 
 export const loginAction = createAsyncThunk<void, void, { state: AppState; rejectValue: unknown }>(
   'USER:AUTH/LOGIN',
@@ -89,13 +90,14 @@ export const updateProfileAction = createAsyncThunk<
 
 export const getUserCompanyAction = createAsyncThunk<string, void, { rejectValue: unknown }>(
   'USER:COMPANY/GET',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await getUserCompany();
 
       return data.name;
     } catch (err: any) {
       logError(err);
+      dispatch(setOrgTicketsLoadingAction(false));
 
       return rejectWithValue(err.message);
     }

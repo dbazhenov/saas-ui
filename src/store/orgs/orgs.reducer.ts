@@ -22,6 +22,7 @@ import {
   setOrgDetailsSeen,
   bulkInviteOrgMembersAction,
   clearBulkInvite,
+  setOrgTicketsLoadingAction,
 } from './org.actions';
 
 const DEFAULT_STATE: OrgsState = {
@@ -240,5 +241,8 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
     })
     .addCase(getOrgTicketsAction.rejected, (state) => {
       state.tickets.pending = false;
+    })
+    .addCase(setOrgTicketsLoadingAction, (state, { payload }) => {
+      state.tickets.pending = payload;
     });
 });

@@ -329,6 +329,8 @@ export const getOrgTicketsAction = createAsyncThunk<
   }
 });
 
+export const setOrgTicketsLoadingAction = createAction<boolean>('ORGS:TICKETS/SET_PENDING');
+
 export const clearBulkInvite = createAsyncThunk<BulkInviteForm, void>(
   'ORGS:MEMBERS/CLEAR_BULK_INVITE',
   (_) => ({
