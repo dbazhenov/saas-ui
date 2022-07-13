@@ -1,16 +1,75 @@
-import React, { useEffect, useRef } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import OktaSignIn from '@okta/okta-signin-widget';
 import { useStyles } from '@grafana/ui';
 import { getStyles } from 'pages/Login/Login.styles';
 import ReactDOM from 'react-dom';
 import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';
+import { cx } from 'emotion';
+import { ContextProps, ToSCheckboxProps } from './OktaSignInWidget.types';
 import { Messages } from './OktaSignInWidget.messages';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 
-interface ContextProps {
-  controller: string;
-}
+const disabledCls = 'link-button-disabled';
+
+const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
+  const [checked, setChecked] = useState(false);
+
+  const handleCheck = useCallback(
+    ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
+      setChecked(eChecked);
+
+      if (eChecked) {
+        submitBtn.classList.remove(disabledCls);
+        submitBtn.removeAttribute('disabled');
+      } else {
+        submitBtn.classList.add(disabledCls);
+        submitBtn.setAttribute('disabled', 'true');
+      }
+    },
+    [submitBtn],
+  );
+
+  useEffect(() => {
+    submitBtn.classList.add(disabledCls);
+    submitBtn.setAttribute('disabled', 'true');
+  }, [submitBtn]);
+
+  return (
+    <div data-se="o-form-fieldset" className="o-form-fieldset o-form-label-top">
+      <div data-se="o-form-input-container" className="o-form-input">
+        <span data-se="o-form-input-tos" className="o-form-input-name-tos">
+          <div className="custom-checkbox">
+            <input
+              type="checkbox"
+              name="tos"
+              id="input099"
+              checked={checked}
+              onChange={handleCheck}
+              value={checked ? 'on' : 'off'}
+            />
+            <label
+              htmlFor="input099"
+              data-se-for-name="tos"
+              data-testid="tos-label"
+              className={cx('tos-label', { checked })}
+            >
+              {Messages.iAgree}
+              <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer" data-testid="tos-link">
+                {Messages.tos}
+              </a>
+              . {Messages.iHaveRead}
+              <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer" data-testid="privacy-policy-link">
+                {Messages.perconaPrivacyPolicy}
+              </a>
+              .&nbsp;*
+            </label>
+          </div>
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const getSignUpTosWrapper = (widgetRef: HTMLDivElement) => {
   const fieldset = widgetRef.querySelector('.o-form-fieldset-container');
@@ -55,34 +114,40 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
   }
 
   let tosWrapper;
-  let actionText;
+  let content;
 
   if (controller === 'registration') {
     tosWrapper = getSignUpTosWrapper(widgetRef);
-    actionText = Messages.byCreating;
+    const submitBtn = widgetRef.querySelector('.button-primary') as HTMLInputElement;
+
+    content = <ToSCheckbox submitBtn={submitBtn} />;
   } else if (['idp-discovery', 'primary-auth'].includes(controller)) {
     tosWrapper = getSocialTosWrapper(widgetRef);
-    actionText = Messages.byContinuing;
+
+    content = (
+      <p className="tos-label" data-testid="tos-label">
+        {Messages.byRegistering}
+        <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener" data-testid="tos-link">
+          {Messages.tos}
+        </a>
+        {Messages.andPerconas}
+        <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
+          {Messages.privacyPolicy}
+        </a>
+        . {Messages.iConsent}
+        <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
+          {Messages.perconaPrivacyPolicy}
+        </a>
+        .
+      </p>
+    );
   }
 
-  if (!tosWrapper) {
+  if (!tosWrapper || !content) {
     return;
   }
 
-  ReactDOM.render(
-    <p className="tos-label" data-testid="tos-label">
-      {actionText}
-      <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener" data-testid="tos-link">
-        {Messages.tos}
-      </a>
-      {Messages.and}
-      <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
-        {Messages.privacyPolicy}
-      </a>
-      .
-    </p>,
-    tosWrapper,
-  );
+  ReactDOM.render(content, tosWrapper);
 };
 
 export const OktaSignInWidget = ({
@@ -101,6 +166,14 @@ export const OktaSignInWidget = ({
     if (!widgetRef.current) {
       return () => {};
     }
+
+    config.features.registration = true;
+    config.registration = {
+      preSubmit: (postData: any, onSuccessSignUp: (postData: any) => {}) => {
+        postData.tos = true;
+        onSuccessSignUp(postData);
+      },
+    };
 
     const widget = new OktaSignIn(config);
 

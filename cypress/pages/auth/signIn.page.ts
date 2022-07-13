@@ -12,7 +12,7 @@ const signInPage = {
       signUpLink: 'Create one',
       unableToSignIn: 'Unable to sign in',
       tosAgree:
-        "By continuing with Google and GitHub, I agree to Percona's Terms of Service and Privacy Policy.",
+        "By registering, I agree to Percona's Terms of Service and Percona Privacy Policy. I consent to receive relevant communications about Percona services and understand that I can unsubscribe from these communications at any time in accordance with the Percona Privacy Policy.",
     },
     links: {},
   },

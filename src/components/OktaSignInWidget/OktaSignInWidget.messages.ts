@@ -1,8 +1,11 @@
 export const Messages = {
-  iHaveAgreed: 'I have read and agree to the ',
-  byContinuing: "By continuing with Google and GitHub, I agree to Percona's ",
-  byCreating: "By creating my account, I agree to Percona's ",
+  iAgree: 'I agree with Percona ',
+  iHaveRead: 'I have read and accepted the ',
+  byRegistering: "By registering, I agree to Percona's ",
   tos: 'Terms of Service',
-  and: ' and ',
+  andPerconas: ' and Percona ',
   privacyPolicy: 'Privacy Policy',
+  perconaPrivacyPolicy: 'Percona Privacy Policy',
+  iConsent:
+    'I consent to receive relevant communications about Percona services and understand that I can unsubscribe from these communications at any time in accordance with the ',
 };

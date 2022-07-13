@@ -29,7 +29,8 @@ const signUpPage = {
       verificationEmailBackToSignIn: 'Back to sign in',
       blankFieldError: 'This field cannot be left blank',
       validationErrorAlert: 'We found some errors. Please review the form and make corrections.',
-      tosAgree: "By creating my account, I agree to Percona's Terms of Service and Privacy Policy.",
+      tosAgree:
+        'I agree with Percona Terms of Service. I have read and accepted the Percona Privacy Policy.\xa0*',
     },
     links: {
       registerAddress: 'https://id-dev.percona.com/signin/register',
@@ -53,6 +54,7 @@ const signUpPage = {
     registrationCompleteBackLink: '[data-se="back-link"]',
     formErrorContainer: '[data-se="o-form-error-container"]',
     registrationContainer: '#okta-sign-in',
+    termsOfService: '[name="tos"]',
     tosLabel: 'tos-label',
     tosLink: 'tos-link',
     privacyPolicyLink: 'privacy-policy-link',
