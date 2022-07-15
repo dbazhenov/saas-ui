@@ -13,11 +13,19 @@ import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 const disabledCls = 'link-button-disabled';
 
 const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
-  const [checked, setChecked] = useState(false);
+  const [marketingChecked, setMarketingChecked] = useState(false);
+  const [tosChecked, setTosChecked] = useState(false);
 
-  const handleCheck = useCallback(
+  const handleMarketingCheck = useCallback(
     ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setChecked(eChecked);
+      setMarketingChecked(eChecked);
+    },
+    [],
+  );
+
+  const handleTosCheck = useCallback(
+    ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
+      setTosChecked(eChecked);
 
       if (eChecked) {
         submitBtn.classList.remove(disabledCls);
@@ -38,21 +46,41 @@ const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
   return (
     <div data-se="o-form-fieldset" className="o-form-fieldset o-form-label-top">
       <div data-se="o-form-input-container" className="o-form-input">
+        <span data-se="o-form-input-marketing" className="o-form-input-name-marketing">
+          <div className="custom-checkbox">
+            <input
+              type="checkbox"
+              name="marketing"
+              id="input098"
+              checked={marketingChecked}
+              onChange={handleMarketingCheck}
+              value={marketingChecked ? 'on' : 'off'}
+            />
+            <label
+              htmlFor="input098"
+              data-se-for-name="marketing"
+              data-testid="marketing-label"
+              className={cx('marketing-label', { checked: marketingChecked })}
+            >
+              {Messages.marketing}
+            </label>
+          </div>
+        </span>
         <span data-se="o-form-input-tos" className="o-form-input-name-tos">
           <div className="custom-checkbox">
             <input
               type="checkbox"
               name="tos"
               id="input099"
-              checked={checked}
-              onChange={handleCheck}
-              value={checked ? 'on' : 'off'}
+              checked={tosChecked}
+              onChange={handleTosCheck}
+              value={tosChecked ? 'on' : 'off'}
             />
             <label
               htmlFor="input099"
               data-se-for-name="tos"
               data-testid="tos-label"
-              className={cx('tos-label', { checked })}
+              className={cx('tos-label', { checked: tosChecked })}
             >
               {Messages.iAgree}
               <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer" data-testid="tos-link">
@@ -171,6 +199,9 @@ export const OktaSignInWidget = ({
     config.registration = {
       preSubmit: (postData: any, onSuccessSignUp: (postData: any) => {}) => {
         postData.tos = true;
+        const marketingConsent = widgetRef.current?.querySelector('[name=marketing]') as HTMLInputElement;
+
+        postData.marketing = marketingConsent.checked;
         onSuccessSignUp(postData);
       },
     };
