@@ -94,7 +94,7 @@ export const getUserCompanyAction = createAsyncThunk<string, void, { rejectValue
     try {
       const { data } = await getUserCompany();
 
-      return data.name;
+      return data?.name;
     } catch (err: any) {
       logError(err);
       dispatch(setOrgTicketsLoadingAction(false));

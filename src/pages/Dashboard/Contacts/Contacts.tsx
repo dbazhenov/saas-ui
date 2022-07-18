@@ -12,6 +12,7 @@ import {
   getOrgEntitlements,
   getCurrentOrgName,
   searchOrgsAction,
+  getUserRoleAction,
 } from 'store/orgs';
 import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
@@ -47,6 +48,10 @@ export const Contacts: FC = () => {
       dispatch(searchOrgsAction());
     }
   }, [dispatch, orgId]);
+
+  useEffect(() => {
+    dispatch(getUserRoleAction());
+  }, [dispatch]);
 
   useEffect(() => {
     if (orgId) {
