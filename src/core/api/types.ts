@@ -65,10 +65,6 @@ export enum OrgTicketStatus {
   Open = 'Open',
   Closed = 'Closed',
   Resolved = 'Resolved',
-  Pending = 'Pending - Awaiting Customer',
-  Scheduled = 'Scheduled',
-  New = 'New',
-  Authorize = 'Authorize',
 }
 
 export interface OrganizationTicketsResponse {

@@ -22,13 +22,8 @@ export const TicketList: FC = () => {
         accessor: 'number',
       },
       {
-        Header: Messages.columns.status,
-        accessor: 'status',
-        Cell: ({
-          row: {
-            original: { status },
-          },
-        }) => <TicketStatus status={status} />,
+        Header: Messages.columns.requester,
+        accessor: 'requester',
       },
       {
         Header: Messages.columns.description,
@@ -43,6 +38,15 @@ export const TicketList: FC = () => {
         accessor: 'priority',
       },
       {
+        Header: Messages.columns.status,
+        accessor: 'status',
+        Cell: ({
+          row: {
+            original: { status },
+          },
+        }) => <TicketStatus status={status} />,
+      },
+      {
         Header: Messages.columns.date,
         accessor: 'date',
         Cell: ({
@@ -50,10 +54,6 @@ export const TicketList: FC = () => {
             original: { date },
           },
         }) => new Date(date).toLocaleDateString(),
-      },
-      {
-        Header: Messages.columns.requester,
-        accessor: 'requester',
       },
     ],
     [],
@@ -75,8 +75,6 @@ export const TicketList: FC = () => {
       columns={columns}
       data={tickets}
       getRowProps={getRowProps}
-      showPagination
-      sortingOnColumns
     />
   );
 };
