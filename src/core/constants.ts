@@ -45,3 +45,5 @@ export const OKTA_TOKEN_STORE_LOCALSTORAGE_KEY = 'okta-token-storage';
 export const SENTRY_TRACES_SAMPLE_RATE = IS_PRODUCTION ? 0.5 : 1.0;
 
 export const ENVIRONMENT = IS_PRODUCTION ? 'production' : 'development';
+
+export const DEFAULT_ROWS_PER_PAGE = 10;
