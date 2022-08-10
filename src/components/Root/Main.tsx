@@ -7,6 +7,7 @@ import {
   LoginPage,
   ManageOrganizationPage,
   ManagePmmInstancesPage,
+  K8sClusterCreationPage,
   NotFound,
   ProfilePage,
 } from 'pages';
@@ -29,6 +30,9 @@ export const Main: FC = () => (
     </SecureRoute>
     <SecureRoute exact path={Routes.instances}>
       <ManagePmmInstancesPage />
+    </SecureRoute>
+    <SecureRoute exact path={Routes.kubernetes}>
+      <K8sClusterCreationPage />
     </SecureRoute>
     <SecureRoute path="*">
       <NotFound />

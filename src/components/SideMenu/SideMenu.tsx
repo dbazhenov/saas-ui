@@ -8,6 +8,7 @@ import instances from 'assets/percona-sidebar-instances.svg';
 import sidebarBlog from 'assets/percona-sidebar-blog.svg';
 import sidebarDocs from 'assets/percona-sidebar-docs.svg';
 import sidebarForum from 'assets/percona-sidebar-forum.svg';
+import sidebarK8s from 'assets/percona-sidebar-k8s.svg';
 import help from 'assets/percona-sidebar-help.svg';
 import { ResourceLink } from 'components/ResourceLink';
 import { getStyles } from './SideMenu.styles';
@@ -31,6 +32,9 @@ export const SideMenu: FC = () => {
         </IconLink>
         <IconLink icon={instances} to={Routes.instances} alt={Messages.instances}>
           {Messages.instances}
+        </IconLink>
+        <IconLink icon={sidebarK8s} to={Routes.kubernetes} alt={Messages.k8sCluster}>
+          {Messages.k8sCluster}
         </IconLink>
       </section>
       <section data-testid="side-menu-resources-section" className={styles.section}>

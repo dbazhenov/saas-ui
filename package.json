@@ -44,7 +44,7 @@
     "@okta/okta-react": "^6.3.0",
     "@okta/okta-signin-widget": "^6.1.2",
     "@percona/platform-core": "^0.12.3",
-    "@reduxjs/toolkit": "^1.6.2",
+    "@reduxjs/toolkit": "^1.8.2",
     "@sentry/react": "^6.19.6",
     "@sentry/tracing": "^6.19.6",
     "@testing-library/jest-dom": "^5.11.4",
