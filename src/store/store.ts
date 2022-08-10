@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { oktaAuth } from 'core';
 import { Messages } from 'core/api';
 import { loadState } from 'store/persistence/engine';
-import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
 import { errorUserInfoAction, getAuth, startUserInfoAction, updateUserInfoAction } from './auth';
 import { rootReducer } from './reducers';
 
@@ -44,8 +43,7 @@ export const authMiddleware = (store: any) => (next: any) => (action: AnyAction)
 export const store = configureStore({
   reducer: rootReducer,
   preloadedState,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(authMiddleware).concat(kubernetesApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(authMiddleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

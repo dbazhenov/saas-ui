@@ -9,5 +9,4 @@ export const Messages = {
   blogs: 'Blogs',
   forum: 'Forum',
   help: 'Portal Help',
-  k8sCluster: 'Free Kubernetes',
 };

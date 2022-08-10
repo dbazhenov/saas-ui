@@ -1,35 +1,6 @@
 import { MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
 import { AxiosRequestConfig } from 'axios';
 
-export enum K8sClusterStatus {
-  active = 'ACTIVE',
-  available = 'AVAILABLE',
-  building = 'BUILDING',
-  upgrading = 'UPGRADING',
-}
-
-export interface CreateK8sClusterResponse {
-  cluster_id: string;
-}
-
-export interface CreateK8sClusterResponseData {
-  clusterId: string;
-}
-
-export interface GetK8sClusterStatusResponse {
-  cluster_id: string;
-  status: K8sClusterStatus;
-}
-
-export interface GetK8sClusterStatusResponseData {
-  clusterId: string;
-  status: K8sClusterStatus;
-}
-
-export interface GetK8sClusterConfigResponse {
-  kubeconfig: string;
-}
-
 export interface RequestBody {
   [key: string]: any;
 }
