@@ -9,6 +9,7 @@ export const Messages = {
   manageOrganization: 'Manage Organization',
   members: 'Members',
   orgCreateSuccess: 'Your organization has been created.',
+  orgDeleteSuccess: 'Your organization has been deleted.',
   orgEditSuccess: 'Your organization has been updated.',
   organization: 'Organization',
   removeInstanceSuccess: 'The instance has been successfully removed from the list',

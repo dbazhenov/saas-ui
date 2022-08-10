@@ -82,6 +82,19 @@ export const getEntitlementsAction = createAsyncThunk<OrganizationEntitlement[],
   },
 );
 
+export const deleteOrganizationAction = createAsyncThunk<void, string>(
+  'ORGS:ORGANIZATION/DELETE',
+  async (payload) => {
+    try {
+      await OrgAPI.deleteOrganization(payload);
+
+      toast.success(OrgMessages.orgDeleteSuccess);
+    } catch (err) {
+      displayAndLogError(err);
+    }
+  },
+);
+
 export const getOrganizationAction = createAsyncThunk<GetOrganizationResponse, string>(
   'ORGS:ORGANIZATION/GET',
   async (payload, { rejectWithValue }) => {
@@ -131,6 +144,9 @@ export const createOrganizationAction = createAsyncThunk<
     const { data } = await OrgAPI.createOrganization(payload);
 
     await dispatch(searchOrgsAction());
+
+    await dispatch(searchOrgMembersAction({ orgId: data.org.id }));
+
     toast.success(OrgMessages.orgCreateSuccess);
 
     return data.org;

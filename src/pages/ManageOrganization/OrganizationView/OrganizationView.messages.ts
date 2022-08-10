@@ -3,5 +3,6 @@ export const Messages = {
   organizationName: 'Organization Name',
   creationDate: 'Creation Date',
   editOrganization: 'Edit Organization',
+  deleteOrganization: 'Delete Organization',
   fromCustomerPortal: 'We found your organization on Percona Customer Portal and used it',
 };

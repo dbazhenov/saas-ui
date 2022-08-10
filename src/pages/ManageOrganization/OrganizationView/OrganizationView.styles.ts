@@ -47,6 +47,10 @@ export const getStyles = (theme: GrafanaTheme) => {
         color: ${colors.textBlue};
         cursor: pointer;
 
+        &:not(:last-child) {
+          margin-right: ${spacing.md};
+        }
+
         &:hover {
           color: ${colors.textBlue};
           opacity: 75%;

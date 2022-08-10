@@ -29,6 +29,9 @@ export const editOrganization = (orgId: string, name: string) =>
 export const getOrganization = (orgId: string) =>
   Api.get<RequestBody, GetOrganizationResponse>(Org.getOrganization(orgId));
 
+export const deleteOrganization = (orgId: string) =>
+  Api.del<RequestBody, void>(Org.deleteOrganization(orgId));
+
 export const createServiceNowOrganization = (name: string) =>
   Api.post<RequestBody, CreateOrganizationResponse>(Org.createServiceNowOrganization, { name });
 

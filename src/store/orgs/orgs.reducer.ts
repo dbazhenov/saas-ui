@@ -5,6 +5,7 @@ import { MemberRole } from 'pages/ManageOrganization/ManageOrganization.types';
 import { OrgsState, OrganizationViewTabs } from 'store/types';
 import {
   createOrganizationAction,
+  deleteOrganizationAction,
   enterOrganizationEditing,
   exitOrganizationEditing,
   editOrganizationAction,
@@ -107,6 +108,16 @@ export const orgsReducer = createReducer<OrgsState>(DEFAULT_STATE, (builder) => 
       state.isOrgFromPortal = !!payload.id;
     })
     .addCase(createOrganizationAction.rejected, (state) => {
+      state.pending = false;
+    })
+    // DeleteOrganization
+    .addCase(deleteOrganizationAction.pending, (state) => {
+      state.pending = true;
+    })
+    .addCase(deleteOrganizationAction.fulfilled, () => ({
+      ...DEFAULT_STATE,
+    }))
+    .addCase(deleteOrganizationAction.rejected, (state) => {
       state.pending = false;
     })
     // OrganizationDetailsSeen
