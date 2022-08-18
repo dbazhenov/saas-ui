@@ -52,7 +52,6 @@ export const getStyles = (theme: GrafanaTheme) => {
     `,
     section: css`
       color: ${colors.text};
-      max-width: 900px;
       width: 100%;
     `,
     loadingMessage: css`

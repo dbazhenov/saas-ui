@@ -15,13 +15,12 @@ export const getStyles = (theme: GrafanaTheme) => {
       margin: 0 0 ${spacing.xl};
     `,
     container: css`
-      align-items: center;
       display: flex;
       flex-direction: column;
       justify-content: center;
       line-height: 2em;
       margin-bottom: ${spacing.xl};
-      padding: 0 56px;
+      padding: 0 ${spacing.lg};
 
       > :not(:first-child) {
         margin-top: ${spacing.lg};

@@ -74,7 +74,7 @@ context('Pages Tests', () => {
       cy.get(LeftMainMenuLinks.dashboard).hasText(commonPage.constants.labels.dashboardLink);
       cy.get(LeftMainMenuLinks.organization).hasText(commonPage.constants.labels.organizationLink);
       cy.get(LeftMainMenuLinks.pmmInstances).hasText(commonPage.constants.labels.pmmInstancesLink);
-      commonPage.methods.uiLogoutUser();
+      cy.removeCurrentUserAccessToken();
     });
   });
 });

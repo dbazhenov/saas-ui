@@ -15,6 +15,7 @@ import {
   getIsOrgPending,
   getOrgTicketsAction,
   createServiceNowOrganizationAction,
+  setOrgTicketsLoadingAction,
 } from 'store/orgs';
 import { SupportTicketOverview } from 'components/SupportTicketOverview/SupportTicketOverview';
 import { getStyles } from './Dashboard.styles';
@@ -63,6 +64,8 @@ export const DashboardPage: FC = () => {
   useEffect(() => {
     if (orgId) {
       dispatch(getOrgTicketsAction());
+    } else {
+      dispatch(setOrgTicketsLoadingAction(false));
     }
   }, [dispatch, orgId]);
 

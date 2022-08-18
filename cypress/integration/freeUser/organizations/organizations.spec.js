@@ -41,6 +41,8 @@ context('Organization Tests for Free user', () => {
     cy.contains(gettingStartedPage.constants.labels.addOrganization).isVisible().click({ force: true });
     cy.findByTestId(organizationPage.locators.createOrgForm).isVisible();
     cy.findByTestId(organizationPage.locators.orgNameInput);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(5000);
     cy.findByTestId(organizationPage.locators.orgNameInput)
       .as('orgNameField')
       .hasAttr('placeholder', organizationPage.constants.labels.orgNamePlaceholder)

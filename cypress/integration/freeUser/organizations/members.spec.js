@@ -13,9 +13,9 @@ context('Members tests for the Free Users', () => {
   let admin1User;
   let admin2User;
   let technical1User;
-  let newAdminUser; 
+  let newAdminUser;
   let newTechnicalUser;
-  
+
   beforeEach(() => {
     admin1User = getUser();
     admin2User = getUser();
@@ -31,12 +31,12 @@ context('Members tests for the Free Users', () => {
 
   afterEach(() => {
     cy.cleanUpAfterTest([admin1User, admin2User, technical1User], admin1User);
-    if(newAdminUser) {
+    if (newAdminUser) {
       cy.oktaDeleteUserByEmail(newAdminUser.email);
       newAdminUser = undefined;
     }
 
-    if(newTechnicalUser) {
+    if (newTechnicalUser) {
       cy.oktaDeleteUserByEmail(newTechnicalUser.email);
       newTechnicalUser = undefined;
     }
@@ -146,14 +146,14 @@ context('Members tests for the Free Users', () => {
       .click({ force: true });
     organizationPage.methods.openMembersTab();
 
-    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({force: true});
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({ force: true });
     cy.findByTestId(organizationPage.locators.modalEmailInput).type(newAdminUser.email);
     cy.contains('div', organizationPage.constants.userRoles.technical).click();
     cy.contains('div', organizationPage.constants.userRoles.admin).click();
     cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
     cy.checkPopUpMessage(organizationPage.constants.messages.userSuccessfullyInvited);
 
-    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({force: true});
+    cy.findByTestId(organizationPage.locators.inviteMemberButton).click({ force: true });
     cy.findByTestId(organizationPage.locators.modalEmailInput).type(newTechnicalUser.email);
     cy.findByTestId(organizationPage.locators.inviteMemberSubmitButton).click();
     cy.checkPopUpMessage(organizationPage.constants.messages.userSuccessfullyInvited);
@@ -290,7 +290,7 @@ context('Members tests for the Free Users', () => {
     emails.forEach((email, index) => {
       cy.contains('td', email)
         .parent()
-        .within(() => cy.findByTestId(organizationPage.locators.deleteMemberIcon).click());
+        .within(() => cy.findByTestId(organizationPage.locators.deleteMemberIcon).click({ force: true }));
       cy.findByTestId(organizationPage.locators.deleteMemberModalContent).should((modalContent) =>
         expect(modalContent).to.contain(emails[index]),
       );

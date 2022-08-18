@@ -31,6 +31,8 @@ export interface GetProfileResponse {
 export interface UpdateProfileRequest {
   firstName: string;
   lastName: string;
+  marketing?: boolean;
+  tos?: boolean;
 }
 
 export interface ResetPasswordRequest {

@@ -34,6 +34,7 @@ const commonPage = {
     forumsLink: 'a[href="https://forums.percona.com/"]',
     portalHelpLink: 'a[href="https://docs.percona.com/percona-platform/index.html"]',
     navLink: '[data-testid="nav-link"]',
+    acceptMarketingButton: 'accept-marketing',
   },
   methods: {
     leftMenuNavigation: (target: LeftMainMenuLinks) => leftMenuNavigation(target),

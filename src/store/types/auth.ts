@@ -10,4 +10,6 @@ export interface AuthState {
 export interface UpdateProfilePayload {
   firstName: string;
   lastName: string;
+  marketing?: boolean;
+  tos?: boolean;
 }

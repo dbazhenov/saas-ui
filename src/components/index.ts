@@ -6,3 +6,4 @@ export * from './Routes';
 export * from './SideMenu';
 export * from './TestContainer';
 export * from './GettingStarted';
+export * from './SecureRoute';

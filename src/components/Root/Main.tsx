@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { LoginCallback, SecureRoute } from '@okta/okta-react';
-import { PublicRoute } from 'components';
+import { LoginCallback } from '@okta/okta-react';
+import { PublicRoute, SecureRoute } from 'components';
 import {
   DashboardPage,
   LoginPage,
