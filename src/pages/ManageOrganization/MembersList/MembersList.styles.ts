@@ -9,10 +9,13 @@ export const getStyles = ({ typography, spacing }: GrafanaTheme) => ({
   fullName: css`
     margin-left: ${spacing.sm};
   `,
+  labelsResendEmails: css`
+    margin-left: ${spacing.sm};
+  `,
   clockIconWrapper: css`
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
   `,
   clockIcon: css`
     height: ${typography.size.md};

@@ -4,4 +4,6 @@ export const Messages = {
   email: 'Email',
   role: 'Role',
   noData: 'No users found',
+  pendingConfirmation: 'Pending Confirmation',
+  resendEmail: 'Resend Email',
 };

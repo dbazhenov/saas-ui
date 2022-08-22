@@ -4,6 +4,7 @@ import { oktaAuth } from 'core';
 import { Messages } from 'core/api';
 import { loadState } from 'store/persistence/engine';
 import { authApi } from 'components/MarketingBanner/MarketingBanner.service';
+import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
 import { errorUserInfoAction, getAuth, startUserInfoAction, updateUserInfoAction } from './auth';
 import { rootReducer } from './reducers';
 
@@ -45,7 +46,7 @@ export const store = configureStore({
   reducer: rootReducer,
   preloadedState,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(authMiddleware).concat(authApi.middleware),
+    getDefaultMiddleware().prepend(authMiddleware).concat(authApi.middleware, membersListApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

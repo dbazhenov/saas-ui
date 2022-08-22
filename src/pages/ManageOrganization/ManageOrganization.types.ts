@@ -11,6 +11,7 @@ export enum MemberRole {
 
 export enum MemberStatus {
   active = 'ACTIVE',
+  provisioned = 'PROVISIONED',
 }
 
 export interface EditMemberFormFields {

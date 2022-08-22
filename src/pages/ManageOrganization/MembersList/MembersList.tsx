@@ -7,10 +7,12 @@ import { OrgMember } from 'store/types';
 import { getFirstOrgId, getOrgMembers, getIsOrgPending, searchOrgMembersAction } from 'store/orgs';
 import { ReactComponent as UserAvatar } from 'assets/user-avatar.svg';
 import { ReactComponent as Clock } from 'assets/clock.svg';
+import { getAuth } from 'store/auth';
 import { getStyles } from './MembersList.styles';
 import { Messages } from './MembersList.messages';
-import { MemberStatus } from '../ManageOrganization.types';
+import { MemberRole, MemberStatus } from '../ManageOrganization.types';
 import { MemberActions } from './MemberActions';
+import { ResendEmailLink } from './ResendEmailLink/ResendEmailLink';
 
 export const MembersList: FC = () => {
   const styles = useStyles(getStyles);
@@ -18,11 +20,13 @@ export const MembersList: FC = () => {
   const pending = useSelector(getIsOrgPending);
   const members = useSelector(getOrgMembers);
   const orgId = useSelector(getFirstOrgId);
+  const { orgRole } = useSelector(getAuth);
+
   const columns = useMemo<Column<OrgMember>[]>(
     () => [
       {
         Header: Messages.name,
-        accessor: ({ firstName, lastName, status }: OrgMember) => {
+        accessor: ({ firstName, lastName, status, memberId }: OrgMember) => {
           const fullName = `${firstName} ${lastName}`;
 
           return (
@@ -34,7 +38,13 @@ export const MembersList: FC = () => {
                 </div>
               ) : (
                 <div className={styles.clockIconWrapper} data-testid="user-not-activated">
-                  <Clock className={styles.clockIcon} />
+                  <div>
+                    <Clock className={styles.clockIcon} />
+                    <span className={styles.labelsResendEmails}>{Messages.pendingConfirmation}</span>
+                  </div>
+                  {orgRole === MemberRole.admin && status === MemberStatus.provisioned && (
+                    <ResendEmailLink organization={orgId} member={memberId} />
+                  )}
                 </div>
               )}
             </>
@@ -58,7 +68,7 @@ export const MembersList: FC = () => {
         width: '5%',
       },
     ],
-    [styles],
+    [styles, orgId, orgRole],
   ) as any;
 
   useEffect(() => {
