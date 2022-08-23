@@ -14,4 +14,5 @@ export const Routes = {
   signup: `https://${OAUTH_HOST}/signin/register`,
   welcome: '/welcome',
   dashboard: '/dashboard',
+  kubernetes: '/kubernetes',
 };
