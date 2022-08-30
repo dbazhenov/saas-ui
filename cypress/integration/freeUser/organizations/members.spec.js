@@ -70,10 +70,10 @@ context('Members tests for the Free Users', () => {
       cy.log(`Changing from ${oldValues[index]} to ${newValues[index]}`);
       cy.contains('td', email)
         .parent()
-        .within(() => cy.findByTestId(organizationPage.locators.editMemberIcon).click());
-      cy.contains('div', oldValues[index]).click();
-      cy.contains('div', newValues[index]).click();
-      cy.findByTestId(organizationPage.locators.ediMemberSubmitButton).click();
+        .within(() => cy.findByTestId(organizationPage.locators.editMemberIcon).click({ force: true }));
+      cy.contains('div', oldValues[index]).click({ force: true });
+      cy.contains('div', newValues[index]).click({ force: true });
+      cy.findByTestId(organizationPage.locators.ediMemberSubmitButton).click({ force: true });
       cy.checkPopUpMessage(organizationPage.constants.messages.memberEditedSuccessfully);
       // eslint-disable-next-line cypress/no-unnecessary-waiting, no-magic-numbers
       cy.wait(1000); // Due to bug SAAS-873, should be removed when bug is fixed.

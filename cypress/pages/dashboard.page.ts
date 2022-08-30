@@ -17,6 +17,7 @@ const dashboardPage = {
       contactsDiscord: 'Discord',
       contactsContactPage: 'Contacts page',
       contactsHelpEmail: 'portal-help@percona.com',
+      contactsHelpEmailCustomer: 'customercare@percona.com',
     },
     messages: {
       emailCopiedClipboard: 'Email copied to clipboard',
@@ -27,6 +28,7 @@ const dashboardPage = {
       perconaDiscord: 'http://per.co.na/discord',
       perconaContactPage: 'https://www.percona.com/about-percona/contact',
       perconaHelpEmail: 'mailto:portal-help@percona.com',
+      perconaHelpEmailCustomer: 'mailto:customercare@percona.com',
     },
   },
   locators: {

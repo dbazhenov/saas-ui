@@ -1,4 +1,5 @@
 import { getUser } from 'pages/auth/getUser';
+import commonPage from 'pages/common.page';
 import dashboardPage from 'pages/dashboard.page';
 import { organizationPage } from 'pages/organization.page';
 import { timeouts } from '../../../fixtures/timeouts';
@@ -95,15 +96,16 @@ context('Dashboard Tests for customers', () => {
       /\/v1\/orgs\/([a-zA-Z0-9]+){8}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){8}$/g,
     ).as('organizationDetails');
     cy.loginByOktaApi(users[0].email, users[0].password);
-    cy.checkPopUpMessage(organizationPage.constants.messages.customerOrgFound);
     dashboardPage.methods.waitForDashboardToLoad();
+
     cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
     cy.window()
       .then((win) => cy.stub(win.navigator.clipboard, 'writeText'))
       .as('clipBoardContent');
     cy.findByTestId(dashboardPage.locators.emailContactLink)
-      .contains(dashboardPage.constants.labels.contactsHelpEmail)
-      .hasAttr('href', dashboardPage.constants.links.perconaHelpEmail);
+      .contains(dashboardPage.constants.labels.contactsHelpEmailCustomer)
+      .hasAttr('href', dashboardPage.constants.links.perconaHelpEmailCustomer);
+    cy.get(commonPage.locators.popUpCloseButton).click({ multiple: true });
     cy.findByTestId(dashboardPage.locators.customerContactIcon).click();
     cy.checkPopUpMessage(dashboardPage.constants.messages.emailCopiedClipboard);
     cy.get('@organizationDetails')

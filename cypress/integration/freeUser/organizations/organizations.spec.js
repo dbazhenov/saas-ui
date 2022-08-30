@@ -75,7 +75,7 @@ context('Organization Tests for Free user', () => {
 
     // necessary due to element being re rendered. Will be removed after loading overlay fix
     // eslint-disable-next-line cypress/no-unnecessary-waiting, no-magic-numbers
-    cy.wait(5);
+    cy.wait(5000);
     cy.findByTestId(organizationPage.locators.orgNameInput).clear();
     cy.findByTestId(organizationPage.locators.orgNameInputError).contains(
       organizationPage.constants.labels.requiredField,

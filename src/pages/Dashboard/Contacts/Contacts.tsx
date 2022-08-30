@@ -16,7 +16,7 @@ import {
 } from 'store/orgs';
 import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
-import { HELP_EMAIL, LINKS } from './Contacts.constants';
+import { FREE_USER_HELP_EMAIL, CUSTOMER_HELP_EMAIL, LINKS } from './Contacts.constants';
 import { CustomerContact } from './CustomerContact/CustomerContact';
 import { getAccountType } from './Contacts.utils';
 import { EntitlementsModal } from './EntitlementsModal/EntitlementsModal';
@@ -35,6 +35,7 @@ export const Contacts: FC = () => {
   const role = useSelector(getUserOrgRole);
   const { firstName, lastName, pending: isUserPending } = user;
   const isPending = isUserPending || isOrgPending;
+  const helpEmail = isCustomer ? CUSTOMER_HELP_EMAIL : FREE_USER_HELP_EMAIL;
 
   const viewEntitlements = useCallback(
     (isVisible: boolean) => () => {
@@ -119,8 +120,8 @@ export const Contacts: FC = () => {
           <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
           <p>
             <span className={styles.label}>{Messages.needHelp}</span>
-            <a className={styles.externalLink} href={`mailto:${HELP_EMAIL}`} data-testid="email-contact-link">
-              {HELP_EMAIL}
+            <a className={styles.externalLink} href={`mailto:${helpEmail}`} data-testid="email-contact-link">
+              {helpEmail}
             </a>
           </p>
           {CSContact.name ? (

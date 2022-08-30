@@ -35,6 +35,7 @@ const commonPage = {
     portalHelpLink: 'a[href="https://docs.percona.com/percona-platform/index.html"]',
     navLink: '[data-testid="nav-link"]',
     acceptMarketingButton: 'accept-marketing',
+    popUpCloseButton: 'button[aria-label="close"]',
   },
   methods: {
     leftMenuNavigation: (target: LeftMainMenuLinks) => leftMenuNavigation(target),
