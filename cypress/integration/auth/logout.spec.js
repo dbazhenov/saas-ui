@@ -14,7 +14,7 @@ context('Logout', () => {
     cy.cleanUpAfterTest([newUser]);
   });
 
-  it('SAAS-T80 - should be able to logout', () => {
+  it.skip('SAAS-T80 - should be able to logout', () => {
     commonPage.methods.uiLogoutUser();
     cy.visit('');
     signInPage.methods.isSignInPageDisplayed();

@@ -68,7 +68,7 @@ export const Contacts: FC = () => {
 
   return (
     <section className={styles.cardsContainer}>
-      <div className={styles.card}>
+      <div className={styles.card} data-testid="account-section">
         <Overlay className={styles.cardOverlay} isPending={isPending}>
           <p className={styles.cardTitle}>{Messages.yourAccount}</p>
           <p>
@@ -115,7 +115,7 @@ export const Contacts: FC = () => {
           )}
         </Overlay>
       </div>
-      <div className={styles.card}>
+      <div className={styles.card} data-testid="contacts-section">
         <Overlay className={styles.cardOverlay} isPending={isOrgPending}>
           <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
           <p>

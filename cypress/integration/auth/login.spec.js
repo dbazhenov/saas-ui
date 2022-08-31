@@ -21,7 +21,7 @@ context('Login', () => {
     cy.visit(pageDetailsMap[Pages.Login].url);
   });
 
-  it('SAAS-T200 - should be able to see landing page form', () => {
+  it.skip('SAAS-T200 - should be able to see landing page form', () => {
     cy.get(signInPage.locators.emailInput).isVisible();
     cy.get(signInPage.locators.nextButton)
       .isEnabled()
@@ -34,7 +34,7 @@ context('Login', () => {
     cy.get(signInPage.locators.signUpLink).hasText(signInPage.constants.messages.signUpLink);
   });
 
-  it('SAAS-T82 Verify successful login on Percona Portal', () => {
+  it.skip('SAAS-T82 Verify successful login on Percona Portal', () => {
     signInPage.methods.fillOutSignInUserDetails(newUser.email, newUser.password);
     cy.get(signInPage.locators.signInButton).click();
     commonPage.methods.commonPageLoaded();
@@ -42,7 +42,7 @@ context('Login', () => {
     cy.findByTestId(dashboardPage.locators.gettingStartedContainer).isVisible();
   });
 
-  it('SAAS-T86 Verify unsuccessful login on Percona Portal', () => {
+  it.skip('SAAS-T86 Verify unsuccessful login on Percona Portal', () => {
     signInPage.methods.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
     cy.get(signInPage.locators.signInButton).click();
     cy.get(signInPage.locators.unableToSignIn).hasText(signInPage.constants.messages.unableToSignIn);

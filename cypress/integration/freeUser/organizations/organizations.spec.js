@@ -33,7 +33,7 @@ context('Organization Tests for Free user', () => {
     cy.cleanUpAfterTest([adminUserWithOrg, adminUser, technicalUser], adminUserWithOrg);
   });
 
-  it('SAAS-T136 SAAS-T139 SAAS-T159 create organization', () => {
+  it.skip('SAAS-T136 SAAS-T139 SAAS-T159 create organization', () => {
     const date = new Date().toLocaleDateString();
 
     cy.loginByOktaApi(adminUser.email, adminUser.password);
@@ -62,7 +62,7 @@ context('Organization Tests for Free user', () => {
     cy.contains(organizationPage.constants.labels.creationDateLabel).find('strong').should('have.text', date);
   });
 
-  it('SAAS-T220 Verify free account admin user can update org name', () => {
+  it.skip('SAAS-T220 Verify free account admin user can update org name', () => {
     const newOrgName = `new_test_org_${Date.now()}`;
 
     cy.loginByOktaApi(adminUserWithOrg.email, adminUserWithOrg.password);

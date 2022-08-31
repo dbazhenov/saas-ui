@@ -9,7 +9,6 @@ context('Percona Customer', () => {
   let users = [];
 
   beforeEach(() => {
-    
     cy.generateServiceNowAccount().then((account) => {
       snAccount = account;
       users.push(account.admin1, account.technical);
@@ -22,7 +21,7 @@ context('Percona Customer', () => {
     users = [];
   });
 
-  it('SAAS-T160 organization is created automatically for admin', () => {
+  it.skip('SAAS-T160 organization is created automatically for admin', () => {
     // login as admin and verify organization is created automatically
     cy.loginByOktaApi(snAccount.admin1.email, snAccount.admin1.password);
     cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
@@ -58,7 +57,7 @@ context('Percona Customer', () => {
     verifyOrganizationName(snAccount.name);
   });
 
-  it('SAAS-T222 Verify Percona Customer account user is not able to update organization name  ', () => {
+  it.skip('SAAS-T222 Verify Percona Customer account user is not able to update organization name  ', () => {
     users.forEach((user) => {
       cy.loginByOktaApi(user.email, user.password);
       cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();

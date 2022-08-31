@@ -27,7 +27,7 @@ context('Pages Tests', () => {
     cy.cleanUpAfterTest([adminUser, technicalUser], adminUser);
   });
 
-  it('SAAS-T118 - Verify access to a non-existent private route returns 404 page', () => {
+  it.skip('SAAS-T118 - Verify access to a non-existent private route returns 404 page', () => {
     cy.loginByOktaApi(adminUser.email, adminUser.password);
     cy.log('Also Covers: SAAS-T119 Verify user can navigate back to Homepage from 404 for private route');
     cy.visit('/page1');
@@ -51,7 +51,7 @@ context('Pages Tests', () => {
     dashboardPage.methods.waitForDashboardToLoad();
   });
 
-  it('SAAS-T203 - Verify Percona Portal Resources menu tab content and links', () => {
+  it.skip('SAAS-T203 - Verify Percona Portal Resources menu tab content and links', () => {
     cy.log('Also covers: SAAS-T204 Verify user can see Percona Portal Resources regardless of the role');
     users.forEach((user) => {
       cy.loginByOktaApi(user.email, user.password);

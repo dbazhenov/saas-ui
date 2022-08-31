@@ -81,7 +81,8 @@ export const OrganizationView: FC = () => {
               {displayName && (
                 <>
                   <span>
-                    {Messages.organizationName}: <strong>{displayName}</strong>
+                    {Messages.organizationName}:{' '}
+                    <strong data-testid="organization-name">{displayName}</strong>
                   </span>
                   {orgCreationDate && (
                     <span>

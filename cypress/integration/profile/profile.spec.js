@@ -53,7 +53,7 @@ context('User Profile', () => {
     });
   });
 
-  it('SAAS-T128 should be able to open profile page and see change profile link', () => {
+  it.skip('SAAS-T128 should be able to open profile page and see change profile link', () => {
     dashboardPage.methods.waitForDashboardToLoad();
     cy.findByTestId(commonPage.locators.acceptMarketingButton).click({ force: true });
     // Open dropdown menu
@@ -82,8 +82,7 @@ context('User Profile', () => {
       .hasText(profilePage.constants.labels.editProfileLink);
   });
 
-  //FIXME
-  xit('SAAS-T130 should have validation for user profile fields', () => {
+  it.skip('SAAS-T130 should have validation for user profile fields', () => {
     dashboardPage.methods.waitForDashboardToLoad();
     cy.findByTestId(commonPage.locators.acceptMarketingButton).click({ force: true });
     cy.visit(pageDetailsMap[Pages.Profile].url);
@@ -127,8 +126,7 @@ context('User Profile', () => {
     updateProfileButton().isEnabled();
   });
 
-  //FIXME
-  xit('SAAS-T129 should be able to update user profile', () => {
+  it.skip('SAAS-T129 should be able to update user profile', () => {
     dashboardPage.methods.waitForDashboardToLoad();
 
     cy.visit(pageDetailsMap[Pages.Profile].url);

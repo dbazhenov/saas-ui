@@ -15,7 +15,7 @@ export const NotFound: FC = () => {
   const logo = isDark ? darkLogo : lightLogo;
 
   return (
-    <div className={styles.contentWrapper}>
+    <div className={styles.contentWrapper} data-testid="not-found-container">
       <img data-testid="404-image" className={styles.logo} alt="404" src={logo} />
       <Link className={styles.link} to={Routes.root}>
         <Button data-testid="404-home-button" className={styles.homeButton}>

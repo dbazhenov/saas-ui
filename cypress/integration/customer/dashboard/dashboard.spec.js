@@ -21,7 +21,7 @@ context('Dashboard Tests for customers', () => {
     users = [];
   });
 
-  it('SAAS-T233 - Verify "open new ticket" link for Percona customer', () => {
+  it.skip('SAAS-T233 - Verify "open new ticket" link for Percona customer', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.loginByOktaApi(user.email, user.password);
@@ -34,7 +34,7 @@ context('Dashboard Tests for customers', () => {
     });
   });
 
-  it('SAAS-T193 SAAS-T196 Verify Percona Customer user is able to see tickets created for his org', () => {
+  it.skip('SAAS-T193 SAAS-T196 Verify Percona Customer user is able to see tickets created for his org', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.intercept('POST', '**/tickets:search').as('userTickets');
@@ -63,7 +63,7 @@ context('Dashboard Tests for customers', () => {
     });
   });
 
-  it('SAAS-T194 - Verify user is able to see empty list if there are no tickets on ServiceNow', () => {
+  it.skip('SAAS-T194 - Verify user is able to see empty list if there are no tickets on ServiceNow', () => {
     users.forEach((user) => {
       cy.log(`Running test for ${user.email} user`);
       cy.intercept('POST', '**/tickets:search', {
@@ -77,7 +77,7 @@ context('Dashboard Tests for customers', () => {
     });
   });
 
-  it('SAAS-T234 - Verify free account user is not able to get organization tickets if he is a part of Org linked with SN', () => {
+  it.skip('SAAS-T234 - Verify free account user is not able to get organization tickets if he is a part of Org linked with SN', () => {
     const nonSnUser = getUser();
 
     cy.oktaCreateUser(nonSnUser);
@@ -90,7 +90,7 @@ context('Dashboard Tests for customers', () => {
     cy.removeCurrentUserAccessToken();
   });
 
-  it('SAAS-T224 - Verify Percona Customer user is able to view Contacts (dynamic)', () => {
+  it.skip('SAAS-T224 - Verify Percona Customer user is able to view Contacts (dynamic)', () => {
     cy.intercept(
       'GET',
       /\/v1\/orgs\/([a-zA-Z0-9]+){8}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){4}-([a-zA-Z0-9]+){8}$/g,

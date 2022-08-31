@@ -42,7 +42,7 @@ context('Members tests for the Free Users', () => {
     }
   });
 
-  it('SAAS-T158 Verify organization admin is able to edit member roles', () => {
+  it.skip('SAAS-T158 Verify organization admin is able to edit member roles', () => {
     cy.loginByOktaApi(admin1User.email, admin1User.password);
     dashboardPage.methods.waitForDashboardToLoad();
     // Navigate to the members page
@@ -213,7 +213,7 @@ context('Members tests for the Free Users', () => {
       });
   });
 
-  it('SAAS-T175 Verify Technical User can view list of Org members in read-only mode', () => {
+  it.skip('SAAS-T175 Verify Technical User can view list of Org members in read-only mode', () => {
     cy.loginByOktaApi(technical1User.email, technical1User.password);
     dashboardPage.methods.waitForDashboardToLoad();
     // Navigate to the members page
@@ -271,7 +271,7 @@ context('Members tests for the Free Users', () => {
     });
   });
 
-  it('SAAS-T215 Verify admin is able to remove users from organization', () => {
+  it.skip('SAAS-T215 Verify admin is able to remove users from organization', () => {
     cy.loginByOktaApi(admin1User.email, admin1User.password);
     dashboardPage.methods.waitForDashboardToLoad();
     // Navigate to the members page
@@ -408,7 +408,7 @@ context('Members tests for the Free Users', () => {
     cy.findByTestId(organizationPage.locators.inviteMemberModal.submitButton).click();
   });
 
-  it('SAAS-T239 Verify inviting non-registered members to the organziation failed', () => {
+  it.skip('SAAS-T239 Verify inviting non-registered members to the organziation failed', () => {
     const newUser = getUser();
     const unauthorizedCode = 401;
     const badRequestCode = 400;

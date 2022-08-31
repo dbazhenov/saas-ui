@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-export const oktaRequest = async ({baseUrl, urlSuffix, method = 'get', token, data = {}}) => {
+export const oktaRequest = async ({ baseUrl, urlSuffix, method = 'get', token, data = {} }) => {
   let response;
 
   try {

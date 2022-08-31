@@ -14,7 +14,7 @@ context('Sign Up', () => {
     cy.get(signUpPage.locators.registrationContainer).isVisible();
   });
 
-  it('SAAS-T78 - Verify Sign Up on Percona Portal', () => {
+  it.skip('SAAS-T78 - Verify Sign Up on Percona Portal', () => {
     cy.log(
       'This test also covers: SAAS-T124 - Verify user can see notification about Account confirmation email sent',
     );
@@ -69,7 +69,7 @@ context('Sign Up', () => {
     cy.cleanUpAfterTest([newUser]);
   });
 
-  it('SAAS-T85 - Verify Sign Up if user already has Percona account', () => {
+  it.skip('SAAS-T85 - Verify Sign Up if user already has Percona account', () => {
     cy.oktaCreateUser(newUser);
     signUpPage.methods.fillOutSignUpForm(newUser);
     cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
@@ -81,7 +81,7 @@ context('Sign Up', () => {
     cy.cleanUpAfterTest([newUser]);
   });
 
-  it('SAAS-T113 - Verify Sign up redirects to Okta widget', () => {
+  it.skip('SAAS-T113 - Verify Sign up redirects to Okta widget', () => {
     cy.url().should('contain', signUpPage.constants.links.loginAddress);
     cy.get(signInPage.locators.signUpLink).click();
     cy.get(signUpPage.locators.inputEmail)
@@ -105,7 +105,7 @@ context('Sign Up', () => {
     cy.get(signUpPage.locators.registerButton).isEnabled();
   });
 
-  it('SAAS-T115 - Verify validation for email on Sign Up', () => {
+  it.skip('SAAS-T115 - Verify validation for email on Sign Up', () => {
     signUpPage.methods.fillOutSignUpForm({
       email: 'Some Email',
       firstName: newUser.firstName,
@@ -131,7 +131,7 @@ context('Sign Up', () => {
     cy.get(signUpPage.locators.registerButton).isEnabled();
   });
 
-  it('SAAS-T121 - Verify Sign Up to Platform is not possible without Last Name and First Name', () => {
+  it.skip('SAAS-T121 - Verify Sign Up to Platform is not possible without Last Name and First Name', () => {
     signUpPage.methods.fillOutSignUpForm({ email: newUser.email, password: newUser.password });
     cy.findByTestId(signUpPage.locators.tosLabel).hasText(signUpPage.constants.messages.tosAgree);
     cy.get(signUpPage.locators.termsOfService).check({ force: true });

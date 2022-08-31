@@ -22,7 +22,7 @@ context('Percona Customer', () => {
       cy.cleanUpAfterTest([snAccount.admin1, snAccount.admin2, snAccount.technical], snAccount.admin1);
     });
 
-    it('SAAS-T223 SAAS-T174 members list', () => {
+    it.skip('SAAS-T223 SAAS-T174 members list', () => {
       cy.loginByOktaApi(snAccount.admin2.email, snAccount.admin2.password);
       cy.findByTestId(dashboardPage.locators.ticketTable, { timeout: timeouts.ONE_MIN }).isVisible();
       openViewOrganizationPage();

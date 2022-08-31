@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "@tests/*": [
+        "./*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@api/*": [
+        "api/*"
+      ],
+      "@support/*": [
+        "support/*"
+      ],
+      "@cypress/*": [
+        "../cypress/*"
+      ],
+      "@root/*": [
+        "../*"
+      ]
+    }
+  }
+}
