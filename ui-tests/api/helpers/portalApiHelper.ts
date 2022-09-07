@@ -1,5 +1,4 @@
-import { expect, request } from '@playwright/test';
-import { APIRequestContext } from 'playwright-core';
+import { APIRequestContext, expect, request } from '@playwright/test';
 import config from '@root/playwright.config';
 
 const throwPortalRequestError = (e) => {
