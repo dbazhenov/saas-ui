@@ -188,9 +188,9 @@ test.describe('Spec file for free users members tests', async () => {
       role: UserRoles.admin,
     });
 
-    expect(responseWrongOrgId.status).toEqual(forbiddenCode);
+    expect(responseWrongOrgId.status).toEqual(badRequestCode);
     expect(responseWrongOrgId.data.message).toEqual(
-      'User must belong to the requested organization to perform this action.',
+      'Incorrect organization ID',
     );
 
     const responseInvalidEmail = await inviteMemberBeCall(adminToken, org.id, {
