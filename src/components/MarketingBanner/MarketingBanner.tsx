@@ -8,7 +8,7 @@ import { LoaderButton } from '@percona/platform-core';
 import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import { getStyles } from './MarketingBanner.styles';
 import { Messages } from './MarketingBanner.messages';
-import { useEditProfileMutation } from './MarketingBanner.service';
+import { useEditProfileMutation } from '../../core/api/auth.service';
 
 export const MarketingBanner: FC = ({ children }) => {
   const styles = useStyles(getStyles);

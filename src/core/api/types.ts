@@ -64,6 +64,17 @@ export interface UpdateProfileRequest {
   tos?: boolean;
 }
 
+export interface ActivateProfileRequest {
+  profile: {
+    firstName: string;
+    lastName: string;
+    marketing?: boolean;
+    tos?: boolean;
+  };
+  password: string;
+  token: string;
+}
+
 export interface ResetPasswordRequest {
   email: string;
 }

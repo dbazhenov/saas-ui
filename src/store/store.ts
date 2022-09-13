@@ -4,7 +4,7 @@ import { oktaAuth } from 'core';
 import { Messages } from 'core/api';
 import { loadState } from 'store/persistence/engine';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
-import { authApi } from 'components/MarketingBanner/MarketingBanner.service';
+import { authApi } from 'core/api/auth.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
 import { errorUserInfoAction, getAuth, startUserInfoAction, updateUserInfoAction } from './auth';
 import { rootReducer } from './reducers';

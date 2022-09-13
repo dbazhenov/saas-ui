@@ -9,6 +9,7 @@ export const Routes = {
   logout: '/logout',
   organization: '/organization',
   profile: '/profile',
+  activation: '/activation',
   root: '/',
   resetPassword: `https://${OAUTH_HOST}/signin/forgot-password`,
   signup: `https://${OAUTH_HOST}/signin/register`,

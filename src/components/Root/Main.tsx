@@ -12,10 +12,12 @@ import {
   ProfilePage,
 } from 'pages';
 import { Routes } from 'core/routes';
+import Activation from 'pages/Activation/Activation';
 
 export const Main: FC = () => (
   <Switch>
     <Route path={Routes.loginCallback} component={LoginCallback} />
+    <Route exact path={Routes.activation} component={Activation} />
     <SecureRoute exact path={Routes.root}>
       <DashboardPage />
     </SecureRoute>
