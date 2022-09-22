@@ -1,4 +1,4 @@
-import { APIResponse, expect, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { MembersPage } from '@pages/members.page';
@@ -7,8 +7,6 @@ import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
-import { getRequestContext, RequestParams } from '@tests/api/helpers';
-import InviteUserToOrg from '@tests/support/types/inviteUser.interface';
 
 test.describe('Spec file for free users members tests', async () => {
   let admin1User: User;
@@ -101,8 +99,8 @@ test.describe('Spec file for free users members tests', async () => {
     await dashboardPage.locators.viewOrgLink.click();
     await organizationPage.locators.membersTab.click();
 
-    await membersPage.verifyMembersTable(usersTable);
-    const membersTableRows = membersPage.membersTableRow;
+    await membersPage.membersTable.verifyMembersTable(usersTable);
+    const membersTableRows = membersPage.membersTable.tableRow;
 
     // eslint-disable-next-line no-await-in-loop, no-plusplus
     for (let i = 0; i < (await membersTableRows.count()); i++) {
@@ -110,14 +108,14 @@ test.describe('Spec file for free users members tests', async () => {
         // eslint-disable-next-line no-await-in-loop
         await membersTableRows
           .nth(i)
-          .locator(membersPage.membersTableEditUser.toString().replace('Locator@', ''))
+          .locator(membersPage.membersTable.membersTableEditUser.toString().replace('Locator@', ''))
           .isDisabled(),
       ).toBeTruthy();
       expect(
         // eslint-disable-next-line no-await-in-loop
         await membersTableRows
           .nth(i)
-          .locator(membersPage.membersTableDeleteUser.toString().replace('Locator@', ''))
+          .locator(membersPage.membersTable.membersTableDeleteUser.toString().replace('Locator@', ''))
           .isDisabled(),
       ).toBeTruthy();
     }
@@ -134,71 +132,30 @@ test.describe('Spec file for free users members tests', async () => {
 
     await dashboardPage.locators.viewOrgLink.click();
     await organizationPage.locators.membersTab.click();
-    await membersPage.verifyMembersTableUserButtons(`${admin1User.firstName} ${admin1User.lastName}`, false);
-    await membersPage.deleteUserMembersTabByEmail(admin2User.email);
+
+    await membersPage.membersTable.verifyMembersTableUserButtons(
+      `${admin1User.firstName} ${admin1User.lastName}`,
+      false,
+    );
+
+    await membersPage.membersTable.deleteUserMembersTabByEmail(admin2User.email);
     await membersPage.toast.toastElementContainer.waitFor({ state: 'detached' });
-    await membersPage.deleteUserMembersTabByEmail(technicalUser.email);
+    await membersPage.membersTable.deleteUserMembersTabByEmail(technicalUser.email);
   });
 
-  test('SAAS-T239 Verify inviting non-registered members to the organziation failed @freeUser @members', async ({
+  test('SAAS-T169 Verify Technical User can not invite Org members @freeUser @members', async ({
+    page,
     baseURL,
   }) => {
-    const inviteMemberBeCall = async (accessToken: string, orgId: number, member: InviteUserToOrg) => {
-      const params: RequestParams = { baseURL, accessToken, path: `/v1/orgs/${orgId}/members`, data: member };
-      const ctx = await getRequestContext(params);
+    const organizationPage = new OrganizationPage(page);
+    const membersPage = new MembersPage(page);
 
-      const response: APIResponse = await ctx.post(params.path, { data: params.data });
-      const responseData = await response.json();
+    await page.goto('');
+    await oktaAPI.loginByOktaApi(technicalUser, page);
 
-      return { status: response.status(), data: responseData };
-    };
-    const newUser = getUser();
-    const unauthorizedCode = 401;
-    const badRequestCode = 400;
-    const forbiddenCode = 403;
-
-    const responseWrongToken = await inviteMemberBeCall('Wrong Token', org.id, {
-      username: newUser.email,
-      role: UserRoles.admin,
-    });
-
-    expect(responseWrongToken.status).toEqual(unauthorizedCode);
-    expect(responseWrongToken.data.message).toEqual('Invalid credentials.');
-
-    const responseNoUsername = await inviteMemberBeCall(adminToken, org.id, {
-      username: '',
-      role: UserRoles.admin,
-    });
-
-    expect(responseNoUsername.status).toEqual(badRequestCode);
-    expect(responseNoUsername.data.message).toEqual(
-      "invalid field Username: value '' must not be an empty string",
-    );
-
-    const responseNoRole = await inviteMemberBeCall(adminToken, org.id, {
-      username: newUser.email,
-      role: '',
-    });
-
-    expect(responseNoRole.status).toEqual(badRequestCode);
-    expect(responseNoRole.data.message).toEqual('Invalid organization member role.');
-
-    const responseWrongOrgId = await inviteMemberBeCall(adminToken, 0, {
-      username: newUser.email,
-      role: UserRoles.admin,
-    });
-
-    expect(responseWrongOrgId.status).toEqual(badRequestCode);
-    expect(responseWrongOrgId.data.message).toEqual(
-      'Incorrect organization ID',
-    );
-
-    const responseInvalidEmail = await inviteMemberBeCall(adminToken, org.id, {
-      username: 'Invalid Email',
-      role: UserRoles.admin,
-    });
-
-    expect(responseInvalidEmail.status).toEqual(badRequestCode);
-    expect(responseInvalidEmail.data.message).toEqual('Failed to invite user');
+    await organizationPage.sideMenu.mainMenu.organization.click();
+    await organizationPage.locators.membersTab.click();
+    await membersPage.membersTable.table.waitFor({ state: 'visible' });
+    await membersPage.membersTable.inviteMembers.inviteMemberButton.waitFor({ state: 'detached' });
   });
 });

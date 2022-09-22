@@ -60,8 +60,18 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
   return (
     <section data-testid="getting-started-section" className={styles.section}>
       <header data-testid="getting-started-section-header" className={styles.header}>
-        <img className={tickClassName} alt={Messages.done} src={doneIcon} />
-        <img className={hideTickBg} alt={Messages.incomplete} src={incompleteIcon} />
+        <img
+          className={tickClassName}
+          alt={Messages.done}
+          src={doneIcon}
+          data-testid="getting-started-done-icon"
+        />
+        <img
+          className={hideTickBg}
+          alt={Messages.incomplete}
+          src={incompleteIcon}
+          data-testid="getting-started-incomplete-icon"
+        />
         <h2>{title}</h2>
       </header>
       <div data-testid="getting-started-section-description-wrapper" className={styles.descriptionWrapper}>

@@ -3,10 +3,10 @@ import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { OrganizationPage } from '@pages/organization.page';
 import { SignInPage } from '@pages/signIn.page';
-import { UserRoles } from '@support/enums/userRoles';
-import User from '@support/types/user.interface';
-import { oktaAPI } from '@api/okta';
-import { portalAPI } from '@api/portal';
+import { MembersPage } from '@pages/members.page';
+import { oktaAPI, portalAPI } from '@tests/api';
+import User from '@tests/support/types/user.interface';
+import { UserRoles } from '@tests/support/enums/userRoles';
 
 test.describe('Spec file for free users dashboard tests', async () => {
   let newAdmin1User: User;
@@ -64,24 +64,34 @@ test.describe('Spec file for free users dashboard tests', async () => {
   }) => {
     test.info().annotations.push(
       {
-        type: 'Also covers',
-        description: 'Also covers: SAAS-T159 Verify user can create Org with special characters and spaces',
+        type: 'Also Covers',
+        description: 'SAAS-T140 Verify portal user is automatically OrgAdmin for created organisation',
       },
       {
-        type: 'Also covers',
+        type: 'Also Covers',
+        description: 'SAAS-T159 Verify user can create Org with special characters and spaces',
+      },
+      {
+        type: 'Also Covers',
         description: 'SAAS-T139 Verify portal user can create organization with already existing name',
       },
+      {
+        type: 'Also Covers',
+        description: 'SAAS-T180 Verify user can view created Organization',
+      },
     );
+
     const dashboardPage = new DashboardPage(page);
+    const membersPage = new MembersPage(page);
     const organizationPage = new OrganizationPage(page);
     const signInPage = new SignInPage(page);
 
     firstUserWithoutOrg = getUser();
-    secondUserWithoutOrg = getUser();
     await oktaAPI.createUser(firstUserWithoutOrg);
 
     await oktaAPI.loginByOktaApi(firstUserWithoutOrg, page);
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
+
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.locators.addOrganizationLocator.click();
 
     // wait due to rerender of the page.
@@ -97,7 +107,25 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await organizationPage.locators.organizationNameInput.type(firstOrgName);
     await organizationPage.locators.createOrgButton.click();
     await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
-    expect(await organizationPage.locators.organizationName.textContent()).toEqual(firstOrgName);
+    await expect(organizationPage.locators.organizationName).toHaveText(firstOrgName, { timeout: 60000 });
+
+    await organizationPage.locators.membersTab.click();
+    await membersPage.verifyMembersTableUserRole(firstUserWithoutOrg.email, UserRoles.admin);
+    await membersPage.sideMenu.mainMenu.dashboard.click();
+
+    await dashboardPage.gettingStarted.doneImageOrganizationSection.waitFor({ state: 'visible' });
+    await expect(dashboardPage.gettingStarted.gettingStartedOrganizationLink).toHaveText(
+      dashboardPage.gettingStarted.viewOrganization,
+    );
+    await expect(dashboardPage.gettingStarted.gettingStartedOrganizationLink).toHaveAttribute(
+      'href',
+      '/organization',
+    );
+
+    // wait due to rerender of the page.
+    await page.waitForTimeout(2000);
+    await expect(dashboardPage.gettingStarted.doneImageOrganizationSection).toHaveCSS('opacity', '1');
+
     await organizationPage.uiUserLogout();
 
     await signInPage.signInContainer.waitFor({ state: 'visible' });
@@ -122,7 +150,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
 
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.locators.viewOrgLink.click();
 
     await organizationPage.locators.editOrgButton.click();
@@ -145,7 +173,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     await oktaAPI.loginByOktaApi(newTechnicalUser, page);
 
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.locators.viewOrgLink.click();
     await organizationPage.locators.editOrgButton.waitFor({ state: 'visible' });
     expect(await organizationPage.locators.editOrgButton.isDisabled()).toBeTruthy();

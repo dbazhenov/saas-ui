@@ -1,14 +1,18 @@
-import { APIRequestContext, expect, request } from '@playwright/test';
+import { APIRequestContext, APIResponse, request } from '@playwright/test';
 import config from '@root/playwright.config';
 
 const throwPortalRequestError = (e) => {
   throw new Error(`Failed to execute portal request. Error: ${e}`);
 };
 
-const checkAndReturnResponse = (r) => {
-  expect(r.ok()).toBeTruthy();
+const checkAndReturnResponse = (r: APIResponse) => {
+  if (r.ok() === true) {
+    return r.json();
+  }
 
-  return r.json();
+  throwPortalRequestError(r.statusText());
+
+  return null;
 };
 
 export interface RequestParams {
@@ -40,7 +44,7 @@ export const portalAPIHelper = {
 
     return ctx
       .post(params.path, { data: params.data })
-      .then(checkAndReturnResponse)
+      .then((response: APIResponse) => checkAndReturnResponse(response))
       .catch(throwPortalRequestError);
   },
   async put(params: RequestParams) {

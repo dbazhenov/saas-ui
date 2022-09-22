@@ -2,7 +2,6 @@
 import { Locator, Page } from '@playwright/test';
 import { CommonPage } from '@pages/common.page';
 import { UserRoles } from '@support/enums/userRoles';
-import User from '@support/types/user.interface';
 
 export default class InviteMembers extends CommonPage {
   readonly page: Page;
@@ -34,9 +33,9 @@ export default class InviteMembers extends CommonPage {
     await this.page.locator(`//span[contains(text(),'${role}')]`).click();
   };
 
-  inviteMember = async (user: User, role: UserRoles = UserRoles.admin) => {
+  inviteMember = async (userEmail: string, role: UserRoles = UserRoles.admin) => {
     await this.inviteMemberButton.click();
-    await this.getInviteMemberUsernameLocator(0).type(user.email);
+    await this.getInviteMemberUsernameLocator(0).type(userEmail);
     await this.selectMemberRole(role);
     await this.inviteMemberSubmitButton.click();
     await this.toast.checkToastMessage(this.memberSuccessfullyInvited);

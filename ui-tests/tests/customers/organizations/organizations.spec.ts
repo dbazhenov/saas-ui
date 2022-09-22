@@ -108,6 +108,7 @@ test.describe('Spec file for organization tests for customers', async () => {
 
     expect(orgName).toEqual(org.orgs[0].name);
     await organizationPage.locators.membersTab.click();
-    await membersPage.verifyUserMembersTable(customerTechnicalUser, UserRoles.technical);
+
+    await membersPage.membersTable.verifyUserMembersTable(customerTechnicalUser, UserRoles.technical);
   });
 });

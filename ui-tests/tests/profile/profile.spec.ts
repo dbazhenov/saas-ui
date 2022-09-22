@@ -28,8 +28,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const profilePage = new ProfilePage(page);
 
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.locators.contactsLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.contactsLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.openUserDropdown();
     await dashboardPage.userDropdownProfile.click();
     expect(page.url()).toContain('/profile');

@@ -9,6 +9,7 @@ import User from '@support/types/user.interface';
 import { serviceNowAPI } from '@api/serviceNow';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
+import { getMailosaurMessage, getRandomMailosaurEmailAddress } from '@tests/api/helpers';
 
 test.describe('Spec file for organization tests for customers', async () => {
   let serviceNowCredentials: ServiceNowResponse;
@@ -86,7 +87,8 @@ test.describe('Spec file for organization tests for customers', async () => {
     await signInPage.sideMenu.mainMenu.organization.click();
 
     await organizationPage.locators.membersTab.click();
-    await membersPage.verifyMembersTable(users);
+
+    await membersPage.membersTable.verifyMembersTable(users);
   });
 
   test('SAAS-T223 Verify Percona Customer user can see list of members for his organization @customers @members', async ({
@@ -94,8 +96,9 @@ test.describe('Spec file for organization tests for customers', async () => {
   }) => {
     test.info().annotations.push({
       type: 'Also Covers',
-      description: 'SAAS-T174 Verify OrgAdmin can view list of Org Members',
+      description: 'SAAS-T168 Verify OrgAdmin can invite members to organization success flow',
     });
+
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
@@ -104,8 +107,23 @@ test.describe('Spec file for organization tests for customers', async () => {
     await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
     await organizationPage.sideMenu.mainMenu.organization.click();
     await organizationPage.locators.membersTab.click();
-    await membersPage.verifyUserMembersTable(customerAdmin1User, UserRoles.admin);
-    await membersPage.inviteMembers.inviteMember(customerAdmin2User);
-    await membersPage.verifyUserMembersTable(customerAdmin2User, UserRoles.admin);
+
+    await membersPage.membersTable.verifyUserMembersTable(customerAdmin1User, UserRoles.admin);
+    await membersPage.membersTable.inviteMembers.inviteMember(customerAdmin2User.email);
+    await membersPage.membersTable.verifyUserMembersTable(customerAdmin2User, UserRoles.admin);
+    await membersPage.membersTable.inviteMembers.inviteMember(
+      customerTechnicalUser.email,
+      UserRoles.technical,
+    );
+    await membersPage.membersTable.verifyUserMembersTable(customerTechnicalUser, UserRoles.technical);
+    const org = await portalAPI.getOrg(adminToken);
+    const invitedTechnicalUserEmail = getRandomMailosaurEmailAddress();
+
+    await membersPage.membersTable.inviteMembers.inviteMember(invitedTechnicalUserEmail, UserRoles.technical);
+    await getMailosaurMessage(invitedTechnicalUserEmail, `Welcome to ${org.orgs[0].name}`);
+    const invitedAdminUserEmail = getRandomMailosaurEmailAddress();
+
+    await membersPage.membersTable.inviteMembers.inviteMember(invitedAdminUserEmail);
+    await getMailosaurMessage(invitedAdminUserEmail, `Welcome to ${org.orgs[0].name}`);
   });
 });

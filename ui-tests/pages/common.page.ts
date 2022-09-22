@@ -17,7 +17,6 @@ export class CommonPage {
 
   readonly documentationLink: string;
 
-  readonly modalBody: Locator;
   readonly modalCloseButton: Locator;
   readonly userDropdownToggle: Locator;
   readonly userDropdownMenuLogout: Locator;
@@ -36,7 +35,6 @@ export class CommonPage {
     this.customerOrgCreated = 'We found your organization on Percona Customer Portal and used it';
     this.requiredField = 'Required field';
 
-    this.modalBody = this.page.locator('//div[@role="modal-body"]');
     this.modalCloseButton = this.page.locator('//div[@role="modal-close-button"]');
     this.userDropdownToggle = this.page.locator('//div[@data-testid="menu-bar-profile-dropdown-toggle"]');
     this.userDropdownContainer = this.page.locator('//div[@data-testid="dropdown-menu-container"]');

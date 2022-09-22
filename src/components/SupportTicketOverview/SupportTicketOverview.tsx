@@ -88,7 +88,7 @@ export const SupportTicketOverview: FC = () => {
   }
 
   return (
-    <section className={styles.marginSection}>
+    <section className={styles.marginSection} data-testid="ticket-overview-section-container">
       <h4>{Messages.header}</h4>
       <div className={styles.container}>
         {loading ? (
@@ -104,7 +104,9 @@ export const SupportTicketOverview: FC = () => {
               // eslint-disable-next-line react/jsx-curly-newline
               centeredElement={
                 <div className={styles.centeredElement}>
-                  <strong>{computedItems.reduce((acc, item) => acc + item.ammount, 0)}</strong>
+                  <strong data-testid="total-ticket-number">
+                    {computedItems.reduce((acc, item) => acc + item.ammount, 0)}
+                  </strong>
                   <p>{Messages.totalTickets}</p>
                 </div>
                 // eslint-disable-next-line react/jsx-curly-newline

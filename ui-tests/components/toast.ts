@@ -16,9 +16,9 @@ export default class Toast {
     this.toastCloseButton = page.locator('//*[@aria-label="close"]');
   }
 
-  checkToastMessage = async (message: string) => {
+  checkToastMessage = async (message: string, timeout: number = 60000) => {
     // TODO: to improve
-    await this.page.locator(`//div[contains(text(), "${message}")]`).waitFor({ state: 'visible' });
+    await this.page.locator(`//div[contains(text(), "${message}")]`).waitFor({ state: 'visible', timeout });
 
     // TODO: to improve
     const toastCloseButtonLocator: Locator = this.page.locator(

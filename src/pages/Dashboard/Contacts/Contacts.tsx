@@ -102,13 +102,14 @@ export const Contacts: FC = () => {
             <p className={styles.entitlementsWrapper}>
               <span className={styles.cardPoint}>{Messages.entitlements}</span>
               &nbsp;
-              {entitlements.length}
+              <span data-testid="number-entitlements">{entitlements.length}</span>
               {entitlements.length ? (
                 <IconButton
                   name="list-ul"
                   size="lg"
                   className={styles.icon}
                   onClick={viewEntitlements(true)}
+                  data-testid="entitlements-button"
                 />
               ) : null}
             </p>

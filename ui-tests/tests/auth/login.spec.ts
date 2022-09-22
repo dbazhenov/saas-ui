@@ -21,13 +21,14 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await page.goto('/');
   });
 
-  test('SAAS-T251 - Verify handling of status 401 @authTests', async ({ page }) => {
+  test('SAAS-T251 - Verify handling of status 401 @auth', async ({ page }) => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(adminUser, page);
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.locators.contactsLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.contactsLoadingSpinner.waitFor({ state: 'detached' });
+
     await oktaAPI.deleteUserByEmail(adminUser.email);
     await page.reload();
     await signInPage.signInContainer.waitFor({ state: 'visible' });

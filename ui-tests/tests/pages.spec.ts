@@ -40,22 +40,20 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await notFoundPage.waitForPortalLoaded();
     await page.goto('page1');
     await notFoundPage.locators.notFoundPageContainer.waitFor({ state: 'visible' });
-    const colorLightMode = await notFoundPage.locators.notFoundPageContainer.evaluate((element) =>
-      window.getComputedStyle(element).getPropertyValue('background-color'),
+    await expect(notFoundPage.locators.notFoundPageContainer).toHaveCSS(
+      'background-color',
+      'rgb(247, 248, 250)',
     );
-
-    expect(colorLightMode).toEqual('rgb(247, 248, 250)');
     expect(await notFoundPage.locators.notFoundImage.isVisible()).toBeTruthy();
     await notFoundPage.locators.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
     await notFoundPage.themeSwitch.click();
     await page.goto('page1');
     await notFoundPage.locators.notFoundPageContainer.waitFor({ state: 'visible' });
-    const colorDarkMode = await notFoundPage.locators.notFoundPageContainer.evaluate((element) =>
-      window.getComputedStyle(element).getPropertyValue('background-color'),
+    await expect(notFoundPage.locators.notFoundPageContainer).toHaveCSS(
+      'background-color',
+      'rgb(11, 12, 14)',
     );
-
-    expect(colorDarkMode).toEqual('rgb(11, 12, 14)');
     expect(await notFoundPage.locators.notFoundImage.isVisible()).toBeTruthy();
     await notFoundPage.locators.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();

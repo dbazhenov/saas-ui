@@ -54,7 +54,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
 
-    await dashboardPage.locators.accountLoadingSpinner.waitFor({ state: 'detached' });
+    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.locators.ticketSection.waitFor({ state: 'detached', timeout: 10000 });
   });
 
@@ -65,35 +65,37 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
 
-    await dashboardPage.locators.perconaContactsHeader.waitFor({ state: 'visible' });
+    await dashboardPage.contacts.perconaContactsHeader.waitFor({ state: 'visible' });
 
-    await expect(dashboardPage.locators.emailContactLink).toHaveText(dashboardPage.labels.contactsHelpEmail);
-    expect(await dashboardPage.locators.emailContactLink.getAttribute('href')).toEqual(
-      `mailto:${dashboardPage.labels.contactsHelpEmail}`,
+    expect(await dashboardPage.contacts.emailContactLink.textContent()).toEqual(
+      dashboardPage.contacts.contactsHelpEmail,
     );
-
-    expect(await dashboardPage.locators.forumContactLink.textContent()).toEqual(
-      dashboardPage.labels.contactsHelpForums,
-    );
-    expect(await dashboardPage.locators.forumContactLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.locators.forumContactLink.getAttribute('href')).toEqual(
-      dashboardPage.links.contactsHelpForumsLink,
+    expect(await dashboardPage.contacts.emailContactLink.getAttribute('href')).toEqual(
+      dashboardPage.contacts.mailtoPerconaHelpEmail,
     );
 
-    expect(await dashboardPage.locators.discordContactLink.textContent()).toEqual(
-      dashboardPage.labels.contactsHelpDiscord,
+    expect(await dashboardPage.contacts.forumContactLink.textContent()).toEqual(
+      dashboardPage.contacts.contactsHelpForums,
     );
-    expect(await dashboardPage.locators.discordContactLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.locators.discordContactLink.getAttribute('href')).toEqual(
-      dashboardPage.links.contactsHelpDiscordLink,
+    expect(await dashboardPage.contacts.forumContactLink.getAttribute('target')).toEqual('_blank');
+    expect(await dashboardPage.contacts.forumContactLink.getAttribute('href')).toEqual(
+      dashboardPage.contacts.contactsHelpForumsLink,
     );
 
-    expect(await dashboardPage.locators.contactPageLink.textContent()).toEqual(
-      dashboardPage.labels.contactPage,
+    expect(await dashboardPage.contacts.discordContactLink.textContent()).toEqual(
+      dashboardPage.contacts.contactsHelpDiscord,
     );
-    expect(await dashboardPage.locators.contactPageLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.locators.contactPageLink.getAttribute('href')).toEqual(
-      dashboardPage.links.contactPageAddress,
+    expect(await dashboardPage.contacts.discordContactLink.getAttribute('target')).toEqual('_blank');
+    expect(await dashboardPage.contacts.discordContactLink.getAttribute('href')).toEqual(
+      dashboardPage.contacts.contactsHelpDiscordLink,
+    );
+
+    expect(await dashboardPage.contacts.contactPageLink.textContent()).toEqual(
+      dashboardPage.contacts.contactPageLabel,
+    );
+    expect(await dashboardPage.contacts.contactPageLink.getAttribute('target')).toEqual('_blank');
+    expect(await dashboardPage.contacts.contactPageLink.getAttribute('href')).toEqual(
+      dashboardPage.contacts.contactPageLinkAddress,
     );
   });
 });
