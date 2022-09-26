@@ -18,13 +18,14 @@
     "type": "git",
     "url": "git+https://github.com/percona-platform/saas-ui.git"
   },
+  "proxy": "https://portal-dev.percona.com",
   "scripts": {
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "eject": "react-scripts eject",
-    "test": "react-scripts test --verbose",
-    "test:ci": "CI=true react-scripts test",
-    "test:coverage": "react-scripts test --coverage --watchAll=false --collectCoverageFrom=src/**/*.{ts,tsx,js} --collectCoverageFrom=!src/core/gen/**/*",
+    "test": "TZ=utc react-scripts test --verbose",
+    "test:ci": "CI=true npm t",
+    "test:coverage": "npm t -- --coverage --watchAll=false --collectCoverageFrom=src/**/*.{ts,tsx,js} --collectCoverageFrom=!src/core/gen/**/*",
     "lint": "eslint --ext js,ts,tsx src",
     "lint:tests": "eslint --ext js,ts cypress --fix",
     "lint:fix": "npm run lint -- --fix",

@@ -50,6 +50,7 @@ export const kubernetesApi = createApi({
       transformResponse: (response: GetK8sClusterStatusResponse) => ({
         clusterId: response.cluster_id,
         status: response.status,
+        createdAt: response.created_at,
       }),
     }),
     getClusterConfig: builder.query<GetK8sClusterConfigResponse, string>({

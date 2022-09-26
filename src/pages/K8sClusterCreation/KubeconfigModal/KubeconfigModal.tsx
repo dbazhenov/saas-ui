@@ -18,7 +18,13 @@ export const KubeconfigModal: FC<KubeconfigModalProps> = ({ kubeconfig, isVisibl
   return (
     <div className={styles.modalWrapper}>
       <Modal title={Messages.k8sClusterConfiguration} isVisible={isVisible} onClose={onClose}>
-        <TextArea className={styles.textArea} name="kubeconfig-yaml" readOnly value={kubeconfig} />
+        <TextArea
+          data-testid="kubernetes-cluster-config-modal-textarea"
+          className={styles.textArea}
+          name="kubeconfig-yaml"
+          readOnly
+          value={kubeconfig}
+        />
         <HorizontalGroup justify="flex-end">
           <Button
             variant="primary"

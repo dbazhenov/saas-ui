@@ -19,11 +19,13 @@ export interface CreateK8sClusterResponseData {
 export interface GetK8sClusterStatusResponse {
   cluster_id: string;
   status: K8sClusterStatus;
+  created_at: string;
 }
 
 export interface GetK8sClusterStatusResponseData {
   clusterId: string;
   status: K8sClusterStatus;
+  createdAt: string;
 }
 
 export interface GetK8sClusterConfigResponse {

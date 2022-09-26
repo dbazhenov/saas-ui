@@ -5,6 +5,7 @@ import { useStyles, LinkButton, Spinner } from '@grafana/ui';
 import { LoaderButton } from '@percona/platform-core';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as KubernetesLogo } from 'assets/percona-sidebar-k8s.svg';
+import { DEFAULT_DATE_LOCALE } from 'core/constants';
 import { K8sClusterStatus } from 'core/api/types';
 import {
   useCreateClusterMutation,
@@ -15,8 +16,15 @@ import {
 import { getStyles } from './K8sClusterCreation.styles';
 import { Messages } from './K8sClusterCreation.messages';
 import { KubeconfigModal } from './KubeconfigModal';
-import { POLLING_INTERVAL, PMM_DBAAS_DOC_LINK, OPERATORS_DOC_LINK } from './K8sClusterCreation.constants';
+import {
+  DATE_LOCALE_OPTIONS,
+  POLLING_INTERVAL,
+  PMM_DBAAS_DOC_LINK,
+  OPERATORS_DOC_LINK,
+} from './K8sClusterCreation.constants';
 import { errorHasStatus } from './K8sClusterCreation.utils';
+
+const CLUSTER_EXPIRATION_DELAY = 10800000; // 3 hours
 
 export const K8sClusterCreationPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -26,6 +34,7 @@ export const K8sClusterCreationPage: FC = () => {
   const [clusterReady, setClusterReady] = useState(false);
   const [isClusterBuilding, setClusterBuilding] = useState(false);
   const [isRequestPending, setIsRequestPending] = useState(false);
+  let expirationDateTime = '';
 
   const {
     data: statusData,
@@ -35,6 +44,15 @@ export const K8sClusterCreationPage: FC = () => {
   } = useGetClusterStatusQuery(undefined, {
     pollingInterval,
   });
+
+  if (statusData?.createdAt) {
+    const expirationDateTimeUtc = new Date(statusData.createdAt).getTime() + CLUSTER_EXPIRATION_DELAY;
+
+    expirationDateTime = new Date(expirationDateTimeUtc).toLocaleString(
+      DEFAULT_DATE_LOCALE,
+      DATE_LOCALE_OPTIONS,
+    );
+  }
 
   const [getConfigTrigger, { data: configData, error: configError, isLoading: isGetClusterConfigPending }] =
     useLazyGetClusterConfigQuery();
@@ -126,10 +144,17 @@ export const K8sClusterCreationPage: FC = () => {
         <div className={styles.contentWrapper}>
           <p className={styles.description}>{Messages.description}</p>
           {(isStatusUninitialized || isRequestPending || isClusterBuilding) && (
-            <Spinner className={styles.loader} />
+            <span data-testid="kubernetes-cluster-building-loader">
+              <Spinner className={styles.loader} />
+            </span>
           )}
           {!isRequestPending && !isClusterBuilding && clusterReady && (
-            <LinkButton variant="link" className={styles.getConfigLink} onClick={handleGetConfigClick}>
+            <LinkButton
+              variant="link"
+              className={styles.getConfigLink}
+              onClick={handleGetConfigClick}
+              data-testid="kubernetes-show-config-link"
+            >
               {Messages.downloadConfig}
             </LinkButton>
           )}
@@ -147,6 +172,12 @@ export const K8sClusterCreationPage: FC = () => {
             </LoaderButton>
           )}
           {isClusterBuilding && <p className={styles.loadingMessage}>{Messages.loading}</p>}
+          {!isRequestPending && !isClusterBuilding && clusterReady && (
+            <p>
+              {Messages.clusterExpirationTimestamp}
+              <span data-testid="kubernetes-cluster-expiration-datetime">{expirationDateTime}</span>
+            </p>
+          )}
           <p className={styles.details}>{Messages.details}</p>
           <p className={styles.learnMore}>{Messages.learnMore}</p>
           <ul className={styles.learnMoreLinks}>

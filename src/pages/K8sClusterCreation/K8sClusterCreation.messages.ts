@@ -16,4 +16,5 @@ export const Messages = {
   operatorsDoc: 'Operators documentation',
   specsHeader: 'Cluster Specifications',
   specs: '3 nodes, 4 CPUs, 8 GB of RAM',
+  clusterExpirationTimestamp: 'The cluster will be available until: ',
 };
