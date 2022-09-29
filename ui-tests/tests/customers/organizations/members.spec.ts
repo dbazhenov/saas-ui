@@ -2,13 +2,13 @@ import { test } from '@playwright/test';
 import { SignInPage } from '@pages/signIn.page';
 import { OrganizationPage } from '@pages/organization.page';
 import { MembersPage } from '@pages/members.page';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { UserRoles } from '@support/enums/userRoles';
 import ServiceNowResponse from '@support/types/serviceNowResponse.interface';
 import User from '@support/types/user.interface';
 import { serviceNowAPI } from '@api/serviceNow';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
+import { getUser } from '@helpers/portalHelper';
 import { getMailosaurMessage, getRandomMailosaurEmailAddress } from '@tests/api/helpers';
 
 test.describe('Spec file for organization tests for customers', async () => {
@@ -21,9 +21,9 @@ test.describe('Spec file for organization tests for customers', async () => {
   test.beforeEach(async ({ page }) => {
     serviceNowCredentials = await serviceNowAPI.createServiceNowCredentials();
 
-    customerAdmin1User = await getUser(serviceNowCredentials.contacts.admin1.email);
-    customerAdmin2User = await getUser(serviceNowCredentials.contacts.admin2.email);
-    customerTechnicalUser = await getUser(serviceNowCredentials.contacts.technical.email);
+    customerAdmin1User = getUser(serviceNowCredentials.contacts.admin1.email);
+    customerAdmin2User = getUser(serviceNowCredentials.contacts.admin2.email);
+    customerTechnicalUser = getUser(serviceNowCredentials.contacts.technical.email);
 
     await oktaAPI.createUser(customerAdmin1User, true);
     await oktaAPI.createUser(customerAdmin2User, true);

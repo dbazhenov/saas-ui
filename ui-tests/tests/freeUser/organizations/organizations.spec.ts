@@ -1,12 +1,13 @@
 import { expect, test } from '@playwright/test';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { OrganizationPage } from '@pages/organization.page';
 import { SignInPage } from '@pages/signIn.page';
-import { MembersPage } from '@pages/members.page';
-import { oktaAPI, portalAPI } from '@tests/api';
-import User from '@tests/support/types/user.interface';
-import { UserRoles } from '@tests/support/enums/userRoles';
+import { UserRoles } from '@support/enums/userRoles';
+import User from '@support/types/user.interface';
+import { oktaAPI } from '@api/okta';
+import { portalAPI } from '@api/portal';
+import { getUser } from '@helpers/portalHelper';
+import { MembersPage } from '@tests/pages/members.page';
 
 test.describe('Spec file for free users dashboard tests', async () => {
   let newAdmin1User: User;
@@ -19,9 +20,9 @@ test.describe('Spec file for free users dashboard tests', async () => {
   const firstOrgName = `new test#$%_org_${Date.now()}`;
 
   test.beforeAll(async () => {
-    newAdmin1User = await getUser();
-    newAdmin2User = await getUser();
-    newTechnicalUser = await getUser();
+    newAdmin1User = getUser();
+    newAdmin2User = getUser();
+    newTechnicalUser = getUser();
 
     await oktaAPI.createUser(newAdmin1User, true);
     await oktaAPI.createUser(newAdmin2User, true);

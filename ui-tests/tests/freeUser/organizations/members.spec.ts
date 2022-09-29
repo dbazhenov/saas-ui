@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { MembersPage } from '@pages/members.page';
 import { OrganizationPage } from '@pages/organization.page';
@@ -7,6 +6,7 @@ import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for free users members tests', async () => {
   let admin1User: User;
@@ -16,9 +16,9 @@ test.describe('Spec file for free users members tests', async () => {
   let org: any;
 
   test.beforeEach(async ({ page }) => {
-    admin1User = await getUser();
-    admin2User = await getUser();
-    technicalUser = await getUser();
+    admin1User = getUser();
+    admin2User = getUser();
+    technicalUser = getUser();
 
     await oktaAPI.createUser(admin1User, true);
     await oktaAPI.createUser(admin2User, true);
@@ -143,10 +143,7 @@ test.describe('Spec file for free users members tests', async () => {
     await membersPage.membersTable.deleteUserMembersTabByEmail(technicalUser.email);
   });
 
-  test('SAAS-T169 Verify Technical User can not invite Org members @freeUser @members', async ({
-    page,
-    baseURL,
-  }) => {
+  test('SAAS-T169 Verify Technical User can not invite Org members @freeUser @members', async ({ page }) => {
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 

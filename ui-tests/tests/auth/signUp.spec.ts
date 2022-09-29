@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { SignUpPage } from '@pages/signUp.page';
 import User from '@support/types/user.interface';
 import { SignInPage } from '@pages/signIn.page';
 import { getMailosaurEmailAddress, getVerificationLink } from '@api/helpers/mailosaurApiHelper';
 import { oktaAPI } from '@api/okta';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for Sign Up tests', async () => {
   let adminUser: User;
@@ -12,9 +12,9 @@ test.describe('Spec file for Sign Up tests', async () => {
   let successUser: User;
 
   test.beforeAll(async () => {
-    casualUser = await getUser();
-    adminUser = await getUser();
-    successUser = await getUser();
+    casualUser = getUser();
+    adminUser = getUser();
+    successUser = getUser();
     await oktaAPI.createUser(casualUser, true);
   });
 

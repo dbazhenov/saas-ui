@@ -1,15 +1,15 @@
 import { test } from '@playwright/test';
 import { oktaAPI } from '@api/okta';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { SignInPage } from '@pages/signIn.page';
 import User from '@support/types/user.interface';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
 
   test.beforeAll(async () => {
-    adminUser = await getUser();
+    adminUser = getUser();
     await oktaAPI.createUser(adminUser, true);
   });
 

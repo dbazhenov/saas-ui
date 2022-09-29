@@ -2,13 +2,13 @@ import { expect, test } from '@playwright/test';
 import { serviceNowAPI } from '@api/serviceNow';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { SignInPage } from '@pages/signIn.page';
 import ServiceNowResponse from '@support/types/serviceNowResponse.interface';
 import User from '@support/types/user.interface';
 import { OrganizationPage } from '@pages/organization.page';
 import { MembersPage } from '@pages/members.page';
 import { UserRoles } from '@support/enums/userRoles';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for organization tests for customers', async () => {
   let serviceNowCredentials: ServiceNowResponse;
@@ -20,9 +20,9 @@ test.describe('Spec file for organization tests for customers', async () => {
   test.beforeAll(async () => {
     serviceNowCredentials = await serviceNowAPI.createServiceNowCredentials();
 
-    customerAdmin1User = await getUser(serviceNowCredentials.contacts.admin1.email);
-    customerAdmin2User = await getUser(serviceNowCredentials.contacts.admin2.email);
-    customerTechnicalUser = await getUser(serviceNowCredentials.contacts.technical.email);
+    customerAdmin1User = getUser(serviceNowCredentials.contacts.admin1.email);
+    customerAdmin2User = getUser(serviceNowCredentials.contacts.admin2.email);
+    customerTechnicalUser = getUser(serviceNowCredentials.contacts.technical.email);
 
     await oktaAPI.createUser(customerAdmin1User, true);
     await oktaAPI.createUser(customerAdmin2User, true);

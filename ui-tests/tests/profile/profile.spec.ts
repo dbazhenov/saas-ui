@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import ProfilePage from '@pages/profile.page';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages//dashboard.page';
 import { SignInPage } from '@pages//signIn.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let newAdmin1User: User;
@@ -12,7 +12,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   const lastName = 'Doe';
 
   test.beforeEach(async ({ page }) => {
-    newAdmin1User = await getUser();
+    newAdmin1User = getUser();
     await oktaAPI.createUser(newAdmin1User, true);
     await page.goto('/');
   });

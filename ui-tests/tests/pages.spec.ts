@@ -1,9 +1,9 @@
 import { expect, test } from '@playwright/test';
 import { NotFoundPage } from '@pages/notFound.page';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -11,8 +11,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   const users: User[] = [];
 
   test.beforeAll(async () => {
-    adminUser = await getUser();
-    technicalUser = await getUser();
+    adminUser = getUser();
+    technicalUser = getUser();
     await oktaAPI.createUser(adminUser, true);
     await oktaAPI.createUser(technicalUser, true);
     users.push(adminUser, technicalUser);

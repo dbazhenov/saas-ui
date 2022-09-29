@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
-import { getUser } from '@cypress/pages/auth/getUser';
 import { DashboardPage } from '@pages/dashboard.page';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
+import { getUser } from '@helpers/portalHelper';
 
 test.describe('Spec file for free users dashboard tests', async () => {
   let newAdmin1User: User;
@@ -14,9 +14,9 @@ test.describe('Spec file for free users dashboard tests', async () => {
   let org: any;
 
   test.beforeAll(async () => {
-    newAdmin1User = await getUser();
-    newAdmin2User = await getUser();
-    newTechnicalUser = await getUser();
+    newAdmin1User = getUser();
+    newAdmin2User = getUser();
+    newTechnicalUser = getUser();
 
     await oktaAPI.createUser(newAdmin1User, true);
     await oktaAPI.createUser(newAdmin2User, true);
