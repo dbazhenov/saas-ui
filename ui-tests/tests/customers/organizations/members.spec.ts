@@ -110,20 +110,32 @@ test.describe('Spec file for organization tests for customers', async () => {
 
     await membersPage.membersTable.verifyUserMembersTable(customerAdmin1User, UserRoles.admin);
     await membersPage.membersTable.inviteMembers.inviteMember(customerAdmin2User.email);
+    await membersPage.toast.checkToastMessage(
+      membersPage.membersTable.inviteMembers.memberSuccessfullyInvited,
+    );
     await membersPage.membersTable.verifyUserMembersTable(customerAdmin2User, UserRoles.admin);
     await membersPage.membersTable.inviteMembers.inviteMember(
       customerTechnicalUser.email,
       UserRoles.technical,
+    );
+    await membersPage.toast.checkToastMessage(
+      membersPage.membersTable.inviteMembers.memberSuccessfullyInvited,
     );
     await membersPage.membersTable.verifyUserMembersTable(customerTechnicalUser, UserRoles.technical);
     const org = await portalAPI.getOrg(adminToken);
     const invitedTechnicalUserEmail = getRandomMailosaurEmailAddress();
 
     await membersPage.membersTable.inviteMembers.inviteMember(invitedTechnicalUserEmail, UserRoles.technical);
+    await membersPage.toast.checkToastMessage(
+      membersPage.membersTable.inviteMembers.memberSuccessfullyInvited,
+    );
     await getMailosaurMessage(invitedTechnicalUserEmail, `Welcome to ${org.orgs[0].name}`);
     const invitedAdminUserEmail = getRandomMailosaurEmailAddress();
 
     await membersPage.membersTable.inviteMembers.inviteMember(invitedAdminUserEmail);
+    await membersPage.toast.checkToastMessage(
+      membersPage.membersTable.inviteMembers.memberSuccessfullyInvited,
+    );
     await getMailosaurMessage(invitedAdminUserEmail, `Welcome to ${org.orgs[0].name}`);
   });
 });

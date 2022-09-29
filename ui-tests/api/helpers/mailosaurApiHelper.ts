@@ -12,7 +12,20 @@ export const getRandomMailosaurEmailAddress = (): string => {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
 
-  return `ui_tests_${firstName}${lastName}@${process.env.MAILOSAUR_UI_TESTS_SERVER_ID}.mailosaur.net`;
+  return `ui_tests_${firstName}_${lastName}_${new Date().getTime()}@${
+    process.env.MAILOSAUR_UI_TESTS_SERVER_ID
+  }.mailosaur.net`;
+};
+
+export const getRandomMailosaurEmailAddresses = (amount: number): string[] => {
+  const userEmails: string[] = [];
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < amount; i++) {
+    userEmails.push(getRandomMailosaurEmailAddress());
+  }
+
+  return userEmails;
 };
 
 export const getVerificationLink = async (user: User): Promise<string> => {

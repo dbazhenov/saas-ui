@@ -13,7 +13,7 @@ export const Messages = {
   orgEditSuccess: 'Your organization has been updated.',
   organization: 'Organization',
   removeInstanceSuccess: 'The instance has been successfully removed from the list',
-  notUsersInvited: 'Error occured during invite process.',
+  notUsersInvited: 'Error occurred during invite process.',
   userInvited: 'user successfully invited to join your organization',
   usersInvited: 'users successfully invited to join your organization',
 };
