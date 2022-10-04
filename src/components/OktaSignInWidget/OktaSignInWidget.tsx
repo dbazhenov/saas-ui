@@ -162,10 +162,6 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
         <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
           {Messages.privacyPolicy}
         </a>
-        . {Messages.iConsent}
-        <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
-          {Messages.perconaPrivacyPolicy}
-        </a>
         .
       </p>
     );
@@ -176,6 +172,25 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
   }
 
   ReactDOM.render(content, tosWrapper);
+};
+
+const newRegistrationButton = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
+  const authContainer = widgetRef.querySelector('.primary-auth-container');
+  const registrationContainer = widgetRef.querySelector('.registration-container');
+
+  if (
+    registrationContainer?.parentElement === authContainer ||
+    !['idp-discovery', 'primary-auth'].includes(controller)
+  ) {
+    return;
+  }
+
+  authContainer?.prepend(registrationContainer!);
+};
+
+const handleAfterRender = (context: ContextProps, widgetRef: HTMLDivElement) => {
+  insertToS(context, widgetRef);
+  newRegistrationButton(context, widgetRef);
 };
 
 export const OktaSignInWidget = ({
@@ -209,7 +224,7 @@ export const OktaSignInWidget = ({
     const widget = new OktaSignIn(config);
 
     widget.on('afterRender', (context: ContextProps) =>
-      insertToS(context, widgetRef.current as HTMLDivElement),
+      handleAfterRender(context, widgetRef.current as HTMLDivElement),
     );
 
     widget

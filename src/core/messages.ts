@@ -3,7 +3,10 @@ export const Messages = {
     'A unified experience for developers and database administrators to monitor, manage, secure, and optimize database environments on any infrastructure.',
   signIn: 'Sign in to Percona Platform',
   workEmail: 'Work Email',
-  linkToSignUp: 'Create one',
+  registration: {
+    label: 'Are you new to Percona Portal?',
+    link: 'Create Account',
+  },
   signUpTitle: 'Create New Account',
   signUpButton: 'Create',
   platformAccessTokenNotFound: 'Platform access token not found in local storage.',

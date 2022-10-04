@@ -103,18 +103,46 @@ export const getStyles = (theme: GrafanaTheme) => {
         box-shadow: none;
 
         .button-primary {
-          background: #4c15a5;
-          border-color: #3c1084 !important;
+          background: ${palette.blue77};
+          border-color: ${palette.blue80} !important;
 
           &:hover {
             background: none !important;
-            background-color: #5d2cae !important;
-            border-color: #6f43b7 !important;
+            background-color: ${palette.blue80} !important;
+            border-color: ${palette.blue85} !important;
           }
 
           &.link-button-disabled {
-            background-color: #a58ad2 !important;
-            border-color: #9372c9 !important;
+            background-color: ${palette.blue95} !important;
+            border-color: ${palette.blue95} !important;
+          }
+        }
+
+        .registration-container {
+          margin: 0;
+
+          .content-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 0 ${spacing.xl} 0;
+            border: 0;
+
+            .registration-link {
+              display: inline-flex;
+              text-decoration: none;
+              background-color: #fbfbfb;
+              color: ${palette.blue77};
+              padding: 6px 12px;
+              border: ${border.width.sm} solid ${palette.blue95};
+              border-radius: ${border.radius.lg};
+              margin-top: ${spacing.md};
+            }
+
+            .registration-link:hover {
+              text-decoration: none;
+              background-color: #fff;
+            }
           }
         }
 

@@ -8,6 +8,4 @@ export const Messages = {
   andPerconas: ' and Percona ',
   privacyPolicy: 'Privacy Policy',
   perconaPrivacyPolicy: 'Percona Privacy Policy',
-  iConsent:
-    'I consent to receive relevant communications about Percona services and understand that I can unsubscribe from these communications at any time in accordance with the ',
 };
