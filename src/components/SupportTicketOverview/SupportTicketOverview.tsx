@@ -89,7 +89,7 @@ export const SupportTicketOverview: FC = () => {
 
   return (
     <section className={styles.marginSection} data-testid="ticket-overview-section-container">
-      <h4>{Messages.header}</h4>
+      <h4 className={styles.headerFont}>{Messages.header}</h4>
       <div className={styles.container}>
         {loading ? (
           <Skeleton height={SKELETON_HEIGHT} />

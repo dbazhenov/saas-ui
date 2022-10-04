@@ -22,6 +22,7 @@ import { getStyles } from './Dashboard.styles';
 import { Contacts } from './Contacts';
 import { TicketList } from './TicketList';
 import { Messages } from './Dashboard.messages';
+import { AccountInfo } from './Contacts/AccountInfo';
 
 export const DashboardPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -76,8 +77,8 @@ export const DashboardPage: FC = () => {
   return (
     <PrivateLayout>
       <div className={styles.container} data-testid="dashboard-container">
-        {showGettingStarted && <GettingStarted />}
         <Contacts />
+        {showGettingStarted && <GettingStarted />}
         <SupportTicketOverview />
         {companyName && orgId && (
           <section className={styles.ticketSection} data-testid="dashboard-ticket-section">
@@ -96,6 +97,7 @@ export const DashboardPage: FC = () => {
             <TicketList />
           </section>
         )}
+        <AccountInfo />
       </div>
     </PrivateLayout>
   );

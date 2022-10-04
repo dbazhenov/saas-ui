@@ -5,10 +5,11 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
   cardsContainer: css`
     display: flex;
     flex-wrap: wrap;
+    margin-top: ${spacing.base * 7}px;
   `,
   card: css`
     color: ${colors.text};
-    flex: 1 1 35%;
+    flex: 0 1 35%;
     background-color: ${colors.bg3};
 
     @media (max-width: 850px) {
@@ -38,14 +39,24 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
     font-size: ${typography.size.lg};
     font-weight: ${typography.weight.bold};
   `,
+  cardPoint: css`
+    font-weight: ${typography.weight.semibold};
+  `,
+  contactBtn: css`
+    text-decoration: none;
+  `,
   externalLink: css`
     color: ${colors.linkExternal};
   `,
-  label: css`
-    margin-right: ${spacing.xs};
+  entitlementsWrapper: css`
+    display: flex;
   `,
-  mailLink: css`
-    display: block;
-    margin-top: 5px;
+  icon: css`
+    cursor: pointer;
+    margin-left: ${spacing.md};
+
+    svg {
+      color: ${palette.blue80};
+    }
   `,
 });

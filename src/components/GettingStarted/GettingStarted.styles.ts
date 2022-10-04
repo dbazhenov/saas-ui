@@ -12,7 +12,7 @@ export const getStyles = (theme: GrafanaTheme) => {
       display: flex;
       font-weight: ${typography.weight.regular};
       font-size: ${typography.heading.h2};
-      margin: 0 0 ${spacing.xl};
+      margin: ${spacing.base * 7}px 0 ${spacing.xl};
     `,
     container: css`
       display: flex;

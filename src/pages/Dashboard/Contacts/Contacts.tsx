@@ -1,13 +1,12 @@
-import React, { FC, useEffect, useState, useCallback } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, LinkButton, useStyles } from '@grafana/ui';
+import { useStyles } from '@grafana/ui';
 import { Overlay } from '@percona/platform-core';
-import { getAuth, getUserOrgRole, getIsPerconaCustomer } from 'store/auth';
+import { getIsPerconaCustomer } from 'store/auth';
 import {
   getCustomerSuccessContact,
   getEntitlementsAction,
   getFirstOrgId,
-  getIsOrgPending,
   getOrganizationAction,
   getOrgEntitlements,
   getCurrentOrgName,
@@ -18,8 +17,7 @@ import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
 import { FREE_USER_HELP_EMAIL, CUSTOMER_HELP_EMAIL, LINKS } from './Contacts.constants';
 import { CustomerContact } from './CustomerContact/CustomerContact';
-import { getAccountType } from './Contacts.utils';
-import { EntitlementsModal } from './EntitlementsModal/EntitlementsModal';
+import { PromoBanner } from '../PromoBanner';
 
 export const Contacts: FC = () => {
   const styles = useStyles(getStyles);
@@ -27,22 +25,9 @@ export const Contacts: FC = () => {
   const orgName = useSelector(getCurrentOrgName);
   const dispatch = useDispatch();
   const isCustomer = useSelector(getIsPerconaCustomer);
-  const isOrgPending = useSelector(getIsOrgPending);
   const CSContact = useSelector(getCustomerSuccessContact);
   const entitlements = useSelector(getOrgEntitlements);
-  const [isEntitlementsVisible, setIsEntilementsVisible] = useState(false);
-  const user = useSelector(getAuth);
-  const role = useSelector(getUserOrgRole);
-  const { firstName, lastName, pending: isUserPending } = user;
-  const isPending = isUserPending || isOrgPending;
   const helpEmail = isCustomer ? CUSTOMER_HELP_EMAIL : FREE_USER_HELP_EMAIL;
-
-  const viewEntitlements = useCallback(
-    (isVisible: boolean) => () => {
-      setIsEntilementsVisible(isVisible);
-    },
-    [setIsEntilementsVisible],
-  );
 
   useEffect(() => {
     if (!orgId) {
@@ -68,62 +53,21 @@ export const Contacts: FC = () => {
 
   return (
     <section className={styles.cardsContainer}>
-      <div className={styles.card} data-testid="account-section">
-        <Overlay className={styles.cardOverlay} isPending={isPending}>
-          <p className={styles.cardTitle}>{Messages.yourAccount}</p>
-          <p>
-            <span className={styles.cardPoint}>{Messages.name}</span> {firstName} {lastName}
-          </p>
-          {role && (
-            <p>
-              <span className={styles.cardPoint}>{Messages.role}</span> {role}
-            </p>
-          )}
-          <p>
-            <span className={styles.cardPoint}>{Messages.accountType}</span>
-            &nbsp;
-            {getAccountType(isCustomer, !!CSContact.name, isPending)}
-          </p>
-          {!isPending && !isCustomer && (
-            <>
-              <p>{Messages.perconaExperts}</p>
-              <LinkButton
-                target="_blank"
-                rel="noreferrer noopener"
-                className={styles.contactBtn}
-                variant="primary"
-                href={LINKS.contactUs}
-              >
-                {Messages.contactUs}
-              </LinkButton>
-            </>
-          )}
-          {isCustomer && (
-            <p className={styles.entitlementsWrapper}>
-              <span className={styles.cardPoint}>{Messages.entitlements}</span>
-              &nbsp;
-              <span data-testid="number-entitlements">{entitlements.length}</span>
-              {entitlements.length ? (
-                <IconButton
-                  name="list-ul"
-                  size="lg"
-                  className={styles.icon}
-                  onClick={viewEntitlements(true)}
-                  data-testid="entitlements-button"
-                />
-              ) : null}
-            </p>
-          )}
-        </Overlay>
-      </div>
+      <PromoBanner />
       <div className={styles.card} data-testid="contacts-section">
-        <Overlay className={styles.cardOverlay} isPending={isOrgPending}>
+        <Overlay className={styles.cardOverlay}>
           <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
           <p>
             <span className={styles.label}>{Messages.needHelp}</span>
-            <a className={styles.externalLink} href={`mailto:${helpEmail}`} data-testid="email-contact-link">
-              {helpEmail}
-            </a>
+            <span className={styles.mailLink}>
+              <a
+                className={styles.externalLink}
+                href={`mailto:${helpEmail}`}
+                data-testid="email-contact-link"
+              >
+                {helpEmail}
+              </a>
+            </span>
           </p>
           {CSContact.name ? (
             <CustomerContact />
@@ -168,9 +112,6 @@ export const Contacts: FC = () => {
           )}
         </Overlay>
       </div>
-      {isEntitlementsVisible && (
-        <EntitlementsModal entitlements={entitlements} onClose={viewEntitlements(false)} />
-      )}
     </section>
   );
 };

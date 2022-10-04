@@ -17,5 +17,5 @@ export const Messages = {
   fetchContactsError: 'Could not fetch your contacts.',
   entitlements: 'Entitlements:',
   viewEntitlements: 'View',
-  needHelp: 'Need help? Contact us:',
+  needHelp: 'Need help? Contact us at',
 };
