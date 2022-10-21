@@ -65,9 +65,13 @@ export const MarketingBanner: FC = ({ children }) => {
   return show ? (
     <div className={styles.pageWrapper}>
       {children}
-      <div className={styles.banner}>
-        <p className={styles.title}>{Messages.title}</p>
-        <p className={styles.description}>{Messages.description}</p>
+      <div className={styles.banner} data-testid="marketing-banner">
+        <p className={styles.title} data-testid="marketing-banner-title">
+          {Messages.title}
+        </p>
+        <p className={styles.description} data-testid="marketing-banner-description">
+          {Messages.description}
+        </p>
         <div className={styles.buttonsWrapper}>
           <LoaderButton
             data-testid="accept-marketing"

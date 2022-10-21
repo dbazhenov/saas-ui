@@ -1,6 +1,7 @@
 /* eslint-disable lines-between-class-members */
 import { CommonPage } from '@pages/common.page';
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
+import { format } from 'date-fns';
 
 export class TicketOverview extends CommonPage {
   readonly page: Page;
@@ -58,4 +59,34 @@ export class TicketOverview extends CommonPage {
     this.totalTicketNumber = page.locator('//strong[@data-testid="total-ticket-number"]');
     this.departmentTicketCount = page.locator('//strong[@data-testid="department-ticket-count"]');
   }
+
+  generateNumberOfTickets = (amount: number) => {
+    const states = ['Pending - Awaiting Customer', 'Open', 'New', 'Scheduled', 'Authorize'];
+    const departments = ['Customer Success', 'Managed Services', 'Professional Services'];
+    const task_types = ['Requested Item', 'PS Project', 'Case', 'Change Request'];
+    const tickets = [];
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < amount; i++) {
+      tickets.push({
+        number: `TS400112${i + 1}`,
+        short_description: `Test Short Description Number: ${i}`,
+        priority: 'P3',
+        state: states[Math.floor(Math.random() * states.length)],
+        create_time: format(new Date(), "yyyy-MM-dd'T'kk:mm:ss'Z'"),
+        department: departments[Math.floor(Math.random() * departments.length)],
+        requester: 'Test User',
+        task_type: task_types[Math.floor(Math.random() * task_types.length)],
+        url: 'https://perconadev.service-now.com/percona?id=percona_ticket&table=sn_customerservice_case&sys_id=b219f31587bb89508d75c9d8cebb35d2',
+      });
+    }
+
+    return tickets;
+  };
+
+  verifyTicketNumberDepartment = async (expected: string) => {
+    const numberTickets: string[] = await this.departmentTicketCount.allTextContents();
+
+    numberTickets.forEach((number) => expect(number).toEqual(expected));
+  };
 }

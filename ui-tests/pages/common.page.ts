@@ -1,5 +1,6 @@
 /* eslint-disable lines-between-class-members */
 import { Locator, Page } from '@playwright/test';
+import MarketingBanner from '@tests/components/MarketingBanner';
 import SideMenu from '../components/sideMenu';
 import Toast from '../components/toast';
 
@@ -28,6 +29,7 @@ export class CommonPage {
   readonly themeSwitch: Locator;
 
   readonly toast: Toast;
+  readonly marketingBanner: MarketingBanner;
 
   constructor(page: Page) {
     this.page = page;
@@ -47,7 +49,9 @@ export class CommonPage {
     );
     this.userRoles = { admin: 'Admin', technical: 'Technical' };
     this.themeSwitch = page.locator('//div[@data-testid="theme-switch"]');
+
     this.toast = new Toast(page);
+    this.marketingBanner = new MarketingBanner(page);
   }
 
   uiUserLogout = async () => {

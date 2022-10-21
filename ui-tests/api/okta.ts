@@ -121,6 +121,15 @@ export const oktaAPI = {
 
     return response.data[0];
   },
+
+  async getUserDetails(userId: string) {
+    const response = await oktaRequest(oktaUrl, `/api/v1/users/${userId}`, 'GET', oktaToken, {});
+
+    expect(response.status).toEqual(200);
+
+    return response;
+  },
+
   async deactivateUserById(userId: string) {
     return oktaRequest(oktaUrl, `/api/v1/users/${userId}`, 'DELETE', oktaToken, {});
   },
@@ -130,8 +139,11 @@ export const oktaAPI = {
   },
   async deleteUserByEmail(email: string) {
     const userDetails = await this.getUser(email);
-    const userId = userDetails.id;
 
-    await this.deleteUserById(userId);
+    if (userDetails.id) {
+      const userId = userDetails.id;
+
+      await this.deleteUserById(userId);
+    }
   },
 };

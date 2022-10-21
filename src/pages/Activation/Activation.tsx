@@ -129,7 +129,9 @@ const Activation = () => {
   return isUserLoggedIn === false ? (
     <div className={styles.wrapper}>
       <div className={styles.container}>
-        <h1 className={styles.h1}>{Messages.title}</h1>
+        <h1 className={styles.h1} data-testid="activation-title">
+          {Messages.title}
+        </h1>
         <h2 className={styles.h2}>{Messages.subtitle}</h2>
         <Form initialValues={initialValues} validate={validation()} onSubmit={handleSubmitActivation}>
           {({ valid, pristine, handleSubmit }) => (

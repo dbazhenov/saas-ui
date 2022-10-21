@@ -126,7 +126,7 @@ export class SignUpPage extends CommonPage {
     };
   }
 
-  fillOutSignUpUserDetails = async (user: User) => {
+  fillOutSignUpUserDetails = async (user: User, options = { tos: true, marketing: true }) => {
     // Verify placeholders
     await this.verifyPlaceholders;
     // filled the form
@@ -139,7 +139,8 @@ export class SignUpPage extends CommonPage {
     await this.locators.inputLastName.click();
     await this.locators.inputLastName.type(user.lastName);
     // check required checkboxes
-    await this.handleCheckBoxes();
+
+    await this.handleCheckBoxes(options);
   };
 
   waitForSucRegToBeLoaded = async () => {
@@ -148,9 +149,14 @@ export class SignUpPage extends CommonPage {
     await this.locators.succIcon.waitFor({ state: 'visible', timeout: 60000 });
   };
 
-  private handleCheckBoxes = async () => {
-    await this.locators.marketingCheckbox.check();
-    await this.locators.tosCheckbox.check();
+  private handleCheckBoxes = async (options = { tos: true, marketing: true }) => {
+    if (options.tos) {
+      await this.locators.tosCheckbox.check();
+    }
+
+    if (options.marketing) {
+      await this.locators.marketingCheckbox.check();
+    }
   };
 
   private verifyPlaceholders = async () => {

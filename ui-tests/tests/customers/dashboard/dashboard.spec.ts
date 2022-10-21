@@ -14,7 +14,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   const users: User[] = [];
   let adminToken: string;
 
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ page }) => {
     const serviceNowCredentials: ServiceNowResponse = await serviceNowAPI.createServiceNowCredentials();
 
     customerAdmin1User = getUser(serviceNowCredentials.contacts.admin1.email);
@@ -26,9 +26,6 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await oktaAPI.createUser(customerTechnicalUser, true);
     users.push(customerAdmin1User, customerAdmin2User, customerTechnicalUser);
     adminToken = await portalAPI.getUserAccessToken(customerAdmin1User.email, customerAdmin1User.password);
-  });
-
-  test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
@@ -48,39 +45,172 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     page,
   }) => {
     const dashboardPage = new DashboardPage(page);
+    let tickets;
 
     await routeHelper.interceptBackEndCall(page, '**/tickets:search', { tickets: [] });
     await oktaAPI.loginByOktaApi(users[0], page);
     await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
-    await dashboardPage.ticketTable.emptyTable.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.elements.emptyTable.waitFor({ state: 'visible', timeout: 60000 });
+
+    await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+      tickets: dashboardPage.ticketOverview.tickets,
+    });
+    await page.reload();
+    await dashboardPage.ticketOverview.ticketOverviewContainer.waitFor({ state: 'visible', timeout: 60000 });
+    const displayedDepartments = await dashboardPage.ticketOverview.departmentName.allTextContents();
+
+    const ticketData = dashboardPage.ticketOverview.tickets.map((ticket) => ticket.department);
+
+    expect(displayedDepartments.sort()).toEqual(ticketData.sort());
+
+    await expect(dashboardPage.ticketOverview.totalTicketNumber).toHaveText(
+      dashboardPage.ticketOverview.tickets.length.toString(),
+    );
+
+    await dashboardPage.ticketOverview.verifyTicketNumberDepartment('1');
+
+    await dashboardPage.ticketTable.elements.header.waitFor({ state: 'visible' });
+    /*
+
+      Blocked due to sorting of table is not functional, will be fixed with MUI migration.
+
+    const ticketHeaders: string[] = await dashboardPage.ticketTable.tableHeaderCell.allTextContents();
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const [index, header] of ticketHeaders.entries()) {
+      if (index > 0) {
+        await dashboardPage.ticketTable.tableHeaderSortIcon.nth(index).click();
+        await page.waitForTimeout(1000);
+      }
+
+      const values = await dashboardPage.ticketTable.getValuesForColumn(header);
+    }
+*/
+    await test.step('Verify that default value for Rows per page is 10', async () => {
+      tickets = dashboardPage.ticketOverview.generateNumberOfTickets(101);
+
+      await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+        tickets,
+      });
+      await page.reload();
+      await dashboardPage.ticketTable.elements.header.waitFor({ state: 'visible' });
+      await expect(dashboardPage.ticketTable.elements.row).toHaveCount(10);
+    });
 
     await test.step(
-      'SAAS-T247 - Verify user with Percona customer organization can see the tickets overview on Portal',
+      'Verify that there is possibility to select rows per page from the next list of values: 10, 25, 50, 100',
       async () => {
-        await test.step('Navigate to Portal and wait for ticket overview to display.', async () => {
-          await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
-            tickets: dashboardPage.ticketOverview.tickets,
-          });
-          await page.reload();
-          await dashboardPage.ticketOverview.ticketOverviewContainer.waitFor({
-            state: 'visible',
-            timeout: 60000,
-          });
-        });
+        await dashboardPage.ticketTable.pagination.elements.select.click();
+        await expect(dashboardPage.ticketTable.pagination.elements.sizeSelect).toHaveCount(
+          dashboardPage.ticketTable.pagination.messages.texts.length,
+        );
+        await expect(dashboardPage.ticketTable.pagination.elements.sizeSelect).toHaveText(
+          dashboardPage.ticketTable.pagination.messages.texts.map(String),
+        );
+      },
+    );
 
-        await test.step(
-          'Verify user can see Ticket Overview section with amount of tickets and divided  by categories.',
-          async () => {
-            const ticketsDepartment: string[] = dashboardPage.ticketOverview.tickets.map(
-              (ticket) => ticket.department,
-            );
+    await test.step(
+      'Select 25 and verify that the only 25 tickets is displayed on the first page',
+      async () => {
+        await dashboardPage.ticketTable.verifyPagination(25);
+      },
+    );
 
-            await expect(dashboardPage.ticketOverview.departmentName).toHaveCount(ticketsDepartment.length);
-            await expect(dashboardPage.ticketOverview.departmentTicketCount).toHaveText(['1', '1', '1']);
-            await expect(dashboardPage.ticketOverview.totalTicketNumber).toHaveText(
-              dashboardPage.ticketOverview.tickets.length.toString(),
-            );
-          },
+    await test.step(
+      'Select 50 and verify that the only 50 tickets is displayed on the first page',
+      async () => {
+        await dashboardPage.ticketTable.pagination.elements.select.click();
+        await dashboardPage.ticketTable.verifyPagination(50);
+      },
+    );
+
+    await test.step(
+      'Select 100 and verify that the only 100 tickets is displayed on the first page',
+      async () => {
+        await dashboardPage.ticketTable.pagination.elements.select.click();
+        await dashboardPage.ticketTable.verifyPagination(100);
+      },
+    );
+
+    await test.step('Verify there is pagination button under the list of tickets', async () => {
+      await dashboardPage.ticketTable.pagination.elements.select.click();
+      await dashboardPage.ticketTable.verifyPagination(10);
+
+      await dashboardPage.ticketTable.pagination.buttons.firstPage.waitFor({ state: 'visible' });
+      await dashboardPage.ticketTable.pagination.buttons.previousPage.waitFor({ state: 'visible' });
+
+      expect(await dashboardPage.ticketTable.pagination.buttons.page.count()).toBeGreaterThan(0);
+
+      await dashboardPage.ticketTable.pagination.buttons.nextPage.waitFor({ state: 'visible' });
+      await dashboardPage.ticketTable.pagination.buttons.lastPage.waitFor({ state: 'visible' });
+    });
+
+    await test.step('Click on "Next" button and Verify that the next page of tickets is opened', async () => {
+      await dashboardPage.ticketTable.pagination.buttons.nextPage.click();
+      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
+        dashboardPage.ticketTable.pagination.messages.interval('11', '20', '101'),
+      );
+      await dashboardPage.ticketTable.verifyRowData(tickets[10], 0);
+    });
+
+    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
+      await dashboardPage.ticketTable.pagination.buttons.previousPage.click();
+      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
+        dashboardPage.ticketTable.pagination.messages.interval('1', '10', '101'),
+      );
+      await dashboardPage.ticketTable.verifyRowData(tickets[0], 0);
+    });
+
+    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
+      await dashboardPage.ticketTable.pagination.buttons.page.nth(1).click();
+      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
+        dashboardPage.ticketTable.pagination.messages.interval('11', '20', '101'),
+      );
+      await dashboardPage.ticketTable.verifyRowData(tickets[10], 0);
+    });
+
+    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
+      await dashboardPage.ticketTable.pagination.buttons.lastPage.click();
+      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
+        dashboardPage.ticketTable.pagination.messages.interval('101', '101', '101'),
+      );
+      await dashboardPage.ticketTable.verifyRowData(tickets[100], 0);
+    });
+
+    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
+      await dashboardPage.ticketTable.pagination.buttons.firstPage.click();
+      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
+        dashboardPage.ticketTable.pagination.messages.interval('1', '10', '101'),
+      );
+      await dashboardPage.ticketTable.verifyRowData(tickets[0], 0);
+    });
+  });
+
+  test('SAAS-T247 - Verify user with Percona customer organization can see the tickets overview on Portal @customers @dashboard', async ({
+    page,
+  }) => {
+    const dashboardPage = new DashboardPage(page);
+
+    await test.step('Navigate to Portal and wait for ticket overview to display.', async () => {
+      await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+        tickets: dashboardPage.ticketOverview.tickets,
+      });
+      await oktaAPI.loginByOktaApi(users[0], page);
+      await dashboardPage.ticketOverview.ticketOverviewContainer.waitFor({
+        state: 'visible',
+        timeout: 60000,
+      });
+    });
+
+    await test.step(
+      'Verify user can see Ticket Overview section with amount of tickets and divided  by categories.',
+      async () => {
+        await expect(dashboardPage.ticketOverview.departmentName).toHaveCount(
+          dashboardPage.ticketOverview.tickets.map((ticket) => ticket.department).length,
+        );
+        await expect(dashboardPage.ticketOverview.departmentTicketCount).toHaveText(['1', '1', '1']);
+        await expect(dashboardPage.ticketOverview.totalTicketNumber).toHaveText(
+          dashboardPage.ticketOverview.tickets.length.toString(),
         );
       },
     );
@@ -92,7 +222,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(customerAdmin1User, page);
-    await dashboardPage.ticketTable.table.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.elements.table.waitFor({ state: 'visible', timeout: 60000 });
 
     await dashboardPage.verifyOpenNewTicketButton();
   });
@@ -104,7 +234,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await portalAPI.createOrg(adminToken);
     await oktaAPI.loginByOktaApi(customerTechnicalUser, page);
-    await dashboardPage.ticketTable.table.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.elements.table.waitFor({ state: 'visible', timeout: 60000 });
 
     await dashboardPage.verifyOpenNewTicketButton();
     await dashboardPage.uiUserLogout();
@@ -180,24 +310,24 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
     await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText(String(numberOfEntitlements));
     await dashboardPage.entitlementsModal.entitlementsButton.click();
-    await dashboardPage.entitlementsModal.modalWindow.modalBody.waitFor({ state: 'visible' });
+    await dashboardPage.entitlementsModal.elements.body.waitFor({ state: 'visible' });
     await expect(dashboardPage.entitlementsModal.entitlementContainer).toHaveCount(numberOfEntitlements);
-    await dashboardPage.entitlementsModal.modalWindow.closeModalButton.click();
+    await dashboardPage.entitlementsModal.buttons.close.click();
 
     const org = await portalAPI.getOrg(adminToken);
     const tickets = await portalAPI.getOrgTickets(adminToken, org.orgs[0].id);
 
-    await expect(dashboardPage.ticketTable.tableHeaderCell).toHaveCount(
-      Object.keys(dashboardPage.ticketTable.tableHeaders()).length,
+    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveCount(
+      Object.keys(dashboardPage.ticketTable.tableHeaders).length,
     );
-    await expect(dashboardPage.ticketTable.tableHeaderCell).toHaveText(
-      Object.values(dashboardPage.ticketTable.tableHeaders()),
+    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveText(
+      Object.values(dashboardPage.ticketTable.tableHeaders),
     );
 
-    expect(await dashboardPage.ticketTable.tableBody.count()).toEqual(1);
+    expect(await dashboardPage.ticketTable.elements.body.count()).toEqual(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      dashboardPage.ticketTable.tableBody.click(),
+      dashboardPage.ticketTable.elements.body.click(),
     ]);
 
     expect(newPage.url()).toEqual(tickets.tickets[0].url);
@@ -225,16 +355,16 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const org = await portalAPI.getOrg(adminToken);
     const tickets = await portalAPI.getOrgTickets(adminToken, org.orgs[0].id);
 
-    await expect(dashboardPage.ticketTable.tableHeaderCell).toHaveCount(
-      Object.keys(dashboardPage.ticketTable.tableHeaders()).length,
+    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveCount(
+      Object.keys(dashboardPage.ticketTable.tableHeaders).length,
     );
-    await expect(dashboardPage.ticketTable.tableHeaderCell).toHaveText(
-      Object.values(dashboardPage.ticketTable.tableHeaders()),
+    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveText(
+      Object.values(dashboardPage.ticketTable.tableHeaders),
     );
-    expect(await dashboardPage.ticketTable.tableBody.count()).toEqual(1);
+    expect(await dashboardPage.ticketTable.elements.body.count()).toEqual(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      dashboardPage.ticketTable.tableBody.click(),
+      dashboardPage.ticketTable.elements.body.click(),
     ]);
 
     expect(newPage.url()).toEqual(tickets.tickets[0].url);

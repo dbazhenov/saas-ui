@@ -3,7 +3,8 @@ import { expect, Locator, Page } from '@playwright/test';
 import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
 import InviteMembers from './inviteMembers';
-import { Table } from './table';
+import { Table } from './Table';
+import Toast from './toast';
 
 export class MembersTable extends Table {
   readonly page: Page;
@@ -15,6 +16,7 @@ export class MembersTable extends Table {
   readonly editUserByName: (s: string) => Locator;
   readonly deleteUserByName: (s: string) => Locator;
   readonly membersRow: (s: string) => Locator;
+  readonly resetEmailLink: (userEmail: string) => Locator;
 
   readonly memberDeletedSuccessfully: string;
 
@@ -43,6 +45,8 @@ export class MembersTable extends Table {
         has: this.page.locator('td').nth(0),
         hasText: name,
       });
+    this.resetEmailLink = (userEmail) =>
+      this.elements.rowByText(userEmail).locator('//div[@data-testid="resend-email-link"]');
 
     this.memberDeletedSuccessfully = 'The user has been successfully removed from the organization';
     this.inviteMembers = new InviteMembers(page);
@@ -51,7 +55,7 @@ export class MembersTable extends Table {
   verifyMembersTable = async (expectedUsers) => {
     // eslint-disable-next-line no-restricted-syntax
     for await (const user of expectedUsers) {
-      const userEmail = await this.tableRow.filter({
+      const userEmail = await this.elements.row.filter({
         has: this.page.locator('td').nth(0),
         hasText: user.Name,
       });
@@ -74,9 +78,11 @@ export class MembersTable extends Table {
 
   // TODO: Refactor to use locator like in verifyMembersTableUserButtons method
   deleteUserMembersTabByEmail = async (email: string) => {
+    const toast = new Toast(this.page);
+
     await this.deleteUserByName(email).click();
     await this.confirmDeleteUser.click();
-    await this.toast.checkToastMessage(this.memberDeletedSuccessfully);
+    await toast.checkToastMessage(this.memberDeletedSuccessfully);
     await expect(this.membersRow(email)).toHaveCount(0);
     await expect(this.page.locator(`//*[contains(text(),"${email}")]//ancestor::tr`)).toHaveCount(0);
   };

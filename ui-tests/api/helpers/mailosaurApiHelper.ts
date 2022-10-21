@@ -43,3 +43,9 @@ export const getMailosaurMessage = async (userEmail: string, subject: string): P
 
   return mailosaur.messages.get(serverId, searchCriteria);
 };
+
+export const deleteMailosaurMessage = async (messageId: string) => {
+  const mailosaur = new MailosaurClient(mailosaurApiKey);
+
+  await mailosaur.messages.del(messageId);
+};

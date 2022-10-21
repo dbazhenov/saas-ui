@@ -17,7 +17,7 @@ test.describe('Spec file for organization tests for customers', async () => {
   let customerTechnicalUser: User;
   let adminToken: string;
 
-  test.beforeAll(async () => {
+  test.beforeEach(async ({ page }) => {
     serviceNowCredentials = await serviceNowAPI.createServiceNowCredentials();
 
     customerAdmin1User = getUser(serviceNowCredentials.contacts.admin1.email);
@@ -28,9 +28,10 @@ test.describe('Spec file for organization tests for customers', async () => {
     await oktaAPI.createUser(customerAdmin2User, true);
     await oktaAPI.createUser(customerTechnicalUser, true);
     adminToken = await portalAPI.getUserAccessToken(customerAdmin1User.email, customerAdmin1User.password);
+    await page.goto('/');
   });
 
-  test.afterAll(async () => {
+  test.afterEach(async () => {
     const org = await portalAPI.getOrg(adminToken);
 
     if (org.orgs.length) {
@@ -40,10 +41,6 @@ test.describe('Spec file for organization tests for customers', async () => {
     await oktaAPI.deleteUserByEmail(customerAdmin1User.email);
     await oktaAPI.deleteUserByEmail(customerAdmin2User.email);
     await oktaAPI.deleteUserByEmail(customerTechnicalUser.email);
-  });
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
   });
 
   test('SAAS-T160 organization is created automatically for admin @customers @organizations', async ({
@@ -86,18 +83,24 @@ test.describe('Spec file for organization tests for customers', async () => {
   test.skip('SAAS-T207 Verify Percona Customer technical user can view org already registered on Portal @customers @organizations', async ({
     page,
   }) => {
-    test.info().annotations.push({
-      type: 'Also Covers',
-      description: 'SAAS-T218 Verify Manage Organization view',
-    });
+    test.info().annotations.push(
+      {
+        type: 'Also Covers',
+        description: 'SAAS-T218 Verify Manage Organization view',
+      },
+      {
+        type: 'Also Covers',
+        description: 'SAAS-T262 Verify Organization is automatically created for Technical user',
+      },
+    );
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
     await oktaAPI.loginByOktaApi(customerTechnicalUser, page);
 
+    await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
     await organizationPage.sideMenu.mainMenu.organization.click();
     await organizationPage.locators.organizationName.waitFor({ state: 'visible', timeout: 60000 });
-    await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
     const orgName = await organizationPage.locators.organizationName.textContent();
 
     const technicalToken = await portalAPI.getUserAccessToken(

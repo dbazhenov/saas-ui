@@ -19,7 +19,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
   let secondUserWithoutOrg: User;
   const firstOrgName = `new test#$%_org_${Date.now()}`;
 
-  test.beforeAll(async () => {
+  test.beforeEach(async ({ page }) => {
     newAdmin1User = getUser();
     newAdmin2User = getUser();
     newTechnicalUser = getUser();
@@ -40,23 +40,27 @@ test.describe('Spec file for free users dashboard tests', async () => {
       username: newAdmin2User.email,
       role: UserRoles.admin,
     });
-  });
-
-  test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test.afterAll(async () => {
-    await portalAPI.deleteOrg(adminToken, org.id);
+  test.afterEach(async () => {
+    const afterTestOrg = await portalAPI.getOrg(adminToken);
+
+    if (afterTestOrg.orgs.length) {
+      await portalAPI.deleteOrg(adminToken, afterTestOrg.orgs[0].id);
+    }
+
     await oktaAPI.deleteUserByEmail(newAdmin1User.email);
     await oktaAPI.deleteUserByEmail(newAdmin2User.email);
     await oktaAPI.deleteUserByEmail(newTechnicalUser.email);
     if (firstUserWithoutOrg) {
       await oktaAPI.deleteUserByEmail(firstUserWithoutOrg.email);
+      firstUserWithoutOrg = undefined;
     }
 
     if (secondUserWithoutOrg) {
       await oktaAPI.deleteUserByEmail(secondUserWithoutOrg.email);
+      secondUserWithoutOrg = undefined;
     }
   });
 
@@ -144,6 +148,11 @@ test.describe('Spec file for free users dashboard tests', async () => {
   test('SAAS-T220 Verify free account admin user can update org name @freeUser @organizations', async ({
     page,
   }) => {
+    test.info().annotations.push({
+      type: 'Also Covers',
+      description: 'SAAS-T260 Verify user admin is able to delete own Organization',
+    });
+
     const dashboardPage = new DashboardPage(page);
     const organizationPage = new OrganizationPage(page);
 
@@ -164,11 +173,46 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await organizationPage.locators.editOrgSubmit.click();
     await organizationPage.toast.checkToastMessage(organizationPage.messages.orgEditedSuccessfully);
     expect(await organizationPage.locators.organizationName.textContent()).toEqual(newOrgName);
+
+    await test.step(
+      'Click on Delete organization icon and Verify confirmation window is displayed',
+      async () => {
+        await organizationPage.locators.deleteOrgButton.click();
+        await organizationPage.confirmDeleteOrgModal.elements.body.waitFor({ state: 'visible' });
+
+        await expect(organizationPage.confirmDeleteOrgModal.elements.header).toHaveText(
+          organizationPage.confirmDeleteOrgModal.messages.header,
+        );
+        await expect(organizationPage.confirmDeleteOrgModal.elements.message).toHaveText(
+          organizationPage.confirmDeleteOrgModal.messages.body(newOrgName),
+        );
+
+        await expect(organizationPage.confirmDeleteOrgModal.elements.confirm).toHaveText(
+          organizationPage.confirmDeleteOrgModal.messages.confirm,
+        );
+      },
+    );
+
+    await test.step('Confirm deletion of the org', async () => {
+      await organizationPage.confirmDeleteOrgModal.fields.orgNameInput.type(newOrgName);
+      await organizationPage.confirmDeleteOrgModal.buttons.submit.click();
+      await organizationPage.toast.checkToastMessage(organizationPage.confirmDeleteOrgModal.messages.success);
+      const deletedOrg = await portalAPI.getOrg(adminToken);
+
+      expect(deletedOrg.orgs.length).toEqual(0);
+    });
+    await test.step('Verify the form for creation organization is displayed', async () => {
+      await organizationPage.locators.organizationNameInput.waitFor({ state: 'visible' });
+    });
   });
 
   test('SAAS-T221 Verify free account technical user is not able to update his organization name @freeUser @organizations', async ({
     page,
   }) => {
+    test.info().annotations.push({
+      type: 'Also Covers',
+      description: 'SAAS-T261 Verify the user with Technical account cannot delete organization',
+    });
     const dashboardPage = new DashboardPage(page);
     const organizationPage = new OrganizationPage(page);
 
@@ -177,6 +221,10 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
     await dashboardPage.locators.viewOrgLink.click();
     await organizationPage.locators.editOrgButton.waitFor({ state: 'visible' });
-    expect(await organizationPage.locators.editOrgButton.isDisabled()).toBeTruthy();
+    await expect(organizationPage.locators.editOrgButton).toBeDisabled();
+    await test.step('Verify there is Delete button, but its disabled and cannot be clicked', async () => {
+      await organizationPage.locators.deleteOrgButton.waitFor({ state: 'visible' });
+      await expect(organizationPage.locators.deleteOrgButton).toBeDisabled();
+    });
   });
 });

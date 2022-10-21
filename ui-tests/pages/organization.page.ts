@@ -1,12 +1,14 @@
 /* eslint-disable lines-between-class-members */
 import { expect, Locator, Page } from '@playwright/test';
 import { UserRoles } from '@support/enums/userRoles';
+import ConfirmDeleteOrgModal from '@tests/components/OrganizationDeleteModal';
 import { CommonPage } from './common.page';
 
 interface Locators {
   readonly membersTab: Locator;
   readonly manageOrganizationContainer: Locator;
   readonly editOrgButton: Locator;
+  readonly deleteOrgButton: Locator;
   readonly editOrgSubmit: Locator;
   readonly editMemberSubmit: Locator;
   readonly organizationName: Locator;
@@ -32,6 +34,8 @@ export class OrganizationPage extends CommonPage {
   readonly labels: Labels;
   readonly messages: Messages;
 
+  readonly confirmDeleteOrgModal: ConfirmDeleteOrgModal;
+
   constructor(page: Page) {
     super(page);
     this.page = page;
@@ -40,6 +44,7 @@ export class OrganizationPage extends CommonPage {
       membersTab: page.locator('li', { hasText: 'Members' }),
       manageOrganizationContainer: page.locator('//div[@data-testid="manage-organization-organization-tab"]'),
       editOrgButton: page.locator('//button[@data-testid="member-actions-edit"]'),
+      deleteOrgButton: page.locator('//button[@data-testid="member-actions-delete"]'),
       editOrgSubmit: page.locator('//button[@data-testid="edit-organization-submit-button"]'),
       editMemberSubmit: page.locator('//button[@data-testid="edit-member-submit-button"]'),
       organizationName: page.locator('//strong[@data-testid="organization-name"]'),
@@ -57,6 +62,7 @@ export class OrganizationPage extends CommonPage {
       memberEditedSuccessfully: "The user's role has been successfully updated",
       requiredField: 'Required field',
     };
+    this.confirmDeleteOrgModal = new ConfirmDeleteOrgModal(page);
   }
 
   getMembersTableRow(userEmail: string): Locator {

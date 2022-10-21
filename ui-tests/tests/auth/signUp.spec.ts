@@ -10,21 +10,32 @@ test.describe('Spec file for Sign Up tests', async () => {
   let adminUser: User;
   let casualUser: User;
   let successUser: User;
+  let firstUserWithoutMarketingConsent: User;
+  let secondUserWithoutMarketingConsent: User;
 
-  test.beforeAll(async () => {
+  test.beforeEach(async ({ page }) => {
     casualUser = getUser();
     adminUser = getUser();
     successUser = getUser();
+    firstUserWithoutMarketingConsent = getUser();
+    secondUserWithoutMarketingConsent = getUser();
     await oktaAPI.createUser(casualUser, true);
-  });
-
-  test.afterAll(async () => {
-    await oktaAPI.deleteUserByEmail(casualUser.email);
-    await oktaAPI.deleteUserByEmail(successUser.email);
-  });
-
-  test.beforeEach(async ({ page }) => {
     await page.goto('/');
+  });
+
+  test.afterEach(async () => {
+    await oktaAPI.deleteUserByEmail(casualUser.email);
+    if (await oktaAPI.getUser(successUser.email)) {
+      await oktaAPI.deleteUserByEmail(successUser.email);
+    }
+
+    if (await oktaAPI.getUser(firstUserWithoutMarketingConsent.email)) {
+      await oktaAPI.deleteUserByEmail(firstUserWithoutMarketingConsent.email);
+    }
+
+    if (await oktaAPI.getUser(secondUserWithoutMarketingConsent.email)) {
+      await oktaAPI.deleteUserByEmail(secondUserWithoutMarketingConsent.email);
+    }
   });
 
   test('SAAS-T115 - Verify validation for email on Sign Up @signUp @auth', async ({ page, baseURL }) => {
@@ -133,5 +144,106 @@ test.describe('Spec file for Sign Up tests', async () => {
     await signInPage.waitForPortalLoaded();
     expect(page.url()).toContain(baseURL);
     await signInPage.waitForPortalLoaded();
+  });
+
+  test('SAAS-T268 - Verify all user can agree with receiving emails from Percona @signUp @auth', async ({
+    page,
+    baseURL,
+  }) => {
+    test.info().annotations.push({
+      type: 'Also Covers',
+      description: 'SAAS-T269 - Verify all users can disagree with receiving emails from Percona',
+    });
+    const signUpPage = new SignUpPage(page);
+
+    await test.step(
+      'Login to Portal with the new user (with any roles) and Verify thew next window appears "Welcome to Percona Portal"',
+      async () => {
+        await oktaAPI.createUserWithoutMarketingConsent(firstUserWithoutMarketingConsent);
+        await oktaAPI.loginByOktaApi(firstUserWithoutMarketingConsent, page);
+        await signUpPage.marketingBanner.elements.banner.waitFor({ state: 'visible' });
+        await expect(signUpPage.marketingBanner.elements.title).toHaveText(
+          signUpPage.marketingBanner.messages.title,
+        );
+        await expect(signUpPage.marketingBanner.elements.description).toHaveText(
+          signUpPage.marketingBanner.messages.description,
+        );
+      },
+    );
+
+    await test.step('Click on "No, thank you" button and Verify the window is closed', async () => {
+      await signUpPage.marketingBanner.buttons.reject.click();
+      await signUpPage.marketingBanner.elements.banner.waitFor({ state: 'detached' });
+    });
+
+    await test.step(
+      'Open id.percona.com profile and verify Marketing consent field has "false" value',
+      async () => {
+        const userDetails = await oktaAPI.getUser(firstUserWithoutMarketingConsent.email);
+        const userSpecification = await oktaAPI.getUserDetails(userDetails.id);
+
+        expect(userSpecification.data.profile.marketing).toBeFalsy();
+        await signUpPage.uiUserLogout();
+      },
+    );
+
+    await test.step(
+      'Login to Portal with the new user (with any roles) and Verify thew next window appears "Welcome to Percona Portal"',
+      async () => {
+        await oktaAPI.createUserWithoutMarketingConsent(secondUserWithoutMarketingConsent);
+        await oktaAPI.loginByOktaApi(secondUserWithoutMarketingConsent, page);
+        await signUpPage.marketingBanner.elements.banner.waitFor({ state: 'visible' });
+        await expect(signUpPage.marketingBanner.elements.title).toHaveText(
+          signUpPage.marketingBanner.messages.title,
+        );
+        await expect(signUpPage.marketingBanner.elements.description).toHaveText(
+          signUpPage.marketingBanner.messages.description,
+        );
+      },
+    );
+
+    await test.step(
+      'Click on "Yes, please keep me posted" button and Verify the window is closed',
+      async () => {
+        await signUpPage.marketingBanner.buttons.accept.click();
+        await signUpPage.marketingBanner.elements.banner.waitFor({ state: 'detached' });
+      },
+    );
+
+    await test.step('Open id.percona.com and verify that Marketing field has "Yes" value', async () => {
+      const userDetails = await oktaAPI.getUser(secondUserWithoutMarketingConsent.email);
+      const userSpecification = await oktaAPI.getUserDetails(userDetails.id);
+
+      expect(userSpecification.data.profile.marketing).toBeTruthy();
+    });
+  });
+
+  test("SAAS-T257 - Verify it's possible to create account with unchecked consent with info sending from Percona @signUp @auth", async ({
+    page,
+  }) => {
+    const signUpPage = new SignUpPage(page);
+
+    await test.step('Open Portal and click on "Create one" link', async () => {
+      await signUpPage.locators.createOneLink.click();
+    });
+
+    await test.step(
+      'Fill in all fields, select  required "consent with TOS" checkbox and Leave empty "consent to send emails from Percona" checkbox',
+      async () => {
+        await signUpPage.locators.createOneLink.waitFor();
+        await signUpPage.fillOutSignUpUserDetails(adminUser, { tos: true, marketing: false });
+      },
+    );
+
+    await test.step('Click on "Create" button and Verify the account successfully created', async () => {
+      await signUpPage.locators.registerButton.click();
+      await expect(signUpPage.locators.verificationEmailSentTitleLoc).toHaveText(
+        signUpPage.messages.verificationEmailSentTitle,
+      );
+      const userDetails = await oktaAPI.getUser(adminUser.email);
+
+      expect(userDetails.profile.marketing).toBeFalsy();
+      expect(userDetails.profile.tos).toBeTruthy();
+    });
   });
 });

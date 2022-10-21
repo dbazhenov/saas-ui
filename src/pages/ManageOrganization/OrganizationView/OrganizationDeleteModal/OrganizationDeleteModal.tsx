@@ -28,8 +28,12 @@ export const OrganizationDeleteModal: FC<OrganizationDeleteModalProps> = ({
     >
       <Alert title={Messages.warningLabel} className={styles.alertBackground} />
       <div className={styles.formMargin}>
-        <p className={styles.deleteMessage}>{Messages.deleteOrganization(orgName)}</p>
-        <p className={styles.confirmMessage}>{Messages.confirmDeletionTitle}</p>
+        <p className={styles.deleteMessage} data-testid="delete-org-message">
+          {Messages.deleteOrganization(orgName)}
+        </p>
+        <p className={styles.confirmMessage} data-testid="delete-org-confirm">
+          {Messages.confirmDeletionTitle}
+        </p>
         <Form onSubmit={onSubmit}>
           {({ handleSubmit, values }: FormRenderProps) => (
             <form

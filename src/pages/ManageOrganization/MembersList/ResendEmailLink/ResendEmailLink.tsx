@@ -17,7 +17,11 @@ export const ResendEmailLink: FC<ResendData> = ({ organization, member }: Resend
   const resendingEmail = isLoading ? <Spinner /> : Messages.resendEmail;
 
   return (
-    <div className={styles.paragraphWrapper} onClick={() => handleResend(organization, member)}>
+    <div
+      className={styles.paragraphWrapper}
+      onClick={() => handleResend(organization, member)}
+      data-testid="resend-email-link"
+    >
       <a className={styles.link}>{resendingEmail}</a>
     </div>
   );

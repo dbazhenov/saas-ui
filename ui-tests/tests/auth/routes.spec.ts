@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { SignInPage } from '@pages/signIn.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
-  test('SAAS-T248 - Verify incorrect links are redirected to login page for unauthorised users @routes @auth', async ({
+  test('SAAS-T248 - Verify incorrect links are redirected to login page for unauthorized users @routes @auth', async ({
     page,
   }) => {
     const signInPage = new SignInPage(page);
