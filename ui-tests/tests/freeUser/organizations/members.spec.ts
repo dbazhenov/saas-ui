@@ -309,4 +309,36 @@ test.describe('Spec file for free users members tests', async () => {
       );
     });
   });
+
+  test('SAAS-T216 Verify free account user that was removed from an org is able to create another org @freeUser @members', async ({
+    page,
+  }) => {
+    const orgName = 'Test Org Second User';
+    const signInPage = new SignInPage(page);
+    const organizationPage = new OrganizationPage(page);
+    const membersPage = new MembersPage(page);
+
+    await test.step('1. Go to Members tab and remove some user from the organization', async () => {
+      await oktaAPI.loginByOktaApi(admin1User, page);
+      await organizationPage.sideMenu.mainMenu.organization.click();
+      await organizationPage.locators.membersTab.click();
+      await membersPage.membersTable.elements.table.waitFor({ state: 'visible' });
+      await membersPage.membersTable.deleteUserMembersTabByEmail(admin2User.email);
+      await membersPage.membersTable.verifyUserNotPresent(admin2User.email);
+      await membersPage.uiUserLogout();
+      await signInPage.emailInput.waitFor({ state: 'visible' });
+    });
+
+    await test.step(
+      '2. Login as user removed in the step 1 and try to create a new organization',
+      async () => {
+        await oktaAPI.loginByOktaApi(admin2User, page);
+        await organizationPage.sideMenu.mainMenu.organization.click();
+        await organizationPage.locators.organizationNameInput.type(orgName);
+        await organizationPage.locators.createOrgButton.click();
+        await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
+        await expect(organizationPage.locators.organizationName).toHaveText(orgName);
+      },
+    );
+  });
 });

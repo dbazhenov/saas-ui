@@ -94,4 +94,8 @@ export class MembersTable extends Table {
     expect(userDetail).toContain(user.email);
     expect(userDetail).toContain(role);
   };
+
+  verifyUserNotPresent = async (userEmail: string) => {
+    await expect(this.membersRow(userEmail)).toBeHidden();
+  };
 }
