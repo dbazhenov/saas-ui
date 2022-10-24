@@ -25,6 +25,11 @@ test.describe('Spec file for Sign Up tests', async () => {
 
   test.afterEach(async () => {
     await oktaAPI.deleteUserByEmail(casualUser.email);
+
+    if (await oktaAPI.getUser(adminUser.email)) {
+      await oktaAPI.deleteUserByEmail(adminUser.email);
+    }
+
     if (await oktaAPI.getUser(successUser.email)) {
       await oktaAPI.deleteUserByEmail(successUser.email);
     }
@@ -245,5 +250,36 @@ test.describe('Spec file for Sign Up tests', async () => {
       expect(userDetails.profile.marketing).toBeFalsy();
       expect(userDetails.profile.tos).toBeTruthy();
     });
+  });
+
+  test("SAAS-T120 - Verify Sign in not possible if user doesn't confirm Portal registration @signUp @auth", async ({
+    page,
+    baseURL,
+  }) => {
+    const signInPage = new SignInPage(page);
+    const signUpPage = new SignUpPage(page);
+
+    await test.step('1. Navigate to Percona Platform and click on Sign Up', async () => {
+      await signInPage.signUpLink.click();
+    });
+
+    await test.step('2. Fill in required fields for Sign Up and click on the Register button', async () => {
+      await signUpPage.fillOutSignUpUserDetails(adminUser);
+      await signUpPage.locators.registerButton.click();
+      await expect(signUpPage.locators.verificationEmailSentTitleLoc).toHaveText(
+        signUpPage.messages.verificationEmailSentTitle,
+      );
+    });
+
+    await test.step(
+      '3. Do not complete the registration by following a link from Okta and try to login',
+      async () => {
+        await page.reload();
+        await signInPage.fillOutSignInUserDetails(adminUser.email, adminUser.password);
+        await signInPage.signInButton.click();
+        await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);
+        await expect(page).toHaveURL(`${baseURL}/login`);
+      },
+    );
   });
 });
