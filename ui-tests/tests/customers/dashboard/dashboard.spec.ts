@@ -6,6 +6,7 @@ import User from '@support/types/user.interface';
 import ServiceNowResponse from '@support/types/serviceNowResponse.interface';
 import { routeHelper } from '@api/helpers';
 import { getUser } from '@helpers/portalHelper';
+import { endpoints } from '@tests/helpers/apiHelper';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let customerAdmin1User: User;
@@ -47,12 +48,12 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
     let tickets;
 
-    await routeHelper.interceptBackEndCall(page, '**/tickets:search', { tickets: [] });
+    await routeHelper.interceptBackEndCall(page, endpoints.listTickets, { tickets: [] });
     await oktaAPI.loginByOktaApi(users[0], page);
     await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
     await dashboardPage.ticketTable.elements.emptyTable.waitFor({ state: 'visible', timeout: 60000 });
 
-    await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+    await routeHelper.interceptBackEndCall(page, endpoints.listTickets, {
       tickets: dashboardPage.ticketOverview.tickets,
     });
     await page.reload();
@@ -88,7 +89,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await test.step('Verify that default value for Rows per page is 10', async () => {
       tickets = dashboardPage.ticketOverview.generateNumberOfTickets(101);
 
-      await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+      await routeHelper.interceptBackEndCall(page, endpoints.listTickets, {
         tickets,
       });
       await page.reload();
@@ -192,7 +193,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
 
     await test.step('Navigate to Portal and wait for ticket overview to display.', async () => {
-      await routeHelper.interceptBackEndCall(page, '**/tickets:search', {
+      await routeHelper.interceptBackEndCall(page, endpoints.listTickets, {
         tickets: dashboardPage.ticketOverview.tickets,
       });
       await oktaAPI.loginByOktaApi(users[0], page);
@@ -293,27 +294,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     page,
     context,
   }) => {
-    test.info().annotations.push(
-      {
-        type: 'Also Covers',
-        description: 'SAAS-T186 - Verify OrgAdmin user can see entitlements for his Org',
-      },
-      {
-        type: 'Also Covers',
-        description: 'SAAS-T192 - Verify user with expired Access token can not see entitlements for his Org',
-      },
-    );
-    const numberOfEntitlements = 3;
     const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(customerAdmin1User, page);
     await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
-    await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText(String(numberOfEntitlements));
-    await dashboardPage.entitlementsModal.entitlementsButton.click();
-    await dashboardPage.entitlementsModal.elements.body.waitFor({ state: 'visible' });
-    await expect(dashboardPage.entitlementsModal.entitlementContainer).toHaveCount(numberOfEntitlements);
-    await dashboardPage.entitlementsModal.buttons.close.click();
-
     const org = await portalAPI.getOrg(adminToken);
     const tickets = await portalAPI.getOrgTickets(adminToken, org.orgs[0].id);
 
@@ -332,14 +316,6 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     expect(newPage.url()).toEqual(tickets.tickets[0].url);
     await newPage.close();
-    const secondTab = await context.newPage();
-    const dashboardPageSecondTab = new DashboardPage(secondTab);
-
-    await secondTab.goto('/');
-    await dashboardPageSecondTab.waitForPortalLoaded();
-    await dashboardPageSecondTab.uiUserLogout();
-    await page.reload();
-    expect(page.url()).toContain('/login');
   });
 
   test('SAAS-T196 - Verify Percona Customer Technical user is able to see tickets created for his org @customers @dashboard', async ({
