@@ -84,7 +84,8 @@ test.describe('Spec file for free users members tests', async () => {
     });
   });
 
-  test('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members', async ({
+  // Un-skip when https://jira.percona.com/browse/SAAS-1176 is fixed
+  test.skip('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members @tempTest', async ({
     page,
     context,
     baseURL,
