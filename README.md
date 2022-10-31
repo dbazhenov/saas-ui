@@ -25,7 +25,7 @@ cp .env .env.local
 
 Then you should update `.env.local` with your own secrets.
 
-To execute E2E tests just use `npm run cy:run`
+To execute E2E tests just use `npm run playwright:run`
 
 ### Store rules
 
