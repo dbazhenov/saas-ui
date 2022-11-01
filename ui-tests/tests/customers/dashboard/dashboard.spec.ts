@@ -139,8 +139,9 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       await dashboardPage.ticketTable.pagination.buttons.firstPage.waitFor({ state: 'visible' });
       await dashboardPage.ticketTable.pagination.buttons.previousPage.waitFor({ state: 'visible' });
+      const numberPagination: number = await dashboardPage.ticketTable.pagination.buttons.page.count();
 
-      expect(await dashboardPage.ticketTable.pagination.buttons.page.count()).toBeGreaterThan(0);
+      expect(numberPagination).toBeGreaterThan(0);
 
       await dashboardPage.ticketTable.pagination.buttons.nextPage.waitFor({ state: 'visible' });
       await dashboardPage.ticketTable.pagination.buttons.lastPage.waitFor({ state: 'visible' });
@@ -274,7 +275,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const org = await portalAPI.getOrg(adminToken);
     const orgDetails = await portalAPI.getOrgDetails(adminToken, org.orgs[0].id);
 
-    expect(await dashboardPage.contacts.emailContactLink.getAttribute('href')).toEqual(
+    await expect(dashboardPage.contacts.emailContactLink).toHaveAttribute(
+      'href',
       `mailto:${dashboardPage.contacts.contactsHelpEmailCustomer}`,
     );
     await expect(dashboardPage.contacts.emailContactLink).toHaveText(
@@ -285,7 +287,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const clipboardContent = await page.evaluate(() => navigator.clipboard.readText());
 
     expect(clipboardContent).toEqual(orgDetails.contacts.customer_success.email);
-    expect(await dashboardPage.contacts.customerContactName.textContent()).toEqual(
+    await expect(dashboardPage.contacts.customerContactName).toHaveText(
       orgDetails.contacts.customer_success.name,
     );
   });
@@ -308,7 +310,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       Object.values(dashboardPage.ticketTable.tableHeaders),
     );
 
-    expect(await dashboardPage.ticketTable.elements.body.count()).toEqual(1);
+    await expect(dashboardPage.ticketTable.elements.body).toHaveCount(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
       dashboardPage.ticketTable.elements.body.click(),
@@ -337,7 +339,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await expect(dashboardPage.ticketTable.elements.headerCell).toHaveText(
       Object.values(dashboardPage.ticketTable.tableHeaders),
     );
-    expect(await dashboardPage.ticketTable.elements.body.count()).toEqual(1);
+    await expect(dashboardPage.ticketTable.elements.body).toHaveCount(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
       dashboardPage.ticketTable.elements.body.click(),

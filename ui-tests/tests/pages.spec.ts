@@ -44,7 +44,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       'background-color',
       'rgb(247, 248, 250)',
     );
-    expect(await notFoundPage.locators.notFoundImage.isVisible()).toBeTruthy();
+
+    await expect(notFoundPage.locators.notFoundImage).toBeVisible();
     await notFoundPage.locators.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
     await notFoundPage.themeSwitch.click();
@@ -54,7 +55,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       'background-color',
       'rgb(11, 12, 14)',
     );
-    expect(await notFoundPage.locators.notFoundImage.isVisible()).toBeTruthy();
+    await expect(notFoundPage.locators.notFoundImage).toBeVisible();
     await notFoundPage.locators.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
   });
@@ -68,47 +69,50 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       await oktaAPI.loginByOktaApi(users[i], page);
 
-      expect(await dashboardPage.sideMenu.resourcesHeader.textContent()).toEqual(
-        dashboardPage.sideMenu.resourcesLabel,
-      );
+      await expect(dashboardPage.sideMenu.resourcesHeader).toHaveText(dashboardPage.sideMenu.resourcesLabel);
 
-      expect(await dashboardPage.sideMenu.resourceMenu.documentationLink.getAttribute('target')).toEqual(
-        '_blank',
-      );
-      expect(await dashboardPage.sideMenu.resourceMenu.documentationLink.getAttribute('href')).toEqual(
+      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute('target', '_blank');
+      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute(
+        'href',
         dashboardPage.sideMenu.documentationLink,
       );
 
-      expect(await dashboardPage.sideMenu.resourceMenu.blogLink.getAttribute('target')).toEqual('_blank');
-      expect(await dashboardPage.sideMenu.resourceMenu.blogLink.getAttribute('href')).toEqual(
+      await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute('target', '_blank');
+      await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute(
+        'href',
         dashboardPage.sideMenu.blogLink,
       );
 
-      expect(await dashboardPage.sideMenu.resourceMenu.forumLink.getAttribute('target')).toEqual('_blank');
-      expect(await dashboardPage.sideMenu.resourceMenu.forumLink.getAttribute('href')).toEqual(
+      await expect(dashboardPage.sideMenu.resourceMenu.forumLink).toHaveAttribute('target', '_blank');
+      await expect(dashboardPage.sideMenu.resourceMenu.forumLink).toHaveAttribute(
+        'href',
         dashboardPage.sideMenu.forumLink,
       );
 
-      expect(await dashboardPage.sideMenu.resourceMenu.portalHelpLink.getAttribute('target')).toEqual(
-        '_blank',
-      );
-      expect(await dashboardPage.sideMenu.resourceMenu.portalHelpLink.getAttribute('href')).toEqual(
+      await expect(dashboardPage.sideMenu.resourceMenu.portalHelpLink).toHaveAttribute('target', '_blank');
+      await expect(dashboardPage.sideMenu.resourceMenu.portalHelpLink).toHaveAttribute(
+        'href',
         dashboardPage.sideMenu.portalHelpLink,
       );
 
-      expect(await dashboardPage.sideMenu.mainHeader.textContent()).toEqual(dashboardPage.sideMenu.mainLabel);
+      await expect(dashboardPage.sideMenu.mainHeader).toHaveText(dashboardPage.sideMenu.mainLabel);
 
-      expect(await dashboardPage.sideMenu.mainMenu.dashboard.isVisible()).toBeTruthy();
-      expect(await dashboardPage.sideMenu.mainMenu.dashboard.getAttribute('href')).toEqual('/');
-
-      expect(await dashboardPage.sideMenu.mainMenu.organization.isVisible()).toBeTruthy();
-      expect(await dashboardPage.sideMenu.mainMenu.organization.getAttribute('href')).toEqual(
-        '/organization',
+      await expect(dashboardPage.sideMenu.mainMenu.dashboard).toBeVisible();
+      await expect(dashboardPage.sideMenu.mainMenu.dashboard).toHaveAttribute(
+        'href',
+        dashboardPage.routes.root,
       );
 
-      expect(await dashboardPage.sideMenu.mainMenu.pmmInstances.isVisible()).toBeTruthy();
-      expect(await dashboardPage.sideMenu.mainMenu.pmmInstances.getAttribute('href')).toEqual(
-        '/pmm-instances',
+      await expect(dashboardPage.sideMenu.mainMenu.organization).toBeVisible();
+      await expect(dashboardPage.sideMenu.mainMenu.organization).toHaveAttribute(
+        'href',
+        dashboardPage.routes.organization,
+      );
+
+      await expect(dashboardPage.sideMenu.mainMenu.pmmInstances).toBeVisible();
+      await expect(dashboardPage.sideMenu.mainMenu.pmmInstances).toHaveAttribute(
+        'href',
+        dashboardPage.routes.instances,
       );
     });
   }

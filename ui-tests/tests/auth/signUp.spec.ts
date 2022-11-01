@@ -49,7 +49,7 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     invalidUser.email = 'Test3#gmail.c0m';
     // Verify URL
-    await expect(page).toHaveURL(`${baseURL + signUpPage.links.loginAddressLink}`);
+    await expect(page).toHaveURL(`${baseURL + signUpPage.routes.login}`);
     await signUpPage.locators.createOneLink.click();
     await signUpPage.locators.inputEmail.type(invalidUser.email);
     // trigger Email field validation s

@@ -32,10 +32,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await oktaAPI.deleteUserByEmail(adminUser.email);
     await page.reload();
     await signInPage.signInContainer.waitFor({ state: 'visible' });
-    expect(page.url()).toContain('/login');
-    await page.goto('/organization');
+    expect(page.url()).toContain(dashboardPage.routes.login);
+    await page.goto(dashboardPage.routes.organization);
     await signInPage.signInContainer.waitFor({ state: 'visible' });
-    expect(page.url()).toContain('/login');
+    expect(page.url()).toContain(dashboardPage.routes.login);
   });
 
   test('SAAS-T82 Verify successful login on Percona Portal @login @auth', async ({ page, baseURL }) => {
@@ -57,8 +57,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
     await signInPage.signInButton.click();
     await signInPage.signInErrorContainer.waitFor({ state: 'visible' });
-    expect(await signInPage.signInErrorContainer.textContent()).toEqual(signInPage.unableToSignIn);
-    expect(page.url()).toContain('/login');
+    await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);
+    expect(page.url()).toContain(dashboardPage.routes.login);
 
     await dashboardPage.locators.gettingStartedContainer.waitFor({ state: 'detached' });
   });

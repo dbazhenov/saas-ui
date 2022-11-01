@@ -1,4 +1,4 @@
-import { Locator, Page } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 import { CommonPage } from '@pages/common.page';
 import User from '../support/types/user.interface';
 
@@ -26,7 +26,6 @@ interface Messages {
 
 interface Links {
   readonly registerAddressLink: string;
-  readonly loginAddressLink: string;
   readonly platformPrivacyLink: string;
   readonly platformTermsLink: string;
 }
@@ -85,7 +84,6 @@ export class SignUpPage extends CommonPage {
 
     this.links = {
       registerAddressLink: 'https://id-dev.percona.com/signin/register',
-      loginAddressLink: '/login',
       platformPrivacyLink: 'https://per.co.na/pmm/platform-privacy',
       platformTermsLink: 'https://per.co.na/pmm/platform-terms',
     };
@@ -160,16 +158,12 @@ export class SignUpPage extends CommonPage {
   };
 
   private verifyPlaceholders = async () => {
-    expect(await this.locators.inputEmail.getAttribute('placeholder')).toEqual(this.labels.emailPlaceholder);
-    expect(await this.locators.inputPassword.getAttribute('placeholder')).toEqual(
-      this.labels.passwordPlaceholder,
-    );
-    expect(await this.locators.inputFirstName.getAttribute('placeholder')).toEqual(
+    await expect(this.locators.inputEmail).toHaveAttribute('placeholder', this.labels.emailPlaceholder);
+    await expect(this.locators.inputPassword).toHaveAttribute('placeholder', this.labels.passwordPlaceholder);
+    await expect(this.locators.inputFirstName).toHaveAttribute(
+      'placeholder',
       this.labels.firstNamePlaceholder,
     );
-    expect(await this.locators.inputLastName.getAttribute('placeholder')).toEqual(
-      this.labels.lastNamePlaceholder,
-    );
+    await expect(this.locators.inputLastName).toHaveAttribute('placeholder', this.labels.lastNamePlaceholder);
   };
-  // this go to mailosaur class
 }

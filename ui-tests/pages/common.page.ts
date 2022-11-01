@@ -31,6 +31,8 @@ export class CommonPage {
   readonly toast: Toast;
   readonly marketingBanner: MarketingBanner;
 
+  readonly routes;
+
   constructor(page: Page) {
     this.page = page;
     this.sideMenu = new SideMenu(page);
@@ -52,6 +54,19 @@ export class CommonPage {
 
     this.toast = new Toast(page);
     this.marketingBanner = new MarketingBanner(page);
+    this.routes = {
+      instances: '/pmm-instances',
+      login: '/login',
+      loginCallback: '/login/callback',
+      logout: '/logout',
+      organization: '/organization',
+      profile: '/profile',
+      activation: '/activation',
+      root: '/',
+      welcome: '/welcome',
+      dashboard: '/dashboard',
+      kubernetes: '/kubernetes',
+    };
   }
 
   uiUserLogout = async () => {

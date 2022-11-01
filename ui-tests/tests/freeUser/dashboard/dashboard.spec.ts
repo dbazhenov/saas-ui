@@ -66,35 +66,36 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
 
     await dashboardPage.contacts.perconaContactsHeader.waitFor({ state: 'visible' });
-
-    expect(await dashboardPage.contacts.emailContactLink.textContent()).toEqual(
+    await expect(dashboardPage.contacts.emailContactLink).toHaveText(
       dashboardPage.contacts.contactsHelpEmail,
     );
-    expect(await dashboardPage.contacts.emailContactLink.getAttribute('href')).toEqual(
+    await expect(dashboardPage.contacts.emailContactLink).toHaveAttribute(
+      'href',
       dashboardPage.contacts.mailtoPerconaHelpEmail,
     );
 
-    expect(await dashboardPage.contacts.forumContactLink.textContent()).toEqual(
+    await expect(dashboardPage.contacts.forumContactLink).toHaveText(
       dashboardPage.contacts.contactsHelpForums,
     );
-    expect(await dashboardPage.contacts.forumContactLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.contacts.forumContactLink.getAttribute('href')).toEqual(
+    await expect(dashboardPage.contacts.forumContactLink).toHaveAttribute('target', '_blank');
+    await expect(dashboardPage.contacts.forumContactLink).toHaveAttribute(
+      'href',
       dashboardPage.contacts.contactsHelpForumsLink,
     );
 
-    expect(await dashboardPage.contacts.discordContactLink.textContent()).toEqual(
+    await expect(dashboardPage.contacts.discordContactLink).toHaveText(
       dashboardPage.contacts.contactsHelpDiscord,
     );
-    expect(await dashboardPage.contacts.discordContactLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.contacts.discordContactLink.getAttribute('href')).toEqual(
+    await expect(dashboardPage.contacts.discordContactLink).toHaveAttribute('target', '_blank');
+    await expect(dashboardPage.contacts.discordContactLink).toHaveAttribute(
+      'href',
       dashboardPage.contacts.contactsHelpDiscordLink,
     );
 
-    expect(await dashboardPage.contacts.contactPageLink.textContent()).toEqual(
-      dashboardPage.contacts.contactPageLabel,
-    );
-    expect(await dashboardPage.contacts.contactPageLink.getAttribute('target')).toEqual('_blank');
-    expect(await dashboardPage.contacts.contactPageLink.getAttribute('href')).toEqual(
+    await expect(dashboardPage.contacts.contactPageLink).toHaveText(dashboardPage.contacts.contactPageLabel);
+    await expect(dashboardPage.contacts.contactPageLink).toHaveAttribute('target', '_blank');
+    await expect(dashboardPage.contacts.contactPageLink).toHaveAttribute(
+      'href',
       dashboardPage.contacts.contactPageLinkAddress,
     );
   });

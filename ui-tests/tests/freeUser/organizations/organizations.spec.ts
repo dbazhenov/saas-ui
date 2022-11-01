@@ -101,14 +101,16 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     // wait due to rerender of the page.
     await page.waitForTimeout(2000);
-    expect(await organizationPage.locators.organizationNameInput.getAttribute('placeholder')).toEqual(
+    await expect(organizationPage.locators.organizationNameInput).toHaveAttribute(
+      'placeholder',
       organizationPage.labels.orgNamePlaceholder,
     );
     await organizationPage.locators.organizationNameInput.type('Test', { delay: 100 });
     await organizationPage.locators.organizationNameInput.fill('');
-    expect(await organizationPage.locators.organizationNameInputError.textContent()).toEqual(
+    await expect(organizationPage.locators.organizationNameInputError).toHaveText(
       organizationPage.messages.requiredField,
     );
+
     await organizationPage.locators.organizationNameInput.type(firstOrgName);
     await organizationPage.locators.createOrgButton.click();
     await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
@@ -124,7 +126,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
     );
     await expect(dashboardPage.gettingStarted.gettingStartedOrganizationLink).toHaveAttribute(
       'href',
-      '/organization',
+      dashboardPage.routes.organization,
     );
 
     // wait due to rerender of the page.
@@ -142,7 +144,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await organizationPage.locators.organizationNameInput.type(firstOrgName);
     await organizationPage.locators.createOrgButton.click();
     await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
-    expect(await organizationPage.locators.organizationName.textContent()).toEqual(firstOrgName);
+    await expect(organizationPage.locators.organizationName).toHaveText(firstOrgName);
   });
 
   test('SAAS-T220 Verify free account admin user can update org name @freeUser @organizations', async ({
@@ -166,13 +168,13 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await organizationPage.locators.editOrgButton.click();
     await organizationPage.locators.editOrgSubmit.isDisabled();
     await organizationPage.locators.organizationNameInput.fill('');
-    expect(await organizationPage.locators.organizationNameInputError.textContent()).toEqual(
+    await expect(organizationPage.locators.organizationNameInputError).toHaveText(
       organizationPage.messages.requiredField,
     );
     await organizationPage.locators.organizationNameInput.fill(newOrgName);
     await organizationPage.locators.editOrgSubmit.click();
     await organizationPage.toast.checkToastMessage(organizationPage.messages.orgEditedSuccessfully);
-    expect(await organizationPage.locators.organizationName.textContent()).toEqual(newOrgName);
+    await expect(organizationPage.locators.organizationName).toHaveText(newOrgName);
 
     await test.step(
       'Click on Delete organization icon and Verify confirmation window is displayed',

@@ -7,11 +7,11 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   }) => {
     const signInPage = new SignInPage(page);
 
-    await page.goto('/pmm-instances');
+    await page.goto(signInPage.routes.instances);
     await signInPage.signInContainer.waitFor({ state: 'visible', timeout: 10000 });
-    expect(page.url()).toContain('/login');
+    expect(page.url()).toContain(signInPage.routes.login);
     await page.goto('/123');
     await signInPage.signInContainer.waitFor({ state: 'visible', timeout: 10000 });
-    expect(page.url()).toContain('/login');
+    expect(page.url()).toContain(signInPage.routes.login);
   });
 });
