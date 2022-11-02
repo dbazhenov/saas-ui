@@ -88,6 +88,18 @@ export interface OrganizationResponse {
   updated_at: number;
 }
 
+export interface SearchOrg {
+  created_at: string;
+  id: string;
+  name: string;
+  tier: string;
+  updated_at: string;
+}
+
+export interface SearchOrgResponse {
+  orgs: SearchOrg[];
+}
+
 export interface SearchOrganizationsResponse {
   orgs: OrganizationResponse[];
 }
@@ -160,10 +172,6 @@ export interface ContactsResponse {
   new_ticket_url: string;
 }
 
-export interface SearchOrganizationEntitlementsResponse {
-  entitlements: OrganizationEntitlement[];
-}
-
 interface PmmInstance {
   pmm_server_id: string;
   pmm_server_name: string;
@@ -172,6 +180,10 @@ interface PmmInstance {
 
 export interface SearchOrganizationInventoryResponse {
   inventory: PmmInstance[];
+}
+
+export interface SearchOrganizationEntitlementsResponse {
+  entitlements: OrganizationEntitlement[];
 }
 
 export interface OrganizationEntitlement {

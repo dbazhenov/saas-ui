@@ -7,11 +7,11 @@ import {
   getCustomerSuccessContact,
   getEntitlementsAction,
   getFirstOrgId,
-  getOrganizationAction,
   getOrgEntitlements,
   getCurrentOrgName,
   searchOrgsAction,
   getUserRoleAction,
+  getOrganizationAction,
 } from 'store/orgs';
 import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';

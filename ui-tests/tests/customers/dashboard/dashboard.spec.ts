@@ -45,6 +45,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   test('SAAS-T194 - Verify user is able to see empty list if there are no tickets on ServiceNow @customers @dashboard', async ({
     page,
   }) => {
+    test.slow();
     const dashboardPage = new DashboardPage(page);
     let tickets;
 

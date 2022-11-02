@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { useStyles, Tab, TabsBar, TabContent, Spinner } from '@grafana/ui';
+import { useStyles, Tab, TabsBar, TabContent } from '@grafana/ui';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import { getIsUserPending, getUserCompanyAction, getUserCompanyName } from 'store/auth';
@@ -18,6 +18,7 @@ import {
   setOrgViewActiveTab,
 } from 'store/orgs';
 import { OrganizationViewTabs } from 'store/types/orgs';
+import { OrganizationContentLoader } from 'components/ContentLoader/OrganizationContentLoader';
 import { Messages } from './ManageOrganization.messages';
 import { getStyles } from './ManageOrganization.styles';
 import { OrganizationView } from './OrganizationView';
@@ -140,7 +141,7 @@ export const ManageOrganizationPage: FC = () => {
         </header>
         <div data-testid="manage-organization-tabs-wrapper" className={tabsWrapperStyles}>
           {isOrgPending || isUserPending ? (
-            <Spinner />
+            <OrganizationContentLoader />
           ) : (
             <>
               <TabsBar>

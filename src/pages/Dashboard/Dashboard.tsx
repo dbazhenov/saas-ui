@@ -4,6 +4,7 @@ import { LinkButton, useStyles } from '@grafana/ui';
 import { PrivateLayout } from 'components/Layouts';
 import { GettingStarted } from 'components';
 import { getUserCompanyAction, getUserCompanyName } from 'store/auth';
+import { DashBoardContentLoader } from 'components/ContentLoader/DashboardContentLoader';
 import {
   getCurrentOrgName,
   getFirstOrgId,
@@ -16,6 +17,8 @@ import {
   getOrgTicketsAction,
   createServiceNowOrganizationAction,
   setOrgTicketsLoadingAction,
+  getOrgTickets,
+  getOrgTicketsPending,
 } from 'store/orgs';
 import { SupportTicketOverview } from 'components/SupportTicketOverview/SupportTicketOverview';
 import { getStyles } from './Dashboard.styles';
@@ -34,7 +37,9 @@ export const DashboardPage: FC = () => {
   const isPending = useSelector(getIsOrgPending);
   const currentOrgName = useSelector(getCurrentOrgName);
   const newTicketUrl = useSelector(getTicketUrl);
-  const [showGettingStarted, setShowGettingStarted] = useState<boolean>();
+  const [showGettingStarted, setShowGettingStarted] = useState<boolean>(false);
+  const tickets = useSelector(getOrgTickets);
+  const isLoadingTickets = useSelector(getOrgTicketsPending);
 
   useEffect(() => {
     if (!companyName) {
@@ -71,33 +76,41 @@ export const DashboardPage: FC = () => {
   }, [dispatch, orgId]);
 
   useEffect(() => {
-    setShowGettingStarted((!(companyName || orgId) || !inventory?.length) && !isPending);
-  }, [orgId, companyName, inventory?.length, isPending]);
+    setShowGettingStarted(
+      (!(companyName || orgId) || !inventory?.length) && !isPending && !isLoadingTickets && !tickets?.length,
+    );
+  }, [orgId, companyName, inventory?.length, isPending, isLoadingTickets, tickets?.length]);
 
   return (
     <PrivateLayout>
       <div className={styles.container} data-testid="dashboard-container">
-        <Contacts />
-        {showGettingStarted && <GettingStarted />}
-        <SupportTicketOverview />
-        {companyName && orgId && (
-          <section className={styles.ticketSection} data-testid="dashboard-ticket-section">
-            <header className={styles.ticketListHeader}>
-              <h4 className={styles.ticketSectionTitle}>{Messages.listOfTickets}</h4>
-              <LinkButton
-                target="_blank"
-                rel="noreferrer noopener"
-                className={styles.newTicketButton}
-                variant="primary"
-                href={newTicketUrl}
-              >
-                {Messages.openNewTicket}
-              </LinkButton>
-            </header>
-            <TicketList />
-          </section>
+        {isLoadingTickets ? (
+          <DashBoardContentLoader />
+        ) : (
+          <>
+            <Contacts />
+            {showGettingStarted ? <GettingStarted /> : <></>}
+            <SupportTicketOverview />
+            {companyName && orgId && (
+              <section className={styles.ticketSection} data-testid="dashboard-ticket-section">
+                <header className={styles.ticketListHeader}>
+                  <h4 className={styles.ticketSectionTitle}>{Messages.listOfTickets}</h4>
+                  <LinkButton
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className={styles.newTicketButton}
+                    variant="primary"
+                    href={newTicketUrl}
+                  >
+                    {Messages.openNewTicket}
+                  </LinkButton>
+                </header>
+                <TicketList />
+              </section>
+            )}
+            <AccountInfo />
+          </>
         )}
-        <AccountInfo />
       </div>
     </PrivateLayout>
   );
