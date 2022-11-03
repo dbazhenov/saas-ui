@@ -134,7 +134,7 @@ test.describe('Spec file for Sign Up tests', async () => {
       signUpPage.messages.verificationEmailSentTitle,
     );
     await expect(signUpPage.locators.registrationCompleteDesc).toHaveText(
-      signUpPage.messages.verificationEmailSentDesc,
+      signUpPage.messages.verificationEmailSentDesc(successUser.email),
     );
     // Verify that mailosaur have that email in the box.
     const activationLink = await getVerificationLink(successUser);

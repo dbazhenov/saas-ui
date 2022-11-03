@@ -5,6 +5,7 @@ import { setIn } from 'final-form';
 import { Form } from 'react-final-form';
 import * as yup from 'yup';
 import Accordion from 'components/Accordion/Accordion';
+import { Messages as ToSMessages } from 'components/OktaSignInWidget/TosCheckbox.messages';
 import { Messages as LoginMessages } from 'components/OktaSignInWidget/OktaSignInWidget.messages';
 import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';
 import { resourcesLinks } from 'components/SideMenu/SideMenu.constants';
@@ -181,7 +182,7 @@ const Activation = () => {
                   <CheckboxField
                     label={
                       <>
-                        {LoginMessages.iAgree}
+                        {ToSMessages.iAgree}
                         <a
                           href={TERMS_OF_SERVICE_URL}
                           target="_blank"
@@ -191,7 +192,7 @@ const Activation = () => {
                         >
                           {LoginMessages.tos}
                         </a>
-                        . {LoginMessages.iHaveRead}
+                        . {ToSMessages.iHaveRead}
                         <a
                           href={PRIVACY_PMM_URL}
                           target="_blank"
@@ -199,7 +200,7 @@ const Activation = () => {
                           data-testid="privacy-policy-link"
                           className={styles.externalLink}
                         >
-                          {LoginMessages.perconaPrivacyPolicy}
+                          {ToSMessages.perconaPrivacyPolicy}
                         </a>
                         .&nbsp;*
                       </>

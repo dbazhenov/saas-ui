@@ -20,7 +20,7 @@ interface Messages {
   readonly blankFieldError: string;
   readonly validationErrorAlert: string;
   readonly verificationEmailSentTitle: string;
-  readonly verificationEmailSentDesc: string;
+  readonly verificationEmailSentDesc: (email: string) => string;
   readonly activateEmailFooter: string;
 }
 
@@ -89,7 +89,7 @@ export class SignUpPage extends CommonPage {
     };
     this.messages = {
       verificationEmailSentTitle: 'Verification email sent',
-      verificationEmailSentDesc: 'To finish signing in, check your email.',
+      verificationEmailSentDesc: (email) => `To finish signing in, check your email (${email}).`,
       activateEmailFooter:
         'This is an automatically generated message by Okta. Replies are not monitored or answered.',
       emailAlreadyRegistered: 'An account with that Work Email already exists',
