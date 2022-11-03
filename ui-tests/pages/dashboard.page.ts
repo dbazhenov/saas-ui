@@ -1,5 +1,6 @@
 /* eslint-disable lines-between-class-members */
 import { expect, Locator, Page } from '@playwright/test';
+import AccountSection from '@tests/components/AccountInfo';
 import Contacts from '@tests/components/contacts';
 import EntitlementsModal from '@tests/components/entitlementsModal';
 import GettingStarted from '@tests/components/gettingStarted';
@@ -40,6 +41,7 @@ export class DashboardPage extends CommonPage {
   readonly contacts: Contacts;
   readonly gettingStarted: GettingStarted;
   readonly ticketOverview: TicketOverview;
+  readonly accountSection: AccountSection;
 
   constructor(page: Page) {
     super(page);
@@ -65,6 +67,7 @@ export class DashboardPage extends CommonPage {
     this.contacts = new Contacts(page);
     this.gettingStarted = new GettingStarted(page);
     this.ticketOverview = new TicketOverview(page);
+    this.accountSection = new AccountSection(page);
   }
 
   async verifyOpenNewTicketButton() {

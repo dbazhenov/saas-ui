@@ -67,7 +67,7 @@ export const AccountInfo: FC = () => {
               <span className={styles.cardPoint}>{Messages.name}</span> {firstName} {lastName}
             </p>
             {role && (
-              <p>
+              <p data-testid="account-info-user-role">
                 <span className={styles.cardPoint}>{Messages.role}</span> {role}
               </p>
             )}
@@ -91,7 +91,7 @@ export const AccountInfo: FC = () => {
               </>
             )}
             {isCustomer && (
-              <p className={styles.entitlementsWrapper}>
+              <p className={styles.entitlementsWrapper} data-testid="entitlements-row">
                 <span className={styles.cardPoint}>{Messages.entitlements}</span>
                 &nbsp;
                 <span data-testid="number-entitlements">{entitlements.length}</span>

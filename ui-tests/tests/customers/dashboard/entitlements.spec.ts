@@ -7,12 +7,16 @@ import { DashboardPage } from '@tests/pages/dashboard.page';
 import { SignInPage } from '@tests/pages/signIn.page';
 import { routeHelper } from '@api/helpers';
 import { endpoints } from '@tests/helpers/apiHelper';
+import { OrganizationPage } from '@tests/pages/organization.page';
+import { MembersPage } from '@tests/pages/members.page';
+import { UserRoles } from '@tests/support/enums/userRoles';
 
 test.describe('Spec file for percona customers entitlements tests', async () => {
   const defaultNumberOfEntitlements = 3;
   let customerFirstAdmin: User;
   let customerSecondAdmin: User;
   let customerTechnical: User;
+  let notCustomerUser: User;
   let adminToken: string;
 
   test.beforeEach(async ({ page }) => {
@@ -21,10 +25,13 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     customerFirstAdmin = getUser(serviceNowCredentials.contacts.admin1.email);
     customerSecondAdmin = getUser(serviceNowCredentials.contacts.admin2.email);
     customerTechnical = getUser(serviceNowCredentials.contacts.technical.email);
+    notCustomerUser = getUser();
 
     await oktaAPI.createUser(customerFirstAdmin, true);
     await oktaAPI.createUser(customerSecondAdmin, true);
     await oktaAPI.createUser(customerTechnical, true);
+    await oktaAPI.createUser(notCustomerUser, true);
+
     adminToken = await portalAPI.getUserAccessToken(customerFirstAdmin.email, customerFirstAdmin.password);
     await page.goto('/');
   });
@@ -39,6 +46,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     await oktaAPI.deleteUserByEmail(customerFirstAdmin.email);
     await oktaAPI.deleteUserByEmail(customerSecondAdmin.email);
     await oktaAPI.deleteUserByEmail(customerTechnical.email);
+    await oktaAPI.deleteUserByEmail(notCustomerUser.email);
   });
 
   test('SAAS-T210 - Verify user with invalid credentials can not see entitlements for his Org @customers @dashboard @entitlements', async ({
@@ -77,12 +85,12 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
 
     await test.step('2. Login on Portal and check Entitlements', async () => {
       await oktaAPI.loginByOktaApi(customerFirstAdmin, page);
-      await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText(
+      await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toHaveText(
         String(defaultNumberOfEntitlements),
       );
-      await dashboardPage.entitlementsModal.entitlementsButton.click();
+      await dashboardPage.entitlementsModal.elements.entitlementsButton.click();
       await dashboardPage.entitlementsModal.elements.body.waitFor({ state: 'visible' });
-      await expect(dashboardPage.entitlementsModal.entitlementContainer).toHaveCount(
+      await expect(dashboardPage.entitlementsModal.elements.entitlementContainer).toHaveCount(
         defaultNumberOfEntitlements,
       );
       await dashboardPage.entitlementsModal.buttons.close.click();
@@ -104,9 +112,42 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     test.step(
       '1. Navigate to Entitlements details on Portal and verify no entitlements are displayed for the user.',
       async () => {
-        await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText('0');
-        await dashboardPage.entitlementsModal.entitlementsButton.waitFor({ state: 'detached' });
+        await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toHaveText('0');
+        await dashboardPage.entitlementsModal.elements.entitlementsButton.waitFor({ state: 'detached' });
       },
     );
+  });
+
+  test('SAAS-T231 - Verify non-customer user is not able to see entitlements for the Percona customer organization @customers @dashboard @entitlements', async ({
+    page,
+  }) => {
+    const dashboardPage = new DashboardPage(page);
+    const membersPage = new MembersPage(page);
+    const organizationPage = new OrganizationPage(page);
+    const signInPage = new SignInPage(page);
+
+    await test.step(
+      '1. Navigate to the Members tab and invite user not in SN to the Percona Customer organization',
+      async () => {
+        await oktaAPI.loginByOktaApi(customerFirstAdmin, page);
+        await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
+        await dashboardPage.sideMenu.mainMenu.organization.click();
+        await organizationPage.locators.membersTab.click();
+        await membersPage.membersTable.inviteMembers.inviteMember(notCustomerUser.email, UserRoles.admin);
+        await membersPage.membersTable.verifyUserMembersTable(notCustomerUser, UserRoles.admin);
+        await membersPage.uiUserLogout();
+      },
+    );
+
+    await test.step('2. Log in as invited user not in SN and check the dashboard', async () => {
+      await signInPage.emailInput.waitFor({ state: 'visible' });
+      await oktaAPI.loginByOktaApi(notCustomerUser, page);
+
+      await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
+
+      await expect(dashboardPage.entitlementsModal.elements.entitlementsRow).toBeHidden();
+      await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toBeHidden();
+      await expect(dashboardPage.entitlementsModal.elements.entitlementsButton).toBeHidden();
+    });
   });
 });

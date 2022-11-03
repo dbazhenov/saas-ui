@@ -1,20 +1,23 @@
 /* eslint-disable lines-between-class-members */
-import { Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import ModalWindow from './modalWindow';
 
 export default class EntitlementsModal extends ModalWindow {
-  readonly page: Page;
-
-  readonly entitlementsButton: Locator;
-  readonly numberEntitlements: Locator;
-  readonly entitlementContainer: Locator;
-
   constructor(page: Page) {
     super(page);
-    this.page = page;
-
-    this.entitlementsButton = page.locator('//button[@data-testid="entitlements-button"]');
-    this.numberEntitlements = page.locator('//span[@data-testid="number-entitlements"]');
-    this.entitlementContainer = this.page.locator('//div[contains(@class, "collapse panel-container")]');
   }
+
+  messages = { ...this.messages };
+
+  elements = {
+    ...this.elements,
+    entitlementsRow: this.page.locator('//p[@data-testid="entitlements-row"]'),
+    entitlementsButton: this.page.locator('//button[@data-testid="entitlements-button"]'),
+    numberEntitlements: this.page.locator('//span[@data-testid="number-entitlements"]'),
+    entitlementContainer: this.page.locator('//div[contains(@class, "collapse panel-container")]'),
+  };
+
+  fields = { ...this.fields };
+
+  buttons = { ...this.buttons };
 }

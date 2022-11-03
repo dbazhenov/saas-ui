@@ -50,9 +50,36 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await dashboardPage.locators.gettingStartedContainer.waitFor({ state: 'visible' });
   });
 
-  test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page }) => {
+  test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page, context }) => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
+
+    await test.step('SAAS-T245 Verify user is able to see "Continue with.." buttons', async () => {
+      await expect(signInPage.continueGoogle).toHaveText(signInPage.continueGoogleLabel);
+      await expect(signInPage.continueGitHub).toHaveText(signInPage.continueGitHubLabel);
+
+      const [googlePage] = await Promise.all([
+        context.waitForEvent('page'),
+        signInPage.continueGoogle.click(),
+      ]);
+      const googleSigInPage = new SignInPage(googlePage);
+
+      await googleSigInPage.googleEmailField.waitFor({ state: 'visible', timeout: 60000 });
+
+      expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth/');
+      await googlePage.close();
+
+      const [gitHubPage] = await Promise.all([
+        context.waitForEvent('page'),
+        signInPage.continueGitHub.click(),
+      ]);
+      const gitHubSigInPage = new SignInPage(gitHubPage);
+
+      await gitHubSigInPage.gitHubEmailField.waitFor({ state: 'visible', timeout: 60000 });
+
+      expect(gitHubPage.url()).toContain('https://github.com/login');
+      await gitHubPage.close();
+    });
 
     await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
     await signInPage.signInButton.click();

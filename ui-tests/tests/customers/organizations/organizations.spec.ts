@@ -9,6 +9,7 @@ import { OrganizationPage } from '@pages/organization.page';
 import { MembersPage } from '@pages/members.page';
 import { UserRoles } from '@support/enums/userRoles';
 import { getUser } from '@helpers/portalHelper';
+import { DashboardPage } from '@tests/pages/dashboard.page';
 
 test.describe('Spec file for organization tests for customers', async () => {
   let serviceNowCredentials: ServiceNowResponse;
@@ -48,10 +49,17 @@ test.describe('Spec file for organization tests for customers', async () => {
   }) => {
     const signInPage = new SignInPage(page);
     const organizationPage = new OrganizationPage(page);
+    const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(customerAdmin1User, page);
 
     await signInPage.toast.checkToastMessage(signInPage.customerOrgCreated);
+
+    await test.step("SAAS-T255 Verify user's role is displayed on Portal", async () => {
+      await expect(dashboardPage.accountSection.elements.userRole).toContainText(UserRoles.admin, {
+        timeout: 30000,
+      });
+    });
     await signInPage.sideMenu.mainMenu.organization.click();
     await organizationPage.locators.organizationName.waitFor({ state: 'visible' });
 
@@ -95,10 +103,18 @@ test.describe('Spec file for organization tests for customers', async () => {
     );
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
+    const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(customerTechnicalUser, page);
 
     await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
+
+    await test.step("SAAS-T255 Verify user's role is displayed on Portal", async () => {
+      await expect(dashboardPage.accountSection.elements.userRole).toContainText(UserRoles.admin, {
+        timeout: 30000,
+      });
+    });
+
     await organizationPage.sideMenu.mainMenu.organization.click();
     await organizationPage.locators.organizationName.waitFor({ state: 'visible', timeout: 60000 });
     const orgName = await organizationPage.locators.organizationName.textContent();
