@@ -1,47 +1,30 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = (theme: GrafanaTheme) => {
-  const { border, colors, spacing, typography } = theme;
+export const getStyles = ({ palette, typography, spacing }: Theme) => ({
+  container: css`
+    color: ${palette.text.primary};
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  `,
+  header: css`
+    align-items: center;
+    display: flex;
+    margin: 0 0 ${spacing(2)};
 
-  return {
-    container: css`
-      color: ${colors.text};
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-
-      header {
-        align-items: center;
-        display: flex;
-        font-weight: ${typography.weight.regular};
-        font-size: ${typography.heading.h2};
-        margin: 0 0 ${spacing.md};
-
-        svg {
-          height: 28px;
-          margin-right: ${spacing.md};
-        }
-      }
-    `,
-    disabledTab: css`
-      cursor: not-allowed;
-
-      > * {
-        color: ${colors.linkDisabled};
-        pointer-events: none;
-      }
-    `,
-    tabsWrapperLoading: css`
-      align-items: center;
-      display: flex;
-      justify-content: center;
-      height: 350px;
-    `,
-    tabsWrapper: css`
-      background-color: ${colors.pageHeaderBg};
-      border-radius: ${border.radius.lg};
-      padding: ${spacing.lg};
-    `,
-  };
-};
+    svg {
+      height: 28px;
+      margin-right: ${spacing(2)};
+    }
+  `,
+  tabsWrapperLoading: css`
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: 350px;
+  `,
+  tabsWrapper: css`
+    padding: ${spacing(3)};
+  `,
+});

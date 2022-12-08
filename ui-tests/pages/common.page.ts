@@ -1,6 +1,7 @@
 /* eslint-disable lines-between-class-members */
 import { Locator, Page } from '@playwright/test';
 import MarketingBanner from '@tests/components/MarketingBanner';
+import { UserDropDown } from '@tests/components/UserDropdown';
 import SideMenu from '../components/sideMenu';
 import Toast from '../components/toast';
 
@@ -10,92 +11,41 @@ interface UserRoles {
 }
 
 export class CommonPage {
-  readonly page: Page;
-  readonly sideMenu: SideMenu;
+  // eslint-disable-next-line no-empty-function
+  constructor(readonly page: Page) {}
+  // Components
+  sideMenu = new SideMenu(this.page);
+  toast = new Toast(this.page);
+  marketingBanner = new MarketingBanner(this.page);
+  userDropdown = new UserDropDown(this.page);
 
-  readonly customerOrgCreated: string;
-  readonly requiredField: string;
+  // Locators
+  perconaLogo = this.page.locator('//a[@data-testid="menu-bar-home-link"]');
+  themeSwitch = this.page.locator('//button[@data-testid="theme-switch"]');
 
-  readonly documentationLink: string;
+  // Messages
+  customerOrgCreated = 'We found your organization on Percona Customer Portal and used it';
+  requiredField = (field: string) => `${field} is a required field`;
 
-  readonly modalCloseButton: Locator;
-  readonly userDropdownToggle: Locator;
-  readonly userDropdownMenuLogout: Locator;
-  readonly userDropdownContainer: Locator;
-  readonly perconaLogo: Locator;
+  userRoles: UserRoles = { admin: 'Admin', technical: 'Technical' };
 
-  readonly userRoles: UserRoles;
-  readonly userDropdownProfile: Locator;
-  readonly themeSwitch: Locator;
-
-  readonly toast: Toast;
-  readonly marketingBanner: MarketingBanner;
-
-  readonly routes;
-
-  constructor(page: Page) {
-    this.page = page;
-    this.sideMenu = new SideMenu(page);
-    this.customerOrgCreated = 'We found your organization on Percona Customer Portal and used it';
-    this.requiredField = 'Required field';
-
-    this.modalCloseButton = this.page.locator('//div[@role="modal-close-button"]');
-    this.userDropdownToggle = this.page.locator('//div[@data-testid="menu-bar-profile-dropdown-toggle"]');
-    this.userDropdownContainer = this.page.locator('//div[@data-testid="dropdown-menu-container"]');
-    this.userDropdownMenuLogout = this.page.locator(
-      '//span[@data-testid="menu-bar-profile-dropdown-logout"]',
-    );
-    this.perconaLogo = page.locator('//a[@data-testid="menu-bar-home-link"]');
-    this.userDropdownProfile = this.userDropdownContainer.locator(
-      '// span[@data-testid="menu-bar-profile-dropdown-profile"]',
-    );
-    this.userRoles = { admin: 'Admin', technical: 'Technical' };
-    this.themeSwitch = page.locator('//div[@data-testid="theme-switch"]');
-
-    this.toast = new Toast(page);
-    this.marketingBanner = new MarketingBanner(page);
-    this.routes = {
-      instances: '/pmm-instances',
-      login: '/login',
-      loginCallback: '/login/callback',
-      logout: '/logout',
-      organization: '/organization',
-      profile: '/profile',
-      activation: '/activation',
-      root: '/',
-      welcome: '/welcome',
-      dashboard: '/dashboard',
-      kubernetes: '/kubernetes',
-    };
-  }
-
-  uiUserLogout = async () => {
-    await this.openUserDropdown();
-    await this.userDropdownMenuLogout.click();
-  };
-
-  openUserProfile = async () => {
-    await this.openUserDropdown();
-    await this.userDropdownProfile.click();
+  routes = {
+    instances: '/pmm-instances',
+    login: '/login',
+    loginCallback: '/login/callback',
+    logout: '/logout',
+    organization: '/organization',
+    profile: '/profile',
+    activation: '/activation',
+    root: '/',
+    welcome: '/welcome',
+    dashboard: '/dashboard',
+    kubernetes: '/kubernetes',
   };
 
   waitForPortalLoaded = async () => {
     await this.perconaLogo.waitFor({ state: 'visible', timeout: 60000 });
-    await this.userDropdownToggle.waitFor({ state: 'visible', timeout: 60000 });
-  };
-
-  openUserDropdown = async () => {
-    // eslint-disable-next-line no-plusplus
-    for (let index = 0; index < 5; index++) {
-      // eslint-disable-next-line no-await-in-loop
-      await this.userDropdownToggle.click();
-      // eslint-disable-next-line no-await-in-loop
-      if (await this.userDropdownContainer.isVisible()) break;
-
-      if (index === 4) {
-        throw new Error('User dropdown was not displayed');
-      }
-    }
+    await this.userDropdown.toggle.waitFor({ state: 'visible', timeout: 60000 });
   };
 
   waitForEnabled = async (locator: Locator, retries = 5) => {

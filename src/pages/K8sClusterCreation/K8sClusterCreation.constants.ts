@@ -5,6 +5,8 @@ export const PMM_DBAAS_DOC_LINK =
 
 export const OPERATORS_DOC_LINK = 'https://www.percona.com/software/percona-kubernetes-operators#install';
 
+export const CLUSTER_EXPIRATION_DELAY = 10800000; // 3 hours
+
 export const DATE_LOCALE_OPTIONS: Intl.DateTimeFormatOptions = {
   day: '2-digit',
   year: 'numeric',

@@ -1,35 +1,27 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = (theme: GrafanaTheme) => {
-  const { colors, isLight, spacing, typography } = theme;
+export const getStyles = ({ palette, spacing }: Theme) => ({
+  header: css`
+    align-items: center;
+    display: flex;
+    margin: ${spacing(7)} 0 ${spacing(4)} !important;
+  `,
+  container: css`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    line-height: 2em;
+    margin-bottom: ${spacing(4)};
+    padding: 0 ${spacing(4)};
 
-  const borderColor = isLight ? colors.border1 : colors.border2;
+    > :not(:first-child) {
+      margin-top: ${spacing(3)};
+    }
 
-  return {
-    header: css`
-      align-items: center;
-      display: flex;
-      font-weight: ${typography.weight.regular};
-      font-size: ${typography.heading.h2};
-      margin: ${spacing.base * 7}px 0 ${spacing.xl};
-    `,
-    container: css`
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 2em;
-      margin-bottom: ${spacing.xl};
-      padding: 0 ${spacing.lg};
-
-      > :not(:first-child) {
-        margin-top: ${spacing.lg};
-      }
-
-      > :not(:last-child) {
-        border-bottom: 1px solid ${borderColor};
-        padding-bottom: ${spacing.lg};
-      }
-    `,
-  };
-};
+    > :not(:last-child) {
+      border-bottom: 1px solid ${palette.divider};
+      padding-bottom: ${spacing(3)};
+    }
+  `,
+});

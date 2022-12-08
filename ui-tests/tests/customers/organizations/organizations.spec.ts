@@ -61,9 +61,9 @@ test.describe('Spec file for organization tests for customers', async () => {
       });
     });
     await signInPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.locators.organizationName.waitFor({ state: 'visible' });
+    await organizationPage.organizationName.waitFor({ state: 'visible' });
 
-    await expect(organizationPage.locators.organizationName).toHaveText(serviceNowCredentials.account.name);
+    await expect(organizationPage.organizationName).toHaveText(serviceNowCredentials.account.name);
   });
 
   test('SAAS-T222 Verify Percona Customer account user is not able to update organization name @customers @organizations', async ({
@@ -77,11 +77,11 @@ test.describe('Spec file for organization tests for customers', async () => {
     await signInPage.toast.checkToastMessage(signInPage.customerOrgCreated);
     await signInPage.sideMenu.mainMenu.organization.click();
 
-    await organizationPage.locators.manageOrganizationContainer.waitFor({
+    await organizationPage.manageOrganizationContainer.waitFor({
       state: 'visible',
       timeout: 10000,
     });
-    await organizationPage.locators.editOrgButton.waitFor({
+    await organizationPage.editOrgButton.waitFor({
       state: 'detached',
       timeout: 10000,
     });
@@ -116,8 +116,8 @@ test.describe('Spec file for organization tests for customers', async () => {
     });
 
     await organizationPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.locators.organizationName.waitFor({ state: 'visible', timeout: 60000 });
-    const orgName = await organizationPage.locators.organizationName.textContent();
+    await organizationPage.organizationName.waitFor({ state: 'visible', timeout: 60000 });
+    const orgName = await organizationPage.organizationName.textContent();
 
     const technicalToken = await portalAPI.getUserAccessToken(
       customerTechnicalUser.email,
@@ -126,8 +126,30 @@ test.describe('Spec file for organization tests for customers', async () => {
     const org = await portalAPI.getOrg(technicalToken);
 
     expect(orgName).toEqual(org.orgs[0].name);
-    await organizationPage.locators.membersTab.click();
+    await organizationPage.membersTab.click();
 
     await membersPage.membersTable.verifyUserMembersTable(customerTechnicalUser, UserRoles.technical);
+  });
+
+  test('SAAS-T218 Verify Manage Organization view @customers @organizations @members', async ({ page }) => {
+    const organizationPage = new OrganizationPage(page);
+    const membersPage = new MembersPage(page);
+
+    await oktaAPI.loginByOktaApi(customerTechnicalUser, page);
+
+    await test.step('1. Click on View Organization and check Manage Organization view', async () => {
+      await organizationPage.sideMenu.mainMenu.organization.click();
+      await organizationPage.manageOrganizationContainer.waitFor({ state: 'visible' });
+    });
+
+    await test.step('2. Verify navigation to members tab', async () => {
+      await organizationPage.membersTab.click();
+      await membersPage.container.waitFor({ state: 'visible' });
+    });
+
+    await test.step('2. Verify navigation to organization tab', async () => {
+      await organizationPage.organizationTab.click();
+      await organizationPage.manageOrganizationContainer.waitFor({ state: 'visible' });
+    });
   });
 });

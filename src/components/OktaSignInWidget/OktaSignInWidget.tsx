@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 // @ts-ignore
 import OktaSignIn from '@okta/okta-signin-widget';
-import { useStyles } from '@grafana/ui';
+import { useStyles } from 'core/utils';
 import { getStyles } from 'pages/Login/Login.styles';
 import ReactDOM from 'react-dom';
 import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';

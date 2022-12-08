@@ -37,4 +37,11 @@ export const Messages = {
   help: 'Help Center',
   activateAccount: 'Activate Account',
   successfulActivation: 'Your account has been successfully activated.',
+  somethingWentWrong: 'We are sorry, but something went wrong.',
+  tokenExpired: {
+    title: 'Token expired',
+    description:
+      'Your account activation link is not valid. This can happen if you click on the activation link after creating the account, the activation link has expired or the link URL is wrong.\nTo request a new token, contact your administrator.',
+  },
+  goToHome: 'Go to the Homepage',
 };

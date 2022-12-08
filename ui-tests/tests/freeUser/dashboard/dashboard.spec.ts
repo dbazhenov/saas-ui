@@ -55,7 +55,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
 
     await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.locators.ticketSection.waitFor({ state: 'detached', timeout: 10000 });
+    await dashboardPage.ticketSection.waitFor({ state: 'detached', timeout: 10000 });
   });
 
   test('SAAS-T225 Verify Free account user is able to view Contacts (static) @freeUser @dashboard', async ({

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import { Provider, ReactReduxContext, useSelector } from 'react-redux';
@@ -6,7 +6,6 @@ import { ConnectedRouter } from 'connected-react-router';
 import { css } from 'emotion';
 import { Security } from '@okta/okta-react';
 import { toRelativeUrl } from '@okta/okta-auth-js';
-import { ThemeContext } from '@grafana/ui';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import { Main } from 'components';
@@ -14,8 +13,15 @@ import { store } from 'store';
 import { getCurrentTheme } from 'store/theme';
 import { history, oktaAuth } from 'core';
 import { ENVIRONMENT, SENTRY_DSN, SENTRY_TRACES_SAMPLE_RATE } from 'core/constants';
+import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
+import { perconaDarkTheme, perconaLightTheme } from './perconaTheme';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import '@fontsource/roboto/100.css';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './styles/global.css';
 /**
  * NOTE: @grafana/ui does not seem to import font-awesome icons, so no easy
@@ -49,8 +55,14 @@ const restoreOriginalUri = async (_: any, originalUri: string) => {
 const App = () => {
   const theme = useSelector(getCurrentTheme);
 
+  const perconaTheme = useMemo(
+    () => createTheme(theme.isLight ? perconaLightTheme : perconaDarkTheme),
+    [theme],
+  );
+
   return (
-    <ThemeContext.Provider value={theme}>
+    <ThemeProvider theme={perconaTheme}>
+      <CssBaseline />
       <ConnectedRouter context={ReactReduxContext} history={history}>
         <Security oktaAuth={oktaAuth} onAuthRequired={onAuthRequired} restoreOriginalUri={restoreOriginalUri}>
           <Main />
@@ -70,7 +82,7 @@ const App = () => {
         draggable
         pauseOnHover
       />
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 };
 

@@ -1,52 +1,84 @@
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 import { css } from 'emotion';
+import { blueGrey } from '@mui/material/colors';
 
-export const getStyles = ({ colors, spacing, typography, palette }: GrafanaTheme) => ({
+export const getStyles = ({ spacing, typography, palette }: Theme) => ({
   wrapper: css`
     display: flex;
     flex: 1;
     justify-content: center;
-    background-color: ${colors.bg2};
     height: 100%;
     min-height: 100vh;
-    padding: ${spacing.lg};
+    padding: ${spacing(2)};
+  `,
+  wrapperInvalid: css`
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    height: 100%;
+    min-height: 100vh;
+    padding: ${spacing(4)};
   `,
   container: css`
     flex: 1;
-    max-width: 1100px;
-    margin-top: 70px;
+    max-width: ${spacing(137)};
+    margin-top: ${spacing(9)};
+  `,
+  containerInvalid: css`
+    flex: 1;
+    max-width: ${spacing(100)};
+    margin-top: ${spacing(10)};
+  `,
+  flexColumn: css`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
   `,
   h1: css`
     padding: 0;
     margin: 0;
-    font-size: 32px;
-    color: ${colors.textHeading};
+    font-size: 32px !important;
+    line-height: 32px !important;
+    font-weight: ${typography.fontWeightBold} !important;
   `,
   h2: css`
     padding: 0;
     margin: 0;
     margin-top: -4px;
-    margin-bottom: 35px;
-    font-weight: ${typography.weight.light};
-    font-size: 32px;
-    color: ${colors.text};
+    margin-bottom: ${spacing(4)} !important;
+    font-weight: ${typography.fontWeightLight} !important;
+    font-size: 32px !important;
   `,
   content: css`
-    padding: ${spacing.lg};
-    background-color: ${colors.bg2};
+    padding: ${spacing(3)};
+    background-color: ${blueGrey[50]};
 
     input {
       max-width: 300px;
     }
   `,
+  title: css`
+    display: inline-block;
+    font-size: 26px !important;
+    font-weight: ${typography.fontWeightMedium} !important;
+    margin: ${spacing(1)} 0 ${spacing(1)} 0 !important;
+  `,
+  description: css`
+    padding: ${spacing(1)} 0 0 0 !important;
+    color: ${palette.text.primary};
+    margin-bottom: ${spacing(2)} !important;
+  `,
   columns: css`
     display: flex;
-    margin-bottom: ${spacing.md};
-    gap: ${spacing.lg};
+    margin-bottom: ${spacing(2)};
+    gap: ${spacing(3)};
   `,
   firstColumn: css`
     flex: 1;
-    max-width: ${600 + spacing.lg};
+    max-width: ${600 + spacing(3)};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing(1)};
   `,
   minWidth: css`
     width: fit-content;
@@ -55,7 +87,7 @@ export const getStyles = ({ colors, spacing, typography, palette }: GrafanaTheme
   row: css`
     display: flex;
     flex: 1;
-    gap: ${spacing.lg};
+    gap: ${spacing(3)};
     & > * {
       flex: 1;
       max-width: 300px;
@@ -68,33 +100,22 @@ export const getStyles = ({ colors, spacing, typography, palette }: GrafanaTheme
   `,
   passwordListTitle: css`
     line-height: 20px;
-    font-size: ${typography.size.sm};
-    font-weight: ${typography.weight.semibold};
-    color: ${colors.formLabel};
+    font-weight: ${typography.fontWeightMedium} !important;
     margin: 0;
   `,
   infoIcon: css`
-    font-size: ${typography.size.lg};
-    font-weight: ${typography.weight.bold};
+    font-size: 24px !important;
+    font-weight: ${typography.fontWeightMedium} !important;
     cursor: default;
     user-select: none;
   `,
   passwordList: css`
-    margin-left: ${spacing.lg};
+    margin-left: ${spacing(3)};
     line-height: 18px;
-    font-size: ${typography.size.sm};
-    color: ${colors.formLabel};
-  `,
-  checkbox: css`
-    max-width: 650px;
-    margin-bottom: 5px !important;
-
-    & > div {
-      display: none;
-    }
+    font-size: 12px !important;
   `,
   externalLink: css`
-    color: ${colors.linkExternal};
+    color: ${palette.primary.main};
   `,
   formFooter: css`
     display: flex;
@@ -102,19 +123,23 @@ export const getStyles = ({ colors, spacing, typography, palette }: GrafanaTheme
     justify-content: space-between;
     align-items: center;
   `,
-  help: css`
-    color: ${colors.linkExternal};
-    text-decoration: none;
-  `,
   helpIcon: css`
-    border: 1px solid ${colors.linkExternal};
+    border: 1px solid ${palette.primary.main} !important;
     border-radius: 100%;
-    font-size: ${typography.size.xs};
-    font-weight: ${typography.weight.bold};
+    font-size: 12px !important;
+    font-weight: ${typography.fontWeightBold} !important;
     text-align: center;
-    line-height: ${typography.size.sm};
+    line-height: 12px;
     width: 14px;
     padding-left: 1px;
     user-select: none;
+  `,
+  center: css`
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  `,
+  goToHome: css`
+    margin-top: ${spacing(2)} !important;
   `,
 });

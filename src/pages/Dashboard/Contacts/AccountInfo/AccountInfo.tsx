@@ -1,7 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, LinkButton, useStyles } from '@grafana/ui';
-import { Overlay } from '@percona/platform-core';
+import { LinkButton } from '@grafana/ui';
+import { useStyles } from 'core';
+import { IconButton, Typography } from '@mui/material';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+
 import { getAuth, getUserOrgRole, getIsPerconaCustomer } from 'store/auth';
 import {
   getCustomerSuccessContact,
@@ -61,52 +64,56 @@ export const AccountInfo: FC = () => {
     <>
       <section className={styles.cardsContainer}>
         <div className={styles.card} data-testid="account-section">
-          <Overlay className={styles.cardOverlay}>
-            <p className={styles.cardTitle}>{Messages.yourAccount}</p>
-            <p>
+          <Typography className={styles.cardTitle} variant="h6">
+            {Messages.yourAccount}
+          </Typography>
+          <p className={isCustomer ? styles.noBottomMargin : undefined}>
+            <Typography>
               <span className={styles.cardPoint}>{Messages.name}</span> {firstName} {lastName}
-            </p>
+            </Typography>
             {role && (
-              <p data-testid="account-info-user-role">
+              <Typography data-testid="account-info-user-role">
                 <span className={styles.cardPoint}>{Messages.role}</span> {role}
-              </p>
+              </Typography>
             )}
-            <p>
+            <Typography>
               <span className={styles.cardPoint}>{Messages.accountType}</span>
               &nbsp;
               {getAccountType(isCustomer, !!CSContact.name, isPending)}
-            </p>
-            {!isPending && !isCustomer && (
-              <>
-                <p>{Messages.perconaExperts}</p>
-                <LinkButton
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className={styles.contactBtn}
-                  variant="primary"
-                  href={LINKS.contactUs}
+            </Typography>
+          </p>
+          {!isPending && !isCustomer && (
+            <>
+              <Typography className={styles.paragraph}>{Messages.perconaExperts}</Typography>
+              <LinkButton
+                target="_blank"
+                rel="noreferrer noopener"
+                className={styles.contactBtn}
+                variant="primary"
+                href={LINKS.contactUs}
+              >
+                {Messages.contactUs}
+              </LinkButton>
+            </>
+          )}
+          {isCustomer && (
+            <p className={styles.entitlementsWrapper} data-testid="entitlements-row">
+              <span className={styles.cardPoint}>{Messages.entitlements}</span>
+              &nbsp;
+              <span data-testid="number-entitlements">{entitlements.length}</span>
+              {entitlements.length ? (
+                <IconButton
+                  name="list-ul"
+                  size="small"
+                  className={styles.icon}
+                  onClick={() => setIsEntilementsVisible(true)}
+                  data-testid="entitlements-button"
                 >
-                  {Messages.contactUs}
-                </LinkButton>
-              </>
-            )}
-            {isCustomer && (
-              <p className={styles.entitlementsWrapper} data-testid="entitlements-row">
-                <span className={styles.cardPoint}>{Messages.entitlements}</span>
-                &nbsp;
-                <span data-testid="number-entitlements">{entitlements.length}</span>
-                {entitlements.length ? (
-                  <IconButton
-                    name="list-ul"
-                    size="lg"
-                    className={styles.icon}
-                    onClick={() => setIsEntilementsVisible(true)}
-                    data-testid="entitlements-button"
-                  />
-                ) : null}
-              </p>
-            )}
-          </Overlay>
+                  <FormatListBulletedIcon className={styles.formatListBulletedIcon} />
+                </IconButton>
+              ) : null}
+            </p>
+          )}
         </div>
         {isEntitlementsVisible && (
           <EntitlementsModal entitlements={entitlements} onClose={() => setIsEntilementsVisible(false)} />

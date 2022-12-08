@@ -1,26 +1,23 @@
 /* eslint-disable no-magic-numbers */
 import React, { FC, useMemo } from 'react';
-import { useStyles } from '@grafana/ui';
+import { useStyles } from 'core/utils';
+import Typography from '@mui/material/Typography';
 import { Pie } from 'components/Charts/Pie';
 import { getOrgTickets, getOrgTicketsPending } from 'store/orgs';
 import { useSelector } from 'react-redux';
 import { color, interpolate } from 'd3';
 import { IPieItem, PieTypes } from 'components/Charts/Pie/Pie.types';
-import { Skeleton } from 'components/Skeleton';
 import { Legend } from './Legend';
 import { getStyles } from './SupportTicketOverview.styles';
 import { Messages } from './SupportTicketOverview.messages';
 import { ICategory } from './SupportTicketOverview.types';
+import { DOUGHNUT_WIDTH, PIE_SIZE } from './SupportTicketOverview.constants';
 
 const addIfNotInArray = (arr: string[], item: string) => {
   const isInArray = arr.find((arrItem) => arrItem === item);
 
   return isInArray ? arr : [...arr, item];
 };
-
-const PIE_SIZE = 200;
-const DOUGHNUT_WIDTH = 30;
-const SKELETON_HEIGHT = 230;
 
 const range = interpolate('#e3df00', '#007be0');
 
@@ -89,31 +86,27 @@ export const SupportTicketOverview: FC = () => {
 
   return (
     <section className={styles.marginSection} data-testid="ticket-overview-section-container">
-      <h4 className={styles.headerFont}>{Messages.header}</h4>
+      <Typography className={styles.headerFont} variant="h6">
+        {Messages.header}
+      </Typography>
       <div className={styles.container}>
-        {loading ? (
-          <Skeleton height={SKELETON_HEIGHT} />
-        ) : (
-          <div className={styles.containerPadding} data-testid="overview">
-            <Legend values={computedItems} />
-            <Pie
-              values={pieValues}
-              size={PIE_SIZE}
-              type={PieTypes.DOUGHNUT}
-              width={DOUGHNUT_WIDTH}
-              // eslint-disable-next-line react/jsx-curly-newline
-              centeredElement={
-                <div className={styles.centeredElement}>
-                  <strong data-testid="total-ticket-number">
-                    {computedItems.reduce((acc, item) => acc + item.ammount, 0)}
-                  </strong>
-                  <p>{Messages.totalTickets}</p>
-                </div>
-                // eslint-disable-next-line react/jsx-curly-newline
-              }
-            />
-          </div>
-        )}
+        <div className={styles.containerPadding} data-testid="overview">
+          <Legend values={computedItems} />
+          <Pie
+            values={pieValues}
+            size={PIE_SIZE}
+            type={PieTypes.DOUGHNUT}
+            width={DOUGHNUT_WIDTH}
+            centeredElement={
+              <div className={styles.centeredElement}>
+                <Typography component="strong" data-testid="total-ticket-number">
+                  {computedItems.reduce((acc, item) => acc + item.ammount, 0)}
+                </Typography>
+                <Typography>{Messages.totalTickets}</Typography>
+              </div>
+            }
+          />
+        </div>
       </div>
     </section>
   );

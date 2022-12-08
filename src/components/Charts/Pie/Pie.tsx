@@ -1,7 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import React, { FC, useMemo } from 'react';
 import { arc, pie as d3pie } from 'd3';
-import { useStyles } from '@grafana/ui';
+import { useStyles } from 'core';
 import { getStyles } from './Pie.styles';
 import { IPieItem, IPie } from './Pie.types';
 

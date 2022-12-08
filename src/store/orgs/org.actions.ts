@@ -353,7 +353,7 @@ export const clearBulkInvite = createAsyncThunk<BulkInviteForm, void>(
     invitedUsers: [
       {
         username: '',
-        role: ROLES.find((role) => role.value === MemberRole.technical)!,
+        role: ROLES.find((role) => role.value === MemberRole.technical)!.value,
         error: '',
       },
     ],

@@ -8,17 +8,16 @@ import { getUser } from '@helpers/portalHelper';
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
 
-  test.beforeAll(async () => {
+  test.beforeEach(async ({ page }) => {
     adminUser = getUser();
     await oktaAPI.createUser(adminUser, true);
-  });
-
-  test.afterAll(async () => {
-    await oktaAPI.deleteUserByEmail(adminUser.email);
-  });
-
-  test.beforeEach(async ({ page }) => {
     await page.goto('/');
+  });
+
+  test.afterEach(async () => {
+    if (await oktaAPI.getUser(adminUser.email)) {
+      await oktaAPI.deleteUserByEmail(adminUser.email);
+    }
   });
 
   test('SAAS-T251 - Verify handling of status 401 @auth', async ({ page }) => {
@@ -47,46 +46,49 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await signInPage.waitForPortalLoaded();
     expect(page.url()).toContain(baseURL);
 
-    await dashboardPage.locators.gettingStartedContainer.waitFor({ state: 'visible' });
+    await dashboardPage.gettingStartedContainer.waitFor({ state: 'visible' });
   });
 
-  test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page, context }) => {
-    const signInPage = new SignInPage(page);
-    const dashboardPage = new DashboardPage(page);
+  if (process.env.CI) {
+    // Test Fails on local, runs only in CI.
+    test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page, context }) => {
+      const signInPage = new SignInPage(page);
+      const dashboardPage = new DashboardPage(page);
 
-    await test.step('SAAS-T245 Verify user is able to see "Continue with.." buttons', async () => {
-      await expect(signInPage.continueGoogle).toHaveText(signInPage.continueGoogleLabel);
-      await expect(signInPage.continueGitHub).toHaveText(signInPage.continueGitHubLabel);
+      await test.step('SAAS-T245 Verify user is able to see "Continue with.." buttons', async () => {
+        await expect(signInPage.continueGoogle).toHaveText(signInPage.continueGoogleLabel);
+        await expect(signInPage.continueGitHub).toHaveText(signInPage.continueGitHubLabel);
 
-      const [googlePage] = await Promise.all([
-        context.waitForEvent('page'),
-        signInPage.continueGoogle.click(),
-      ]);
-      const googleSigInPage = new SignInPage(googlePage);
+        const [googlePage] = await Promise.all([
+          context.waitForEvent('page'),
+          signInPage.continueGoogle.click(),
+        ]);
+        const googleSigInPage = new SignInPage(googlePage);
 
-      await googleSigInPage.googleEmailField.waitFor({ state: 'visible', timeout: 60000 });
+        await googleSigInPage.googleEmailField.waitFor({ state: 'visible', timeout: 60000 });
 
-      expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth/');
-      await googlePage.close();
+        expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth/');
+        await googlePage.close();
 
-      const [gitHubPage] = await Promise.all([
-        context.waitForEvent('page'),
-        signInPage.continueGitHub.click(),
-      ]);
-      const gitHubSigInPage = new SignInPage(gitHubPage);
+        const [gitHubPage] = await Promise.all([
+          context.waitForEvent('page'),
+          signInPage.continueGitHub.click(),
+        ]);
+        const gitHubSigInPage = new SignInPage(gitHubPage);
 
-      await gitHubSigInPage.gitHubEmailField.waitFor({ state: 'visible', timeout: 60000 });
+        await gitHubSigInPage.gitHubEmailField.waitFor({ state: 'visible', timeout: 60000 });
 
-      expect(gitHubPage.url()).toContain('https://github.com/login');
-      await gitHubPage.close();
+        expect(gitHubPage.url()).toContain('https://github.com/login');
+        await gitHubPage.close();
+      });
+
+      await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
+      await signInPage.signInButton.click();
+      await signInPage.signInErrorContainer.waitFor({ state: 'visible' });
+      await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);
+      expect(page.url()).toContain(dashboardPage.routes.login);
+
+      await dashboardPage.gettingStartedContainer.waitFor({ state: 'detached' });
     });
-
-    await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
-    await signInPage.signInButton.click();
-    await signInPage.signInErrorContainer.waitFor({ state: 'visible' });
-    await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);
-    expect(page.url()).toContain(dashboardPage.routes.login);
-
-    await dashboardPage.locators.gettingStartedContainer.waitFor({ state: 'detached' });
-  });
+  }
 });

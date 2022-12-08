@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LinkButton, useStyles } from '@grafana/ui';
+import { useStyles } from 'core';
+import { Button, Typography } from '@mui/material';
 import { PrivateLayout } from 'components/Layouts';
 import { GettingStarted } from 'components';
 import { getUserCompanyAction, getUserCompanyName } from 'store/auth';
@@ -94,16 +95,18 @@ export const DashboardPage: FC = () => {
             {companyName && orgId && (
               <section className={styles.ticketSection} data-testid="dashboard-ticket-section">
                 <header className={styles.ticketListHeader}>
-                  <h4 className={styles.ticketSectionTitle}>{Messages.listOfTickets}</h4>
-                  <LinkButton
+                  <Typography className={styles.ticketSectionTitle} variant="h6">
+                    {Messages.listOfTickets}
+                  </Typography>
+                  <Button
                     target="_blank"
                     rel="noreferrer noopener"
                     className={styles.newTicketButton}
-                    variant="primary"
+                    variant="contained"
                     href={newTicketUrl}
                   >
                     {Messages.openNewTicket}
-                  </LinkButton>
+                  </Button>
                 </header>
                 <TicketList />
               </section>

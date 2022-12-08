@@ -15,7 +15,7 @@ export enum MemberStatus {
 }
 
 export interface EditMemberFormFields {
-  role: SelectableValue<MemberRole>;
+  role: MemberRole;
   email: string;
   name: string;
 }
@@ -39,7 +39,7 @@ export interface BulkInviteForm {
 
 export interface BulkInviteFormFields {
   username: string;
-  role: SelectableValue<MemberRole>;
+  role: MemberRole;
   error: string;
 }
 

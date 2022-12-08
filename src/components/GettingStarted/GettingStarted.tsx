@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { useStyles } from '@grafana/ui';
+import { useStyles } from 'core/utils';
+import { Typography } from '@mui/material';
 import { getStyles } from './GettingStarted.styles';
 import { GettingStartedPmmSection } from './GettingStartedPmmSection';
 import { GettingStartedOrgSection } from './GettingStartedOrgSection';
@@ -10,7 +11,9 @@ export const GettingStarted: FC = () => {
 
   return (
     <>
-      <header className={styles.header}>{Messages.getStarted}</header>
+      <Typography variant="h5" className={styles.header}>
+        {Messages.getStarted}
+      </Typography>
       <div data-testid="getting-started-container" className={styles.container}>
         <GettingStartedOrgSection />
         <GettingStartedPmmSection />

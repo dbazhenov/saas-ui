@@ -4,7 +4,7 @@ import { act, fireEvent, render } from '@testing-library/react';
 import { useSelector } from 'react-redux';
 import * as authApi from 'core/api/auth';
 import { dataTestId } from '@percona/platform-core';
-import { MenuBar } from './MenuBar';
+import { AppHeader } from './AppHeader';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -31,7 +31,7 @@ xdescribe('MenuBar', () => {
   test('clicking on the profile logout button calls the logout API', async () => {
     const { container } = render(
       <TestContainer>
-        <MenuBar />
+        <AppHeader />
       </TestContainer>,
     );
 
@@ -55,7 +55,7 @@ xdescribe('MenuBar', () => {
 
     const { container } = render(
       <TestContainer>
-        <MenuBar />
+        <AppHeader />
       </TestContainer>,
     );
 

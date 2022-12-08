@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useMemo } from 'react';
-import { Column } from 'react-table';
+import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table } from '@percona/platform-core';
-import { Button, useStyles } from '@grafana/ui';
+import { useStyles } from 'core/utils';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Link } from '@mui/material';
 import { getAuth } from 'store/auth';
 import { PmmInstance } from 'store/types';
 import { getUserRoleAction } from 'store/orgs';
@@ -23,49 +23,48 @@ export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loadin
     }
   }, [dispatch, orgRole]);
 
-  const columns = useMemo<Column<PmmInstance>[]>(
-    () => [
-      {
-        Header: Messages.name,
-        accessor: 'name',
-        width: '35%',
-      },
-      {
-        Header: Messages.id,
-        accessor: 'id',
-        width: '35%',
-      },
-      {
-        Header: Messages.url,
-        accessor: 'url',
-        Cell: ({
-          row: {
-            original: { url },
-          },
-        }) => (
-          <a href={url} className={styles.instanceServerLink} target="_blank" rel="noreferrer">
-            <Button variant="link">{url}</Button>
-          </a>
-        ),
-        width: '25%',
-      },
-      {
-        Header: Messages.actions,
-        accessor: (instance: PmmInstance) => <PmmInstanceActions instance={instance} />,
-        width: '5%',
-      },
-    ],
-    [styles],
-  ) as any;
+  const columns: GridColDef[] = [
+    {
+      field: 'name',
+      flex: 1,
+      headerName: Messages.name,
+    },
+    {
+      field: 'id',
+      flex: 1,
+      headerName: Messages.id,
+    },
+    {
+      field: 'url',
+      flex: 1,
+      headerName: Messages.url,
+      renderCell: ({ value }: GridRenderCellParams<string>) => (
+        <Link href={value} target="_blank" rel="noreferrer">
+          {value}
+        </Link>
+      ),
+    },
+    {
+      align: 'center',
+      field: 'instance',
+      headerName: Messages.actions,
+      renderCell: ({ row }: GridRenderCellParams<PmmInstance>) => <PmmInstanceActions instance={row} />,
+    },
+  ];
 
   return (
     <div data-testid="instances-list-wrapper" className={styles.tableWrapper}>
-      <Table
-        data={pmmInstances}
-        totalItems={pmmInstances.length}
+      <DataGrid
+        autoHeight
         columns={columns}
-        emptyMessage={Messages.noData}
-        pendingRequest={loading}
+        components={{
+          NoRowsOverlay: () => <div className={styles.emptyMessage}>{Messages.noData}</div>,
+        }}
+        disableColumnMenu
+        disableSelectionOnClick
+        hideFooter
+        loading={loading}
+        rows={pmmInstances}
       />
     </div>
   );

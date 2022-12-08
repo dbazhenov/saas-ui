@@ -1,7 +1,9 @@
 import React, { FC, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStyles, IconButton } from '@grafana/ui';
+import { IconButton } from '@mui/material';
+import { RemoveCircleOutline } from '@mui/icons-material';
 import { getAuth } from 'store/auth';
+import { useStyles } from 'core/utils';
 import { removePmmInstanceAction } from 'store/orgs';
 import { getStyles } from './PmmInstanceActions.styles';
 import { PmmInstanceActionsProps } from './PmmInstanceActions.types';
@@ -37,11 +39,11 @@ export const PmmInstanceActions: FC<PmmInstanceActionsProps> = ({ instance }) =>
           className={styles.actionButton}
           data-testid="pmm-instance-actions-remove"
           disabled={isActionDisabled}
-          // @ts-ignore
-          name="fa fa-minus-circle"
           onClick={handleRemoveInstanceClick}
           title={Messages.remove}
-        />
+        >
+          <RemoveCircleOutline />
+        </IconButton>
       </div>
       <PmmInstanceRemoveModal
         instance={instance}

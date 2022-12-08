@@ -1,7 +1,10 @@
 import React, { FC, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { Icon, IconButton, useStyles } from '@grafana/ui';
+import { IconButton, Typography } from '@mui/material';
+import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { useStyles } from 'core';
 import { getCustomerSuccessContact } from 'store/orgs';
 import { getStyles } from './CustomerContact.styles';
 import { Messages } from './CustomerContact.messages';
@@ -17,21 +20,25 @@ export const CustomerContact: FC = () => {
 
   return (
     <div className={styles.wrapper} data-testid="customer-contact-wrapper">
-      <span className={styles.title}>{Messages.title}</span>
+      <Typography className={styles.title} component="strong">
+        {Messages.title}
+      </Typography>
       <div className={styles.nameWrapper}>
-        <Icon name="user" size="lg" />
-        <span data-testid="customer-contact-name" className={styles.name}>
+        <PersonOutlineOutlinedIcon />
+        <Typography data-testid="customer-contact-name" className={styles.name}>
           {name}
-        </span>
+        </Typography>
         <IconButton
           data-testid="customer-contact-email-icon"
           className={styles.icon}
           title={email}
           name="envelope"
           onClick={copyToClipboard}
-          size="lg"
+          size="small"
           disabled={!email}
-        />
+        >
+          <EmailOutlinedIcon />
+        </IconButton>
       </div>
     </div>
   );

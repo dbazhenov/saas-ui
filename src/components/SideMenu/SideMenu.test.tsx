@@ -12,8 +12,10 @@ describe('SideMenu', () => {
     );
 
     const sideMenu = await screen.findByTestId('side-menu');
-    const section = await screen.findByTestId('side-menu-main-section');
+    const mainSection = await screen.findByTestId('side-menu-main-section');
+    const resourceSection = await screen.findByTestId('side-menu-resources-section');
 
-    expect(sideMenu).toContainElement(section);
+    expect(sideMenu).toContainElement(mainSection);
+    expect(sideMenu).toContainElement(resourceSection);
   });
 });

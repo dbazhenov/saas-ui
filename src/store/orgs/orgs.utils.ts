@@ -50,8 +50,8 @@ export const transformBulkInvitedUsers = (
             (role) =>
               role.value ===
               payload.users.find((plUser: { username: string }) => plUser.username === user.username)?.role!,
-          )!
-        : ROLES.find((role) => role.value === MemberRole.technical)!,
+          )!.value
+        : ROLES.find((role) => role.value === MemberRole.technical)!.value,
       error: user.error,
     }));
   }
@@ -59,7 +59,7 @@ export const transformBulkInvitedUsers = (
   return [
     {
       username: '',
-      role: ROLES.find((role) => role.value === MemberRole.technical)!,
+      role: ROLES.find((role) => role.value === MemberRole.technical)!.value,
       error: '',
     },
   ];

@@ -1,13 +1,20 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ colors }: GrafanaTheme) => ({
+export const getStyles = ({ spacing }: Theme) => ({
   link: css`
-    color: ${colors.linkExternal};
-    text-decoration: none;
+    margin-left: ${spacing(1)} !important;
+    text-decoration: none !important;
     cursor: pointer;
   `,
   paragraphWrapper: css`
     margin: 0;
+    line-height: ${spacing(3)};
+    display: flex;
+  `,
+  loader: css`
+    height: 20px !important;
+    width: 20px !important;
+    margin-left: ${spacing(5)} !important;
   `,
 });

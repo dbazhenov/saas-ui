@@ -1,84 +1,85 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { Table } from '@percona/platform-core';
-import { useStyles } from '@grafana/ui';
-import { Column, Row } from 'react-table';
+import { DataGrid, GridRenderCellParams, GridEventListener, GridColDef } from '@mui/x-data-grid';
 import { openNewTab } from 'core';
+import { useStyles } from 'core/utils';
 import { getOrgTickets, getOrgTicketsPending } from 'store/orgs';
-import { DEFAULT_ROWS_PER_PAGE } from 'core/constants';
-import { OrgTicket } from './TicketList.types';
+import { OrgTicketStatus } from 'core/api/types';
 import { Messages } from './TicketList.messages';
 import { TicketStatus } from './TicketStatus';
 import { getStyles } from './TicketList.styles';
+import { ROWS_PER_PAGE_CHOICES } from './TicketList.constants';
 
 export const TicketList: FC = () => {
-  const styles = useStyles(getStyles);
   const tickets = useSelector(getOrgTickets);
   const isLoadingTickets = useSelector(getOrgTicketsPending);
+  const styles = useStyles(getStyles);
 
-  const columns: Column<any>[] = useMemo(
-    (): Array<Column<OrgTicket>> => [
-      {
-        Header: Messages.columns.number,
-        accessor: 'number',
-      },
-      {
-        Header: Messages.columns.status,
-        accessor: 'status',
-        Cell: ({
-          row: {
-            original: { status },
-          },
-        }) => <TicketStatus status={status} />,
-      },
-      {
-        Header: Messages.columns.description,
-        accessor: 'description',
-      },
-      {
-        Header: Messages.columns.category,
-        accessor: 'department',
-      },
-      {
-        Header: Messages.columns.priority,
-        accessor: 'priority',
-      },
-      {
-        Header: Messages.columns.date,
-        accessor: 'date',
-        Cell: ({
-          row: {
-            original: { date },
-          },
-        }) => new Date(date).toLocaleDateString(),
-      },
-      {
-        Header: Messages.columns.requester,
-        accessor: 'requester',
-      },
-    ],
-    [],
-  );
-  const getRowProps = useCallback(
-    ({ id, original: { url } }: Row<OrgTicket>) => ({
-      key: id,
-      className: styles.row,
-      onClick: () => openNewTab(url),
-    }),
-    [styles],
-  );
+  const columns: GridColDef[] = [
+    {
+      field: 'number',
+      headerName: Messages.columns.number,
+    },
+    {
+      field: 'status',
+      headerName: Messages.columns.status,
+      renderCell: ({ value }: GridRenderCellParams<OrgTicketStatus>) => <TicketStatus status={value!} />,
+    },
+    {
+      field: 'description',
+      flex: 2,
+      headerName: Messages.columns.description,
+    },
+    {
+      field: 'department',
+      flex: 1,
+      headerName: Messages.columns.category,
+    },
+    {
+      field: 'priority',
+      headerName: Messages.columns.priority,
+    },
+    {
+      field: 'date',
+      flex: 1,
+      headerName: Messages.columns.date,
+      renderCell: ({ value }: GridRenderCellParams<string>) => new Date(value!).toLocaleDateString(),
+    },
+    {
+      field: 'requester',
+      flex: 1,
+      headerName: Messages.columns.requester,
+    },
+  ];
+
+  const handleRowClick: GridEventListener<'rowClick'> = (params, event, details) => {
+    openNewTab(params.row.url);
+  };
 
   return (
-    <Table
-      pendingRequest={isLoadingTickets}
-      emptyMessage={Messages.emptyMessage}
-      totalItems={tickets.length}
+    <DataGrid
+      autoHeight
+      className={styles.table}
       columns={columns}
-      data={tickets}
-      getRowProps={getRowProps}
-      showPagination
-      sortingOnColumns
-      pageSize={DEFAULT_ROWS_PER_PAGE}
+      components={{
+        NoRowsOverlay: () => (
+          <div className={styles.emptyMessage} data-testid="table-no-data">
+            {Messages.emptyMessage}
+          </div>
+        ),
+      }}
+      disableColumnMenu
+      disableSelectionOnClick
+      getRowId={(row) => `row-${row.number}`}
+      initialState={{
+        pagination: {
+          pageSize: ROWS_PER_PAGE_CHOICES[0],
+        },
+      }}
+      loading={isLoadingTickets}
+      onRowClick={handleRowClick}
+      rows={tickets}
+      rowsPerPageOptions={ROWS_PER_PAGE_CHOICES}
     />
   );
 };

@@ -47,12 +47,11 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   }) => {
     test.slow();
     const dashboardPage = new DashboardPage(page);
-    let tickets;
 
     await routeHelper.interceptBackEndCall(page, endpoints.listTickets, { tickets: [] });
     await oktaAPI.loginByOktaApi(users[0], page);
     await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
-    await dashboardPage.ticketTable.elements.emptyTable.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.emptyTable.waitFor({ state: 'visible', timeout: 60000 });
 
     await routeHelper.interceptBackEndCall(page, endpoints.listTickets, {
       tickets: dashboardPage.ticketOverview.tickets,
@@ -70,8 +69,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     );
 
     await dashboardPage.ticketOverview.verifyTicketNumberDepartment('1');
-
-    await dashboardPage.ticketTable.elements.header.waitFor({ state: 'visible' });
+    await dashboardPage.ticketTable.table.waitFor({ state: 'visible' });
     /*
 
       Blocked due to sorting of table is not functional, will be fixed with MUI migration.
@@ -87,6 +85,14 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       const values = await dashboardPage.ticketTable.getValuesForColumn(header);
     }
 */
+  });
+
+  test('SAAS-T264 - Verify pagination for list of tickets @customers @dashboard', async ({ page }) => {
+    const dashboardPage = new DashboardPage(page);
+    let tickets;
+
+    await oktaAPI.loginByOktaApi(users[0], page);
+
     await test.step('Verify that default value for Rows per page is 10', async () => {
       tickets = dashboardPage.ticketOverview.generateNumberOfTickets(101);
 
@@ -94,19 +100,21 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         tickets,
       });
       await page.reload();
-      await dashboardPage.ticketTable.elements.header.waitFor({ state: 'visible' });
-      await expect(dashboardPage.ticketTable.elements.row).toHaveCount(10);
+      await page.waitForTimeout(5000);
+      await page.mouse.wheel(0, 1000);
+      await dashboardPage.ticketTable.table.waitFor({ state: 'visible' });
+      await expect(dashboardPage.ticketTable.row).toHaveCount(10);
     });
 
     await test.step(
       'Verify that there is possibility to select rows per page from the next list of values: 10, 25, 50, 100',
       async () => {
-        await dashboardPage.ticketTable.pagination.elements.select.click();
-        await expect(dashboardPage.ticketTable.pagination.elements.sizeSelect).toHaveCount(
-          dashboardPage.ticketTable.pagination.messages.texts.length,
+        await dashboardPage.ticketTable.paginationComponent.select.click();
+        await expect(dashboardPage.ticketTable.paginationComponent.sizeSelect).toHaveCount(
+          dashboardPage.ticketTable.paginationComponent.texts.length,
         );
-        await expect(dashboardPage.ticketTable.pagination.elements.sizeSelect).toHaveText(
-          dashboardPage.ticketTable.pagination.messages.texts.map(String),
+        await expect(dashboardPage.ticketTable.paginationComponent.sizeSelect).toHaveText(
+          dashboardPage.ticketTable.paginationComponent.texts.map(String),
         );
       },
     );
@@ -121,7 +129,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await test.step(
       'Select 50 and verify that the only 50 tickets is displayed on the first page',
       async () => {
-        await dashboardPage.ticketTable.pagination.elements.select.click();
+        await dashboardPage.ticketTable.paginationComponent.select.click();
         await dashboardPage.ticketTable.verifyPagination(50);
       },
     );
@@ -129,61 +137,30 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await test.step(
       'Select 100 and verify that the only 100 tickets is displayed on the first page',
       async () => {
-        await dashboardPage.ticketTable.pagination.elements.select.click();
+        await dashboardPage.ticketTable.paginationComponent.select.click();
         await dashboardPage.ticketTable.verifyPagination(100);
       },
     );
 
     await test.step('Verify there is pagination button under the list of tickets', async () => {
-      await dashboardPage.ticketTable.pagination.elements.select.click();
+      await dashboardPage.ticketTable.paginationComponent.select.click();
       await dashboardPage.ticketTable.verifyPagination(10);
-
-      await dashboardPage.ticketTable.pagination.buttons.firstPage.waitFor({ state: 'visible' });
-      await dashboardPage.ticketTable.pagination.buttons.previousPage.waitFor({ state: 'visible' });
-      const numberPagination: number = await dashboardPage.ticketTable.pagination.buttons.page.count();
-
-      expect(numberPagination).toBeGreaterThan(0);
-
-      await dashboardPage.ticketTable.pagination.buttons.nextPage.waitFor({ state: 'visible' });
-      await dashboardPage.ticketTable.pagination.buttons.lastPage.waitFor({ state: 'visible' });
+      await dashboardPage.ticketTable.paginationComponent.previousPage.waitFor({ state: 'visible' });
+      await dashboardPage.ticketTable.paginationComponent.nextPage.waitFor({ state: 'visible' });
     });
 
     await test.step('Click on "Next" button and Verify that the next page of tickets is opened', async () => {
-      await dashboardPage.ticketTable.pagination.buttons.nextPage.click();
-      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
-        dashboardPage.ticketTable.pagination.messages.interval('11', '20', '101'),
+      await dashboardPage.ticketTable.paginationComponent.nextPage.click();
+      await expect(dashboardPage.ticketTable.paginationComponent.intervalLocator).toHaveText(
+        dashboardPage.ticketTable.paginationComponent.interval('11', '20', '101'),
       );
       await dashboardPage.ticketTable.verifyRowData(tickets[10], 0);
     });
 
     await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
-      await dashboardPage.ticketTable.pagination.buttons.previousPage.click();
-      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
-        dashboardPage.ticketTable.pagination.messages.interval('1', '10', '101'),
-      );
-      await dashboardPage.ticketTable.verifyRowData(tickets[0], 0);
-    });
-
-    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
-      await dashboardPage.ticketTable.pagination.buttons.page.nth(1).click();
-      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
-        dashboardPage.ticketTable.pagination.messages.interval('11', '20', '101'),
-      );
-      await dashboardPage.ticketTable.verifyRowData(tickets[10], 0);
-    });
-
-    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
-      await dashboardPage.ticketTable.pagination.buttons.lastPage.click();
-      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
-        dashboardPage.ticketTable.pagination.messages.interval('101', '101', '101'),
-      );
-      await dashboardPage.ticketTable.verifyRowData(tickets[100], 0);
-    });
-
-    await test.step('Click on "Back" button and Verify the first page of tickets is opened', async () => {
-      await dashboardPage.ticketTable.pagination.buttons.firstPage.click();
-      await expect(dashboardPage.ticketTable.pagination.elements.interval).toHaveText(
-        dashboardPage.ticketTable.pagination.messages.interval('1', '10', '101'),
+      await dashboardPage.ticketTable.paginationComponent.previousPage.click();
+      await expect(dashboardPage.ticketTable.paginationComponent.intervalLocator).toHaveText(
+        dashboardPage.ticketTable.paginationComponent.interval('1', '10', '101'),
       );
       await dashboardPage.ticketTable.verifyRowData(tickets[0], 0);
     });
@@ -225,7 +202,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(customerAdmin1User, page);
-    await dashboardPage.ticketTable.elements.table.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.table.waitFor({ state: 'visible', timeout: 60000 });
 
     await dashboardPage.verifyOpenNewTicketButton();
   });
@@ -237,10 +214,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await portalAPI.createOrg(adminToken);
     await oktaAPI.loginByOktaApi(customerTechnicalUser, page);
-    await dashboardPage.ticketTable.elements.table.waitFor({ state: 'visible', timeout: 60000 });
+    await dashboardPage.ticketTable.table.waitFor({ state: 'visible', timeout: 60000 });
 
     await dashboardPage.verifyOpenNewTicketButton();
-    await dashboardPage.uiUserLogout();
+    await dashboardPage.userDropdown.logoutUser();
   });
 
   test('SAAS-T234 - Verify free account user is not able to get organization tickets if he is a part of Org linked with SN @customers @dashboard', async ({
@@ -260,7 +237,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await oktaAPI.loginByOktaApi(nonSnUser, page);
 
-    await dashboardPage.locators.ticketSection.waitFor({ state: 'detached', timeout: 10000 });
+    await dashboardPage.ticketSection.waitFor({ state: 'detached', timeout: 10000 });
   });
 
   test('SAAS-T224 - Verify Percona Customer user is able to view Contacts (dynamic) @customers @dashboard', async ({
@@ -284,7 +261,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       dashboardPage.contacts.contactsHelpEmailCustomer,
     );
     await dashboardPage.contacts.customerContactIcon.click();
-    await dashboardPage.toast.checkToastMessage(dashboardPage.messages.emailCopiedClipboard);
+    await dashboardPage.toast.checkToastMessage(dashboardPage.emailCopiedClipboard);
     const clipboardContent = await page.evaluate(() => navigator.clipboard.readText());
 
     expect(clipboardContent).toEqual(orgDetails.contacts.customer_success.email);
@@ -304,17 +281,17 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const org = await portalAPI.getOrg(adminToken);
     const tickets = await portalAPI.getOrgTickets(adminToken, org.orgs[0].id);
 
-    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveCount(
+    await expect(dashboardPage.ticketTable.headerCell).toHaveCount(
       Object.keys(dashboardPage.ticketTable.tableHeaders).length,
     );
-    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveText(
+    await expect(dashboardPage.ticketTable.headerCell).toHaveText(
       Object.values(dashboardPage.ticketTable.tableHeaders),
     );
 
-    await expect(dashboardPage.ticketTable.elements.body).toHaveCount(1);
+    await expect(dashboardPage.ticketTable.row).toHaveCount(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      dashboardPage.ticketTable.elements.body.click(),
+      dashboardPage.ticketTable.row.click(),
     ]);
 
     expect(newPage.url()).toEqual(tickets.tickets[0].url);
@@ -334,16 +311,16 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const org = await portalAPI.getOrg(adminToken);
     const tickets = await portalAPI.getOrgTickets(adminToken, org.orgs[0].id);
 
-    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveCount(
+    await expect(dashboardPage.ticketTable.headerCell).toHaveCount(
       Object.keys(dashboardPage.ticketTable.tableHeaders).length,
     );
-    await expect(dashboardPage.ticketTable.elements.headerCell).toHaveText(
+    await expect(dashboardPage.ticketTable.headerCell).toHaveText(
       Object.values(dashboardPage.ticketTable.tableHeaders),
     );
-    await expect(dashboardPage.ticketTable.elements.body).toHaveCount(1);
+    await expect(dashboardPage.ticketTable.row).toHaveCount(1);
     const [newPage] = await Promise.all([
       context.waitForEvent('page'),
-      dashboardPage.ticketTable.elements.body.click(),
+      dashboardPage.ticketTable.row.click(),
     ]);
 
     expect(newPage.url()).toEqual(tickets.tickets[0].url);

@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import { cx } from 'emotion';
-import { Button, useStyles } from '@grafana/ui';
+import { Link, Button, Typography } from '@mui/material';
+import { useStyles } from 'core/utils';
 import doneIcon from 'assets/tick-circle.svg';
 import incompleteIcon from 'assets/circle-filled.svg';
 import { getStyles } from './GettingStartedSection.styles';
@@ -26,19 +27,14 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
   const hideTickBg = cx({ [styles.hideTickBg]: isTicked });
 
   const LinkButton = () => (
-    <Button
-      data-testid="getting-started-section-link-button"
-      icon={linkIcon}
-      variant="link"
-      disabled={disabled}
-    >
+    <Button data-testid="getting-started-section-link-button" startIcon={linkIcon} disabled={disabled}>
       {linkText}
     </Button>
   );
 
   const SectionLink = () =>
     linkIsExternal ? (
-      <a
+      <Link
         href={linkTo}
         data-testid="getting-started-section-link"
         className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
@@ -46,15 +42,15 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
         rel="noreferrer noopener"
       >
         <LinkButton />
-      </a>
+      </Link>
     ) : (
-      <Link
+      <RouterLink
         to={linkTo}
         data-testid="getting-started-section-link"
         className={cx(styles.link, disabled ? styles.linkDisabled : undefined)}
       >
         <LinkButton />
-      </Link>
+      </RouterLink>
     );
 
   return (
@@ -72,7 +68,9 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
           src={incompleteIcon}
           data-testid="getting-started-incomplete-icon"
         />
-        <h2>{title}</h2>
+        <Typography variant="h5" className={styles.title}>
+          {title}
+        </Typography>
       </header>
       <div data-testid="getting-started-section-description-wrapper" className={styles.descriptionWrapper}>
         <span data-testid="getting-started-section-description" className={styles.description}>
@@ -80,17 +78,15 @@ export const GettingStartedSection: FC<GettingStartedSectionProps> = ({
           {readMoreLink && (
             <>
               {' '}
-              <a
+              <Link
                 href={readMoreLink}
                 target="_blank"
                 rel="noreferrer"
                 className={styles.readMoreLink}
                 data-testid="read-more-link"
               >
-                <Button data-testid="getting-started-section-link-button" variant="link">
-                  {Messages.readMore}
-                </Button>
-              </a>
+                <Button data-testid="getting-started-section-link-button">{Messages.readMore}</Button>
+              </Link>
             </>
           )}
         </span>

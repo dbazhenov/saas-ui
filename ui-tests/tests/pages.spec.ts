@@ -39,24 +39,24 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await oktaAPI.loginByOktaApi(adminUser, page);
     await notFoundPage.waitForPortalLoaded();
     await page.goto('page1');
-    await notFoundPage.locators.notFoundPageContainer.waitFor({ state: 'visible' });
-    await expect(notFoundPage.locators.notFoundPageContainer).toHaveCSS(
+    await notFoundPage.notFoundPageContainer.waitFor({ state: 'visible' });
+    await expect(notFoundPage.notFoundPageContainer).toHaveCSS(
       'background-color',
-      'rgb(247, 248, 250)',
+      'rgb(255, 255, 255)',
     );
 
-    await expect(notFoundPage.locators.notFoundImage).toBeVisible();
-    await notFoundPage.locators.notFoundHomeButton.click();
+    await expect(notFoundPage.notFoundImage).toBeVisible();
+    await notFoundPage.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
     await notFoundPage.themeSwitch.click();
     await page.goto('page1');
-    await notFoundPage.locators.notFoundPageContainer.waitFor({ state: 'visible' });
-    await expect(notFoundPage.locators.notFoundPageContainer).toHaveCSS(
+    await notFoundPage.notFoundPageContainer.waitFor({ state: 'visible' });
+    await expect(notFoundPage.notFoundPageContainer).toHaveCSS(
       'background-color',
-      'rgb(11, 12, 14)',
+      'rgb(18, 18, 18)',
     );
-    await expect(notFoundPage.locators.notFoundImage).toBeVisible();
-    await notFoundPage.locators.notFoundHomeButton.click();
+    await expect(notFoundPage.notFoundImage).toBeVisible();
+    await notFoundPage.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
   });
 
@@ -64,18 +64,13 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   for (let i = 0; i < 2; i++) {
     test(`SAAS-T203 - Verify Percona Portal Resources menu tab content and links ${i} @pages`, async ({
       page,
+      baseURL,
     }) => {
       const dashboardPage = new DashboardPage(page);
 
       await oktaAPI.loginByOktaApi(users[i], page);
-
-      await expect(dashboardPage.sideMenu.resourcesHeader).toHaveText(dashboardPage.sideMenu.resourcesLabel);
-
       await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute('target', '_blank');
-      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute(
-        'href',
-        dashboardPage.sideMenu.documentationLink,
-      );
+      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute('href', dashboardPage.sideMenu.documentationLink);
 
       await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute('target', '_blank');
       await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute(
@@ -95,25 +90,21 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         dashboardPage.sideMenu.portalHelpLink,
       );
 
-      await expect(dashboardPage.sideMenu.mainHeader).toHaveText(dashboardPage.sideMenu.mainLabel);
-
-      await expect(dashboardPage.sideMenu.mainMenu.dashboard).toBeVisible();
-      await expect(dashboardPage.sideMenu.mainMenu.dashboard).toHaveAttribute(
-        'href',
-        dashboardPage.routes.root,
-      );
+      expect(await dashboardPage.sideMenu.mainMenu.dashboard.isVisible()).toBeTruthy();
+      await dashboardPage.sideMenu.mainMenu.dashboard.click();
+      await expect(page).toHaveURL(baseURL);
 
       await expect(dashboardPage.sideMenu.mainMenu.organization).toBeVisible();
-      await expect(dashboardPage.sideMenu.mainMenu.organization).toHaveAttribute(
-        'href',
-        dashboardPage.routes.organization,
-      );
+      await dashboardPage.sideMenu.mainMenu.organization.click();
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.organization}`);
 
-      await expect(dashboardPage.sideMenu.mainMenu.pmmInstances).toBeVisible();
-      await expect(dashboardPage.sideMenu.mainMenu.pmmInstances).toHaveAttribute(
-        'href',
-        dashboardPage.routes.instances,
-      );
+      expect(await dashboardPage.sideMenu.mainMenu.pmmInstances.isVisible()).toBeTruthy();
+      await dashboardPage.sideMenu.mainMenu.pmmInstances.click();
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.instances}`);
+
+      await expect(dashboardPage.sideMenu.mainMenu.freeKubernetes).toBeVisible();
+      await dashboardPage.sideMenu.mainMenu.freeKubernetes.click();
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.kubernetes}`);
     });
   }
 });

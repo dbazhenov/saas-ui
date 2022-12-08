@@ -1,25 +1,24 @@
-import { GrafanaTheme } from '@grafana/data';
 import { css } from 'emotion';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ colors, spacing, typography }: GrafanaTheme) => ({
+export const getStyles = ({ spacing, typography }: Theme) => ({
   container: css`
     display: flex;
     flex-direction: column;
-    color: ${colors.text};
     width: 100%;
   `,
   ticketSection: css`
-    margin-top: ${spacing.lg};
+    margin-top: ${spacing(3)};
   `,
   ticketSectionTitle: css`
-    color: ${colors.textSemiWeak};
-    font-size: ${typography.heading.h3};
-    font-weight: ${typography.weight.semibold};
+    font-weight: ${typography.fontWeightMedium} !important;
   `,
   ticketListHeader: css`
+    font-weight: ${typography.fontWeightMedium};
     align-items: center;
     display: flex;
     justify-content: space-between;
+    margin-bottom: ${spacing(1)};
   `,
   newTicketButton: css`
     text-decoration: none;

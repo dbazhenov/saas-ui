@@ -1,8 +1,9 @@
 import React, { FC, useEffect } from 'react';
-import { useStyles } from '@grafana/ui';
 import { useDispatch, useSelector } from 'react-redux';
+import { Typography } from '@mui/material';
 import { PrivateLayout } from 'components/Layouts';
 import { getOrgInventory } from 'store/orgs/orgs.selectors';
+import { useStyles } from 'core/utils';
 import { ReactComponent as PmmInstancesLogo } from 'assets/pmm-server-instances.svg';
 import { getFirstOrgId, getInventoryAction, getIsOrgPending, searchOrgsAction } from 'store/orgs';
 import { LINKS } from './ManagePmmInstances.constants';
@@ -31,10 +32,10 @@ export const ManagePmmInstancesPage: FC = () => {
 
   return (
     <PrivateLayout>
-      <div data-testid="manage-organization-container" className={styles.container}>
-        <header data-testid="manage-organization-header">
+      <div data-testid="manage-instances-container" className={styles.container}>
+        <header data-testid="manage-instances-header">
           <PmmInstancesLogo />
-          {Messages.pmmInstances}
+          <Typography variant="h5">{Messages.pmmInstances}</Typography>
         </header>
         <div className={styles.contentWrapper}>
           <div className={styles.linkWrapper}>
@@ -43,7 +44,7 @@ export const ManagePmmInstancesPage: FC = () => {
               href={LINKS.howToConnectPMM}
               target="_blank"
               rel="noreferrer noopener"
-              data-testid="forum-contact-link"
+              data-testid="connect-pmm-link"
             >
               {Messages.howToLink}
             </a>

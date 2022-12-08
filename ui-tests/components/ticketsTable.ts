@@ -1,6 +1,5 @@
 /* eslint-disable lines-between-class-members */
 import { Page, expect } from '@playwright/test';
-import IPage from '@tests/pages/page.interface';
 import { Table } from './Table';
 
 enum TableHeader {
@@ -13,27 +12,11 @@ enum TableHeader {
   RequestedBy = 'Requested By',
 }
 
-export class TicketsTable extends Table implements IPage {
+export class TicketsTable extends Table {
   constructor(page: Page) {
     super(page);
   }
   tableHeaders = TableHeader;
-
-  messages = {
-    ...this.messages,
-  };
-
-  elements = {
-    ...this.elements,
-  };
-
-  fields = {
-    ...this.fields,
-  };
-
-  buttons = {
-    ...this.buttons,
-  };
 
   getTableColumnsData = async (columns: string[] = Object.values(this.elements.header)): Promise<unknown> => {
     const columnPromise = columns.map(async (column) => {
@@ -65,11 +48,11 @@ export class TicketsTable extends Table implements IPage {
   };
 
   verifyRowData = async (ticket, rowNumber = 0) => {
-    await expect(this.elements.rowCell(rowNumber).nth(0)).toHaveText(ticket.number);
-    await expect(this.elements.rowCell(rowNumber).nth(1)).toHaveText(ticket.state);
-    await expect(this.elements.rowCell(rowNumber).nth(2)).toHaveText(ticket.short_description);
-    await expect(this.elements.rowCell(rowNumber).nth(3)).toHaveText(ticket.department);
-    await expect(this.elements.rowCell(rowNumber).nth(4)).toHaveText(ticket.priority);
-    await expect(this.elements.rowCell(rowNumber).nth(6)).toHaveText(ticket.requester);
+    await expect(this.rowCell(rowNumber).nth(0)).toHaveText(ticket.number);
+    await expect(this.rowCell(rowNumber).nth(1)).toHaveText(ticket.state);
+    await expect(this.rowCell(rowNumber).nth(2)).toHaveText(ticket.short_description);
+    await expect(this.rowCell(rowNumber).nth(3)).toHaveText(ticket.department);
+    await expect(this.rowCell(rowNumber).nth(4)).toHaveText(ticket.priority);
+    await expect(this.rowCell(rowNumber).nth(6)).toHaveText(ticket.requester);
   };
 }

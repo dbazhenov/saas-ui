@@ -1,7 +1,7 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ colors }: GrafanaTheme) => ({
+export const getStyles = ({ palette }: Theme) => ({
   wrapper: css`
     position: relative;
   `,
@@ -16,6 +16,6 @@ export const getStyles = ({ colors }: GrafanaTheme) => ({
     align-items: center;
   `,
   path: css`
-    stroke: ${colors.bg1};
+    stroke: ${palette.background.default};
   `,
 });

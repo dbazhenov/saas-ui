@@ -26,11 +26,12 @@ describe('Organization Edit', () => {
       </TestContainer>,
     );
 
-    const saveButton = await screen.findByTestId('edit-organization-submit-button');
     const input = await screen.findByTestId('organizationName-text-input');
 
     userEvent.type(input, 'Test');
     userEvent.clear(input);
+
+    const saveButton = await screen.findByTestId('edit-organization-submit-button');
 
     expect(saveButton).toBeDisabled();
   });

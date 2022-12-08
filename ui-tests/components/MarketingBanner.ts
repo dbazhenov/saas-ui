@@ -1,8 +1,7 @@
 /* eslint-disable lines-between-class-members */
 import { Page } from '@playwright/test';
-import IPage from '@tests/pages/page.interface';
 
-export default class MarketingBanner implements IPage {
+export default class MarketingBanner {
   constructor(readonly page: Page) {
     this.page = page;
   }

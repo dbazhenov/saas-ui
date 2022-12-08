@@ -1,28 +1,28 @@
-import { GrafanaTheme } from '@grafana/data';
 import { css } from 'emotion';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ colors, spacing, typography }: GrafanaTheme) => ({
+export const getStyles = ({ palette, spacing, typography }: Theme) => ({
   marginSection: css`
-    margin-top: ${spacing.base * 7}px;
+    margin-top: ${spacing(4)};
   `,
   container: css`
-    background-color: ${colors.bg1};
+    background-color: ${palette.background.default};
   `,
   containerPadding: css`
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: ${spacing.lg};
+    padding: ${spacing(3)};
   `,
   headerFont: css`
-    font-size: ${typography.heading.h3};
-    font-weight: ${typography.weight.semibold};
+    font-weight: ${typography.fontWeightMedium} !important;
   `,
   centeredElement: css`
     text-align: center;
 
     strong {
-      font-size: ${typography.heading.h1};
+      font-size: ${typography.h4.fontSize} !important;
+      font-weight: ${typography.fontWeightBold};
     }
 
     p {

@@ -49,6 +49,6 @@ export default class GettingStarted {
 
   private getGettingStartedSectionLocator = (label: string): Locator =>
     this.page.locator(
-      `//h2[contains(text(), "${label}")]//ancestor::*[@data-testid="getting-started-section"]`,
+      `//h5[contains(text(), "${label}")]//ancestor::*[@data-testid="getting-started-section"]`,
     );
 }

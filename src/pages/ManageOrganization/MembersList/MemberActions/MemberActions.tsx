@@ -1,6 +1,8 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStyles, IconButton } from '@grafana/ui';
+import { IconButton } from '@mui/material';
+import { useStyles } from 'core/utils';
+import { Edit, Delete } from '@mui/icons-material';
 import { getAuth } from 'store/auth';
 import { editOrgMemberAction, getFirstOrgId, removeOrgMemberAction } from 'store/orgs';
 import { getStyles } from './MemberActions.styles';
@@ -48,7 +50,7 @@ export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
   const handleEditMemberSubmit = useCallback(
     (formData: EditMemberFormFields) => {
       setIsEditModalVisible(false);
-      dispatch(editOrgMemberAction({ orgId, memberId, role: formData.role.value! }));
+      dispatch(editOrgMemberAction({ orgId, memberId, role: formData.role! }));
     },
     [dispatch, orgId, memberId],
   );
@@ -57,21 +59,21 @@ export const MemberActions: FC<MemberActionsProps> = ({ member }) => {
     <>
       <div className={styles.actionsWrapper} data-testid="member-actions">
         <IconButton
-          className={styles.actionButton}
           data-testid="member-actions-edit"
           disabled={isActionDisabled}
-          name="pen"
           onClick={handleEditMemberClick}
           title={Messages.edit}
-        />
+        >
+          <Edit />
+        </IconButton>
         <IconButton
-          className={styles.actionButton}
           data-testid="member-actions-delete"
           disabled={isActionDisabled}
-          name="trash-alt"
           onClick={handleDeleteMemberClick}
           title={Messages.delete}
-        />
+        >
+          <Delete />
+        </IconButton>
       </div>
       <MemberEditModal
         member={member}

@@ -25,15 +25,6 @@ describe('Support ticket overview::', () => {
     jest.clearAllMocks();
   });
 
-  it('renders loader', async () => {
-    getOrgTickets.mockImplementation(() => []);
-    getOrgTicketsPending.mockImplementation(() => true);
-
-    renderOverview();
-
-    expect(screen.getByTestId('skeleton-loader')).toBeInTheDocument();
-  });
-
   it('renders with support tickets', async () => {
     getOrgTickets.mockImplementation(() => tickets);
 

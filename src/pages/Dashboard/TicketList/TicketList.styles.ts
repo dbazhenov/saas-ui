@@ -1,17 +1,15 @@
-import { GrafanaTheme } from '@grafana/data';
 import { css } from 'emotion';
 
-export const getStyles = ({ colors }: GrafanaTheme) => ({
-  header: css`
-    cursor: default;
-  `,
-  row: css`
-    cursor: pointer;
-
-    &:hover {
-      td {
-        background-color: ${colors.bg2};
-      }
+export const getStyles = () => ({
+  table: css`
+    & .MuiDataGrid-row {
+      cursor: pointer;
     }
+  `,
+  emptyMessage: css`
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
   `,
 });

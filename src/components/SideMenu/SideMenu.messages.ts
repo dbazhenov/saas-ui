@@ -1,10 +1,9 @@
 export const Messages = {
-  main: 'Main',
+  portal: 'Percona Portal',
   gettingStarted: 'Getting Started',
   dashboard: 'Dashboard',
   organization: 'Organization',
   instances: 'PMM Instances',
-  resources: 'Resources',
   documentation: 'Documentation',
   blogs: 'Blogs',
   forum: 'Forum',

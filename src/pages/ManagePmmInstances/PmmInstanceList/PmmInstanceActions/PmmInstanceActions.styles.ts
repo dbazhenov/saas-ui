@@ -1,13 +1,13 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ colors, spacing }: GrafanaTheme) => ({
+export const getStyles = ({ palette, spacing }: Theme) => ({
   actionButton: css`
-    color: ${colors.text};
+    color: ${palette.text.primary};
     cursor: pointer;
 
     &:not(:first-child) {
-      margin-left: ${spacing.sm};
+      margin-left: ${spacing(1)};
     }
   `,
   actionsWrapper: css`

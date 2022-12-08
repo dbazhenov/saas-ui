@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
-import { Spinner, useStyles } from '@grafana/ui';
+import { CircularProgress, Link } from '@mui/material';
+import { useStyles } from 'core/utils';
 import { useCreateResendEmailMutation } from '../MembersList.service';
 import { ResendEmailData } from '../MembersList.types';
 import { getStyles } from './ResendEmailLink.styles';
@@ -14,15 +15,17 @@ export const ResendEmailLink: FC<ResendData> = ({ organization, member }: Resend
     await createResendEmail({ organizationId, memberId } as ResendEmailData);
   };
 
-  const resendingEmail = isLoading ? <Spinner /> : Messages.resendEmail;
-
   return (
     <div
       className={styles.paragraphWrapper}
       onClick={() => handleResend(organization, member)}
       data-testid="resend-email-link"
     >
-      <a className={styles.link}>{resendingEmail}</a>
+      {isLoading ? (
+        <CircularProgress className={styles.loader} />
+      ) : (
+        <Link className={styles.link}>{Messages.resendEmail}</Link>
+      )}
     </div>
   );
 };

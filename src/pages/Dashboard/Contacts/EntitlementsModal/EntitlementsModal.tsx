@@ -1,6 +1,7 @@
-import React, { FC, useState, useCallback } from 'react';
-import { Collapse, useStyles } from '@grafana/ui';
-import { Modal } from '@percona/platform-core';
+import React, { FC, useCallback, useState } from 'react';
+import { Accordion, AccordionDetails, AccordionSummary, Modal, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useStyles } from 'core';
 import { CollapseMap, EntitlementsModalProps } from './EntitlementsModal.types';
 import { Messages } from './EntitlementsModal.messages';
 import { getStyles } from './EntitlementsModal.styles';
@@ -11,74 +12,88 @@ export const EntitlementsModal: FC<EntitlementsModalProps> = ({ entitlements, on
   const [collapseMap, setCollpaseMap] = useState<CollapseMap>({
     [entitlements[0].number]: true,
   });
+
   const toggleCollapse = useCallback(
     (key: string) => () => {
-      setCollpaseMap({ ...collapseMap, [key]: !collapseMap[key] });
+      setCollpaseMap((prev) => ({ ...prev, [key]: !collapseMap[key] }));
     },
     [collapseMap, setCollpaseMap],
   );
 
   return (
-    <div className={styles.modalWrapper(entitlements)}>
-      <Modal isVisible title={Messages.title} onClose={onClose}>
-        {entitlements.map(
-          ({
-            name,
-            number,
-            summary,
-            start_date,
-            end_date,
-            tier,
-            total_units,
-            support_level,
-            platform: { config_advisor, security_advisor },
-          }) => (
-            <Collapse
-              key={number}
-              collapsible
-              label={name}
-              isOpen={collapseMap[number]}
-              onToggle={toggleCollapse(number)}
-            >
-              <>
-                <div className={styles.wrapper} data-testid="entitlements-wrapper">
-                  <p>
-                    <span>{Messages.startDate}:</span>
-                    {new Date(start_date).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <span>{Messages.endDate}:</span>
-                    {new Date(end_date).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <span>{Messages.summary}:</span>
-                    {summary}
-                  </p>
-                  <p>
-                    <span>{Messages.tier}:</span>
-                    {tier}
-                  </p>
-                  <p>
-                    <span>{Messages.totalUnits}:</span>
-                    {total_units}
-                  </p>
-                  <p>
-                    <span>{Messages.supportLevel}:</span>
-                    {support_level}
-                  </p>
-                  <p>
-                    <span>{Messages.platform}</span>
-                  </p>
-                  <div className={styles.advisorsWrapper} data-testid="entitlements-advisors-wrapper">
-                    <Advisor label={Messages.configAdvisor} hasAdvisor={config_advisor} />
-                    <Advisor label={Messages.securityAdvisor} hasAdvisor={security_advisor} />
+    <Modal open title={Messages.title} onClose={onClose}>
+      <div className={styles.modal} data-testid="modal-body">
+        <Typography component="h6" className={styles.title}>
+          {Messages.title}
+        </Typography>
+        <div className="EntitlementAccordions">
+          {entitlements.map(
+            ({
+              name,
+              number,
+              summary,
+              start_date,
+              end_date,
+              tier,
+              total_units,
+              support_level,
+              platform: { config_advisor, security_advisor },
+            }) => (
+              <Accordion
+                key={number}
+                expanded={collapseMap[number]}
+                defaultExpanded
+                onChange={toggleCollapse(number)}
+                data-testid="entitlement-container"
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <div className={styles.accordionTitle}>
+                    <Typography component="h6">{name}</Typography>
+                    <Typography component="span" className={styles.expiryDate}>
+                      {Messages.expiryDate}: {new Date(end_date).toLocaleDateString()}
+                    </Typography>
                   </div>
-                </div>
-              </>
-            </Collapse>
-          ),
-        )}
-      </Modal>
-    </div>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <div className={styles.wrapper} data-testid="entitlements-wrapper">
+                    <Typography>
+                      <span>{Messages.startDate}:</span>
+                      {new Date(start_date).toLocaleDateString()}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.endDate}:</span>
+                      {new Date(end_date).toLocaleDateString()}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.summary}:</span>
+                      {summary}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.tier}:</span>
+                      {tier}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.totalUnits}:</span>
+                      {total_units}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.supportLevel}:</span>
+                      {support_level}
+                    </Typography>
+                    <Typography>
+                      <span>{Messages.platform}</span>
+                    </Typography>
+                    <div className={styles.advisorsWrapper} data-testid="entitlements-advisors-wrapper">
+                      <Advisor label={Messages.configAdvisor} hasAdvisor={config_advisor} />
+                      <Advisor label={Messages.securityAdvisor} hasAdvisor={security_advisor} />
+                    </div>
+                  </div>
+                </AccordionDetails>
+              </Accordion>
+            ),
+          )}
+        </div>
+      </div>
+    </Modal>
   );
 };

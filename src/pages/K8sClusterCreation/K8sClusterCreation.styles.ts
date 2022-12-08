@@ -1,29 +1,29 @@
-import { GrafanaTheme } from '@grafana/data';
 import { css } from 'emotion';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ typography, spacing, colors }: GrafanaTheme) => ({
+export const getStyles = ({ spacing, typography }: Theme) => ({
   pageWrapper: css`
     width: 100%;
-    color: ${colors.text};
 
     header {
       align-items: center;
       display: flex;
-      font-size: ${typography.heading.h2};
-      font-weight: ${typography.weight.regular};
-      margin: 0 0 ${spacing.md};
+      font-size: ${typography.fontSize + 10}px;
+      font-weight: ${typography.fontWeightRegular};
+      margin: 0 0 ${spacing(2)};
 
       svg {
-        height: 28px;
-        margin-right: ${spacing.md};
+        height: ${spacing(3.5)};
+        margin-right: ${spacing(2)};
       }
     }
   `,
+
   contentWrapper: css`
     align-items: center;
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
+    margin-top: ${spacing(6)};
     margin: 0 auto;
     max-width: 500px;
 
@@ -34,7 +34,7 @@ export const getStyles = ({ typography, spacing, colors }: GrafanaTheme) => ({
     }
 
     p {
-      line-height: ${typography.lineHeight.md};
+      line-height: 1.5;
     }
 
     ul {
@@ -42,49 +42,50 @@ export const getStyles = ({ typography, spacing, colors }: GrafanaTheme) => ({
     }
   `,
   description: css`
-    font-size: ${typography.size.lg};
+    font-size: ${typography.fontSize + 4}px;
   `,
   details: css`
-    font-size: ${typography.size.md};
+    font-size: ${typography.fontSize};
   `,
   loadingMessage: css`
-    font-size: ${typography.size.lg};
+    font-size: ${typography.fontSize + 4}px;
   `,
   getConfigLink: css`
-    margin: ${spacing.lg} 0;
-    font-size: ${typography.size.lg};
+    margin: ${spacing(3)} 0;
+    font-size: ${typography.fontSize + 4}px !important;
+    text-transform: capitalize !important;
   `,
   createClusterButton: css`
-    margin: ${spacing.md} 0;
+    margin: ${spacing(4)} 0 !important;
+    text-transform: capitalize !important;
   `,
   learnMore: css`
-    font-size: ${typography.size.lg};
-    margin-bottom: ${spacing.sm};
+    font-size: ${typography.fontSize + 4}px;
+    margin-bottom: ${spacing(1)};
   `,
   learnMoreLink: css`
     vertical-align: baseline;
     padding: 0;
   `,
   learnMoreLinks: css`
-    margin-bottom: ${spacing.lg};
+    margin-bottom: ${spacing(3)};
   `,
   specsWrapper: css`
-    font-size: ${typography.size.md};
+    font-size: ${typography.fontSize};
 
     header {
-      font-size: ${typography.size.lg};
+      font-size: ${typography.fontSize + 4}px;
     }
 
     li {
       list-style-type: none;
 
       svg {
-        height: 24px;
+        height: ${spacing(3)};
       }
     }
   `,
   loader: css`
-    padding: 30px;
-    margin-top: 1px;
+    margin: ${spacing(6)};
   `,
 });

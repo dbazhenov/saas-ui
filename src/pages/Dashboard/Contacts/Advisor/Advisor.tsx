@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import { Icon, useStyles } from '@grafana/ui';
+import { useStyles } from 'core';
+import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { AdvisorProps } from './Advisor.types';
 import { getStyles } from './Advisor.styles';
 
@@ -10,9 +12,9 @@ export const Advisor: FC<AdvisorProps> = ({ label, hasAdvisor }) => {
     <div className={styles.wrapper} data-testid="advisor-wrapper">
       <p className={styles.label}>{label}</p>
       {hasAdvisor ? (
-        <Icon data-testid="advisor-check-icon" name="check" className={styles.checkIcon} />
+        <CheckOutlinedIcon data-testid="advisor-check-icon" className={styles.checkIcon} />
       ) : (
-        <Icon data-testid="advisor-times-icon" name="times" className={styles.timesIcon} />
+        <CloseOutlinedIcon data-testid="advisor-times-icon" className={styles.timesIcon} />
       )}
     </div>
   );

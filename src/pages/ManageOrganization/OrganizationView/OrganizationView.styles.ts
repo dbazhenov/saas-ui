@@ -1,61 +1,57 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = (theme: GrafanaTheme) => {
-  const { colors, spacing } = theme;
+export const getStyles = ({ spacing, palette }: Theme) => ({
+  container: css`
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: ${spacing(4)};
 
-  return {
-    container: css`
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-top: ${spacing.lg};
+    & > svg {
+      color: ${palette.primary.light};
+      height: 145px;
+      opacity: 45%;
+    }
+  `,
+  containerLoading: css`
+    height: 242px;
+  `,
+  orgDetails: css`
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: ${spacing(4)};
 
-      & > svg {
-        color: ${colors.bgBlue1};
-        height: 145px;
-        opacity: 45%;
+    & > :not(:first-child) {
+      margin-top: ${spacing(1)};
+    }
+  `,
+  infoWrapper: css`
+    align-items: center;
+    background-color: ${palette.info.light};
+    display: flex;
+    height: 60px;
+    padding: ${spacing(1)};
+    width: fit-content;
+  `,
+  icon: css`
+    margin-right: ${spacing(1)};
+  `,
+  actions: css`
+    & > * {
+      color: ${palette.primary.light};
+      cursor: pointer;
+
+      &:not(:last-child) {
+        margin-right: ${spacing(0)};
       }
-    `,
-    containerLoading: css`
-      height: 242px;
-    `,
-    orgDetails: css`
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      margin-top: ${spacing.lg};
 
-      & > :not(:first-child) {
-        margin-top: ${spacing.md};
+      &:hover {
+        color: ${palette.primary.light};
+        opacity: 75%;
       }
-    `,
-    infoWrapper: css`
-      align-items: center;
-      background-color: ${colors.bg3};
-      display: flex;
-      height: 60px;
-      padding: ${spacing.sm};
-      width: fit-content;
-    `,
-    icon: css`
-      margin-right: ${spacing.sm};
-    `,
-    actions: css`
-      & > * {
-        color: ${colors.textBlue};
-        cursor: pointer;
-
-        &:not(:last-child) {
-          margin-right: ${spacing.md};
-        }
-
-        &:hover {
-          color: ${colors.textBlue};
-          opacity: 75%;
-        }
-      }
-    `,
-  };
-};
+    }
+  `,
+});

@@ -1,12 +1,15 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { useStyles, LinkButton, Spinner } from '@grafana/ui';
-import { LoaderButton } from '@percona/platform-core';
+import CircularProgress from '@mui/material/CircularProgress';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { Button, Link } from '@mui/material';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as KubernetesLogo } from 'assets/percona-sidebar-k8s.svg';
 import { DEFAULT_DATE_LOCALE } from 'core/constants';
+import { errorHasStatus, useStyles } from 'core/utils';
 import { K8sClusterStatus } from 'core/api/types';
+
 import {
   useCreateClusterMutation,
   useGetClusterStatusQuery,
@@ -21,10 +24,9 @@ import {
   POLLING_INTERVAL,
   PMM_DBAAS_DOC_LINK,
   OPERATORS_DOC_LINK,
+  CLUSTER_EXPIRATION_DELAY,
 } from './K8sClusterCreation.constants';
-import { errorHasStatus } from './K8sClusterCreation.utils';
-
-const CLUSTER_EXPIRATION_DELAY = 10800000; // 3 hours
+import { CIRCULAR_SIZE } from './KubeconfigModal/KuberconfigModal.constants';
 
 export const K8sClusterCreationPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -145,31 +147,31 @@ export const K8sClusterCreationPage: FC = () => {
           <p className={styles.description}>{Messages.description}</p>
           {(isStatusUninitialized || isRequestPending || isClusterBuilding) && (
             <span data-testid="kubernetes-cluster-building-loader">
-              <Spinner className={styles.loader} />
+              <CircularProgress color="inherit" className={styles.loader} size={CIRCULAR_SIZE} />
             </span>
           )}
           {!isRequestPending && !isClusterBuilding && clusterReady && (
-            <LinkButton
-              variant="link"
+            <Button
               className={styles.getConfigLink}
               onClick={handleGetConfigClick}
               data-testid="kubernetes-show-config-link"
+              size="large"
             >
               {Messages.downloadConfig}
-            </LinkButton>
+            </Button>
           )}
           {!isStatusUninitialized && !isRequestPending && !isClusterBuilding && !clusterReady && (
-            <LoaderButton
+            <LoadingButton
               className={styles.createClusterButton}
               data-testid="kubernetes-create-cluster-button"
-              type="button"
-              size="lg"
+              variant="contained"
+              size="large"
               loading={isCreateClusterPending || isClusterBuilding}
               disabled={(statusData?.status == null && statusError == null) || isRequestPending}
               onClick={handleCreateClusterClick}
             >
               {Messages.createCluster}
-            </LoaderButton>
+            </LoadingButton>
           )}
           {isClusterBuilding && <p className={styles.loadingMessage}>{Messages.loading}</p>}
           {!isRequestPending && !isClusterBuilding && clusterReady && (
@@ -182,24 +184,14 @@ export const K8sClusterCreationPage: FC = () => {
           <p className={styles.learnMore}>{Messages.learnMore}</p>
           <ul className={styles.learnMoreLinks}>
             <li>
-              <LinkButton
-                className={styles.learnMoreLink}
-                variant="link"
-                href={PMM_DBAAS_DOC_LINK}
-                target="_blank"
-              >
+              <Link className={styles.learnMoreLink} href={PMM_DBAAS_DOC_LINK} target="_blank">
                 {Messages.pmmDbaas}
-              </LinkButton>
+              </Link>
             </li>
             <li>
-              <LinkButton
-                className={styles.learnMoreLink}
-                variant="link"
-                href={OPERATORS_DOC_LINK}
-                target="_blank"
-              >
+              <Link className={styles.learnMoreLink} href={OPERATORS_DOC_LINK} target="_blank">
                 {Messages.operatorsDoc}
-              </LinkButton>
+              </Link>
             </li>
           </ul>
           <section className={styles.specsWrapper}>

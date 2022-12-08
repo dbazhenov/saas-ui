@@ -23,7 +23,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
 
     await dashboardPage.waitForPortalLoaded();
-    await dashboardPage.uiUserLogout();
+    await dashboardPage.userDropdown.logoutUser();
     const signInPage = new SignInPage(page);
 
     await signInPage.signInContainer.waitFor({ state: 'visible' });

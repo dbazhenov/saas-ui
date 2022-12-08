@@ -97,27 +97,27 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await oktaAPI.loginByOktaApi(firstUserWithoutOrg, page);
 
     await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.locators.addOrganizationLocator.click();
+    await page.waitForTimeout(60000);
+    await dashboardPage.addOrganizationLocator.click();
 
     // wait due to rerender of the page.
     await page.waitForTimeout(2000);
-    await expect(organizationPage.locators.organizationNameInput).toHaveAttribute(
+    await expect(organizationPage.organizationNameInput).toHaveAttribute(
       'placeholder',
-      organizationPage.labels.orgNamePlaceholder,
+      organizationPage.orgNamePlaceholder,
     );
-    await organizationPage.locators.organizationNameInput.type('Test', { delay: 100 });
-    await organizationPage.locators.organizationNameInput.fill('');
-    await expect(organizationPage.locators.organizationNameInputError).toHaveText(
-      organizationPage.messages.requiredField,
-    );
+    await organizationPage.organizationNameInput.type('Test', { delay: 100 });
+    await organizationPage.organizationNameInput.fill('');
 
-    await organizationPage.locators.organizationNameInput.type(firstOrgName);
-    await organizationPage.locators.createOrgButton.click();
-    await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
-    await expect(organizationPage.locators.organizationName).toHaveText(firstOrgName, { timeout: 60000 });
+    await expect(organizationPage.createOrgButton).toBeDisabled();
 
-    await organizationPage.locators.membersTab.click();
-    await membersPage.verifyMembersTableUserRole(firstUserWithoutOrg.email, UserRoles.admin);
+    await organizationPage.organizationNameInput.type(firstOrgName);
+    await organizationPage.createOrgButton.click();
+    await organizationPage.toast.checkToastMessage(organizationPage.orgCreatedSuccessfully);
+    await expect(organizationPage.organizationName).toHaveText(firstOrgName, { timeout: 60000 });
+
+    await organizationPage.membersTab.click();
+    await membersPage.membersTable.verifyMembersTableUserRole(firstUserWithoutOrg.email, UserRoles.admin);
     await membersPage.sideMenu.mainMenu.dashboard.click();
 
     await dashboardPage.gettingStarted.doneImageOrganizationSection.waitFor({ state: 'visible' });
@@ -133,18 +133,18 @@ test.describe('Spec file for free users dashboard tests', async () => {
     await page.waitForTimeout(2000);
     await expect(dashboardPage.gettingStarted.doneImageOrganizationSection).toHaveCSS('opacity', '1');
 
-    await organizationPage.uiUserLogout();
+    await organizationPage.userDropdown.logoutUser();
 
     await signInPage.signInContainer.waitFor({ state: 'visible' });
     secondUserWithoutOrg = getUser();
     await oktaAPI.createUser(secondUserWithoutOrg);
     await oktaAPI.loginByOktaApi(secondUserWithoutOrg, page);
-    await dashboardPage.locators.addOrganizationLocator.click();
+    await dashboardPage.addOrganizationLocator.click();
     await page.waitForTimeout(2000);
-    await organizationPage.locators.organizationNameInput.type(firstOrgName);
-    await organizationPage.locators.createOrgButton.click();
-    await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
-    await expect(organizationPage.locators.organizationName).toHaveText(firstOrgName);
+    await organizationPage.organizationNameInput.type(firstOrgName);
+    await organizationPage.createOrgButton.click();
+    await organizationPage.toast.checkToastMessage(organizationPage.orgCreatedSuccessfully);
+    await expect(organizationPage.organizationName).toHaveText(firstOrgName);
   });
 
   test('SAAS-T220 Verify free account admin user can update org name @freeUser @organizations', async ({
@@ -165,52 +165,50 @@ test.describe('Spec file for free users dashboard tests', async () => {
       });
     });
 
-    await dashboardPage.locators.viewOrgLink.click();
+    await dashboardPage.sideMenu.mainMenu.organization.click();
 
-    await organizationPage.locators.editOrgButton.click();
-    await organizationPage.locators.editOrgSubmit.isDisabled();
-    await organizationPage.locators.organizationNameInput.fill('');
-    await expect(organizationPage.locators.organizationNameInputError).toHaveText(
-      organizationPage.messages.requiredField,
+    await organizationPage.editOrgButton.click();
+    await organizationPage.editOrgSubmit.isDisabled();
+    await organizationPage.organizationNameInput.fill('');
+    await expect(organizationPage.organizationNameInputError).toHaveText(
+      organizationPage.requiredField('Organization Name'),
     );
-    await organizationPage.locators.organizationNameInput.fill(newOrgName);
-    await organizationPage.locators.editOrgSubmit.click();
-    await organizationPage.toast.checkToastMessage(organizationPage.messages.orgEditedSuccessfully);
-    await expect(organizationPage.locators.organizationName).toHaveText(newOrgName);
+    await organizationPage.organizationNameInput.fill(newOrgName);
+    await organizationPage.editOrgSubmit.click();
+    await organizationPage.toast.checkToastMessage(organizationPage.orgEditedSuccessfully);
+    await expect(organizationPage.organizationName).toHaveText(newOrgName);
 
     await test.step('SAAS-T260 Verify user admin is able to delete own Organization', async () => {
       await test.step(
         'Click on Delete organization icon and Verify confirmation window is displayed',
         async () => {
-          await organizationPage.locators.deleteOrgButton.click();
-          await organizationPage.confirmDeleteOrgModal.elements.body.waitFor({ state: 'visible' });
+          await organizationPage.deleteOrgButton.click();
+          await organizationPage.confirmDeleteOrgModal.body.waitFor({ state: 'visible' });
 
-          await expect(organizationPage.confirmDeleteOrgModal.elements.header).toHaveText(
-            organizationPage.confirmDeleteOrgModal.messages.header,
+          await expect(organizationPage.confirmDeleteOrgModal.header).toHaveText(
+            organizationPage.confirmDeleteOrgModal.headerLabel,
           );
-          await expect(organizationPage.confirmDeleteOrgModal.elements.message).toHaveText(
-            organizationPage.confirmDeleteOrgModal.messages.body(newOrgName),
+          await expect(organizationPage.confirmDeleteOrgModal.message).toHaveText(
+            organizationPage.confirmDeleteOrgModal.bodyMessage(newOrgName),
           );
 
-          await expect(organizationPage.confirmDeleteOrgModal.elements.confirm).toHaveText(
-            organizationPage.confirmDeleteOrgModal.messages.confirm,
+          await expect(organizationPage.confirmDeleteOrgModal.confirm).toHaveText(
+            organizationPage.confirmDeleteOrgModal.confirmMessage,
           );
         },
       );
 
       await test.step('Confirm deletion of the org', async () => {
-        await organizationPage.confirmDeleteOrgModal.fields.orgNameInput.type(newOrgName);
-        await organizationPage.confirmDeleteOrgModal.buttons.submit.click();
-        await organizationPage.toast.checkToastMessage(
-          organizationPage.confirmDeleteOrgModal.messages.success,
-        );
+        await organizationPage.confirmDeleteOrgModal.orgNameInput.type(newOrgName);
+        await organizationPage.confirmDeleteOrgModal.submitButton.click();
+        await organizationPage.toast.checkToastMessage(organizationPage.confirmDeleteOrgModal.successMessage);
         const deletedOrg = await portalAPI.getOrg(adminToken);
 
         expect(deletedOrg.orgs.length).toEqual(0);
       });
 
       await test.step('Verify the form for creation organization is displayed', async () => {
-        await organizationPage.locators.organizationNameInput.waitFor({ state: 'visible' });
+        await organizationPage.organizationNameInput.waitFor({ state: 'visible' });
       });
     });
   });
@@ -235,12 +233,12 @@ test.describe('Spec file for free users dashboard tests', async () => {
       });
     });
 
-    await dashboardPage.locators.viewOrgLink.click();
-    await organizationPage.locators.editOrgButton.waitFor({ state: 'visible' });
-    await expect(organizationPage.locators.editOrgButton).toBeDisabled();
+    await dashboardPage.sideMenu.mainMenu.organization.click();
+    await organizationPage.editOrgButton.waitFor({ state: 'visible' });
+    await expect(organizationPage.editOrgButton).toBeDisabled();
     await test.step('Verify there is Delete button, but its disabled and cannot be clicked', async () => {
-      await organizationPage.locators.deleteOrgButton.waitFor({ state: 'visible' });
-      await expect(organizationPage.locators.deleteOrgButton).toBeDisabled();
+      await organizationPage.deleteOrgButton.waitFor({ state: 'visible' });
+      await expect(organizationPage.deleteOrgButton).toBeDisabled();
     });
   });
 });

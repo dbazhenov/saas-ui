@@ -17,22 +17,16 @@ const uiTestFolder = './ui-tests/';
 
 const config: PlaywrightTestConfig = {
   testDir: './ui-tests/tests',
-  timeout: 120 * 1000,
+  timeout: 240 * 1000,
   expect: {
     timeout: 5000,
   },
 
-  /* Run tests in files in parallel */
   fullyParallel: false,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: 6,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
+  workers: process.env.CI ? 8 : 1,
   reporter: [['html', { open: 'never' }]],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 
   use: {
     navigationTimeout: 30 * 1000,
@@ -56,6 +50,7 @@ const config: PlaywrightTestConfig = {
         },
         screenshot: 'on',
         ...devices['Desktop Chrome'],
+        viewport: { width: 1920, height: 1080 },
       },
     },
   ],

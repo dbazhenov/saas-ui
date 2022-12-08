@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs } from '@reduxjs/toolkit/query/react';
 import { ENDPOINTS } from 'core/api';
-import { ActivateProfileRequest, UpdateProfileRequest } from 'core/api/types';
+import {
+  ActivateProfileRequest,
+  UpdateProfileRequest,
+  ValidateTokenRequest,
+  ValidateTokenResponse,
+} from 'core/api/types';
 import { oktaAuth } from 'core';
 import { EditProfileError } from '../../components/MarketingBanner/MarketingBanner.types';
 
@@ -42,7 +47,14 @@ export const authApi = createApi({
         body,
       }),
     }),
+    validateToken: builder.mutation<ValidateTokenResponse, ValidateTokenRequest>({
+      query: (body) => ({
+        method: 'POST',
+        url: Auth.ValidateToken,
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useEditProfileMutation, useActivateProfileMutation } = authApi;
+export const { useEditProfileMutation, useActivateProfileMutation, useValidateTokenMutation } = authApi;

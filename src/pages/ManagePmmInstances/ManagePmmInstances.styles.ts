@@ -1,9 +1,9 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ border, colors, spacing, typography }: GrafanaTheme) => ({
+export const getStyles = ({ palette, typography, spacing, shape }: Theme) => ({
   container: css`
-    color: ${colors.text};
+    color: ${palette.text.primary};
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -11,26 +11,26 @@ export const getStyles = ({ border, colors, spacing, typography }: GrafanaTheme)
     header {
       align-items: center;
       display: flex;
-      font-weight: ${typography.weight.regular};
-      font-size: ${typography.heading.h2};
-      margin: 0 0 ${spacing.md};
+      font-weight: ${typography.fontWeightRegular};
+      font-size: ${typography.h2.fontSize};
+      margin: 0 0 ${spacing(2)};
 
       svg {
         height: 28px;
-        margin-right: ${spacing.md};
+        margin-right: ${spacing(2)};
       }
     }
   `,
   contentWrapper: css`
-    background-color: ${colors.pageHeaderBg};
-    border-radius: ${border.radius.lg};
-    padding: ${spacing.lg};
+    background-color: ${palette.background.default};
+    border-radius: ${shape.borderRadius};
+    padding: ${spacing(3)};
   `,
   linkWrapper: css`
     text-align: right;
-    padding: ${spacing.sm};
+    padding: ${spacing(1)};
   `,
   externalLink: css`
-    color: ${colors.linkExternal};
+    color: ${palette.primary.main};
   `,
 });

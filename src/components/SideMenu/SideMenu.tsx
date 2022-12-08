@@ -1,51 +1,57 @@
 import React, { FC } from 'react';
-import { useStyles } from '@grafana/ui';
-import { IconLink } from 'components';
-import { Routes } from 'core/routes';
-import dashboard from 'assets/dashboard.svg';
-import organization from 'assets/percona-sidebar-organization.svg';
-import instances from 'assets/percona-sidebar-instances.svg';
-import sidebarBlog from 'assets/percona-sidebar-blog.svg';
-import sidebarDocs from 'assets/percona-sidebar-docs.svg';
-import sidebarForum from 'assets/percona-sidebar-forum.svg';
-import sidebarK8s from 'assets/percona-sidebar-k8s.svg';
-import help from 'assets/percona-sidebar-help.svg';
-import { ResourceLink } from 'components/ResourceLink';
-import { getStyles } from './SideMenu.styles';
+import { Box, createTheme, Drawer, List, ThemeProvider, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { ReactComponent as PerconaLogo } from 'assets/percona-logo.svg';
+import { HEADER_HEIGHT } from 'components/Layouts/PrivateLayout/PrivateLayout.constants';
+import { Routes } from 'core';
 import { Messages } from './SideMenu.messages';
-import { resourcesLinks } from './SideMenu.constants';
+import { mainMenu, resourcesMenu } from './SideMenu.constants';
+import { styles } from './SideMenu.styles';
+import { NavItem } from './NavItem';
+import { ResourceItem } from './ResourceItem';
 
-export const SideMenu: FC = () => {
-  const styles = useStyles(getStyles);
+const sideMenuTheme = createTheme({ palette: { mode: 'dark' } });
 
-  return (
-    <nav data-testid="side-menu" className={styles.sideMenu}>
-      <section data-testid="side-menu-main-section" className={styles.section}>
-        <header className={styles.navSectionLabel} data-testid="main-header">
-          {Messages.main}
-        </header>
-        <IconLink icon={dashboard} to={Routes.root} alt={Messages.dashboard}>
-          {Messages.dashboard}
-        </IconLink>
-        <IconLink icon={organization} to={Routes.organization} alt={Messages.organization}>
-          {Messages.organization}
-        </IconLink>
-        <IconLink icon={instances} to={Routes.instances} alt={Messages.instances}>
-          {Messages.instances}
-        </IconLink>
-        <IconLink icon={sidebarK8s} to={Routes.kubernetes} alt={Messages.k8sCluster}>
-          {Messages.k8sCluster}
-        </IconLink>
-      </section>
-      <section data-testid="side-menu-resources-section" className={styles.section}>
-        <header className={styles.navSectionLabel} data-testid="resources-header">
-          {Messages.resources}
-        </header>
-        <ResourceLink text={Messages.documentation} icon={sidebarDocs} href={resourcesLinks.documentation} />
-        <ResourceLink text={Messages.blogs} icon={sidebarBlog} href={resourcesLinks.blogs} />
-        <ResourceLink text={Messages.forum} icon={sidebarForum} href={resourcesLinks.forum} />
-        <ResourceLink text={Messages.help} icon={help} href={resourcesLinks.help} />
-      </section>
-    </nav>
-  );
-};
+export const SideMenu: FC = () => (
+  <ThemeProvider theme={sideMenuTheme}>
+    <Drawer variant="permanent" data-testid="side-menu" sx={styles.drawer}>
+      <Box display="flex" flexDirection="column" pb={2} flexGrow={1}>
+        <Box
+          display="flex"
+          flexDirection="row"
+          alignItems="center"
+          pl={2}
+          mb={2}
+          height={`${HEADER_HEIGHT}px`}
+          color="inherit"
+          component={Link}
+          sx={styles.logo.wrapper}
+          to={Routes.root}
+          data-testid="menu-bar-home-link"
+        >
+          <PerconaLogo />
+          <Typography
+            marginLeft={1}
+            marginTop="3px"
+            fontWeight={500}
+            fontSize={16}
+            sx={styles.logo.typography}
+          >
+            {Messages.portal}
+          </Typography>
+        </Box>
+        <List data-testid="side-menu-main-section">
+          {mainMenu.map((page) => (
+            <NavItem key={page.to} label={page.label} icon={page.icon} to={page.to} />
+          ))}
+        </List>
+        <Box flexGrow={1} />
+        <List data-testid="side-menu-resources-section">
+          {resourcesMenu.map((page) => (
+            <ResourceItem key={page.to} label={page.label} icon={page.icon} to={page.to} />
+          ))}
+        </List>
+      </Box>
+    </Drawer>
+  </ThemeProvider>
+);

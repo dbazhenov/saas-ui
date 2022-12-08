@@ -75,7 +75,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
       const secondDashboard = new DashboardPage(secondPage);
 
       await secondPage.goto('/');
-      await secondDashboard.uiUserLogout();
+      await secondDashboard.userDropdown.logoutUser();
       await secondPage.close();
     });
 
@@ -85,15 +85,14 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
 
     await test.step('2. Login on Portal and check Entitlements', async () => {
       await oktaAPI.loginByOktaApi(customerFirstAdmin, page);
-      await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toHaveText(
+      await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText(
         String(defaultNumberOfEntitlements),
       );
-      await dashboardPage.entitlementsModal.elements.entitlementsButton.click();
-      await dashboardPage.entitlementsModal.elements.body.waitFor({ state: 'visible' });
-      await expect(dashboardPage.entitlementsModal.elements.entitlementContainer).toHaveCount(
+      await dashboardPage.entitlementsModal.entitlementsButton.click();
+      await dashboardPage.entitlementsModal.body.waitFor({ state: 'visible' });
+      await expect(dashboardPage.entitlementsModal.entitlementContainer).toHaveCount(
         defaultNumberOfEntitlements,
       );
-      await dashboardPage.entitlementsModal.buttons.close.click();
     });
   });
 
@@ -112,8 +111,8 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     test.step(
       '1. Navigate to Entitlements details on Portal and verify no entitlements are displayed for the user.',
       async () => {
-        await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toHaveText('0');
-        await dashboardPage.entitlementsModal.elements.entitlementsButton.waitFor({ state: 'detached' });
+        await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText('0');
+        await dashboardPage.entitlementsModal.entitlementsButton.waitFor({ state: 'detached' });
       },
     );
   });
@@ -132,10 +131,10 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
         await oktaAPI.loginByOktaApi(customerFirstAdmin, page);
         await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.locators.membersTab.click();
+        await organizationPage.membersTab.click();
         await membersPage.membersTable.inviteMembers.inviteMember(notCustomerUser.email, UserRoles.admin);
         await membersPage.membersTable.verifyUserMembersTable(notCustomerUser, UserRoles.admin);
-        await membersPage.uiUserLogout();
+        await membersPage.userDropdown.logoutUser();
       },
     );
 
@@ -145,9 +144,9 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
 
       await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
 
-      await expect(dashboardPage.entitlementsModal.elements.entitlementsRow).toBeHidden();
-      await expect(dashboardPage.entitlementsModal.elements.numberEntitlements).toBeHidden();
-      await expect(dashboardPage.entitlementsModal.elements.entitlementsButton).toBeHidden();
+      await expect(dashboardPage.entitlementsModal.entitlementsRow).toBeHidden();
+      await expect(dashboardPage.entitlementsModal.numberEntitlements).toBeHidden();
+      await expect(dashboardPage.entitlementsModal.entitlementsButton).toBeHidden();
     });
   });
 });

@@ -1,26 +1,24 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme) => ({
+export const getStyles = ({ palette, spacing, typography }: Theme) => ({
   cardsContainer: css`
     display: flex;
     flex-wrap: wrap;
   `,
   promoCard: css`
-    color: ${colors.text};
-    flex: 1 1 calc(65% - ${spacing.lg});
-    background-color: ${palette.gray6};
+    flex: 1 1 calc(65% - ${spacing(3)});
 
     @media (max-width: 850px) {
       flex: 0 0 100%;
     }
 
     &:first-child {
-      margin-right: ${spacing.lg};
+      margin-right: ${spacing(3)};
 
       @media (max-width: 850px) {
         margin: 0;
-        margin-bottom: ${spacing.lg};
+        margin-bottom: ${spacing(3)};
       }
     }
   `,
@@ -29,18 +27,18 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    padding: ${spacing.lg};
-    color: ${palette.white};
+    padding: ${spacing(3)};
+    color: ${palette.common.white};
     background: linear-gradient(to right, #2a83d4, #8bbdda);
   `,
   cardTitle: css`
-    font-size: ${typography.heading.h3};
-    font-weight: ${typography.weight.bold};
-    margin-bottom: ${spacing.base}px;
+    font-size: ${typography.h6.fontSize} !important;
+    font-weight: ${typography.fontWeightBold} !important;
+    margin-bottom: ${spacing(1)};
     margin-top: 0;
   `,
   boldPoint: css`
-    font-weight: ${typography.weight.bold};
+    font-weight: ${typography.fontWeightBold};
   `,
   buttonContainer: css`
     display: flex;
@@ -50,9 +48,10 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
     text-decoration: none;
   `,
   list: css`
-    margin-left: ${spacing.base * 3 - 2}px;
-    margin-bottom: ${spacing.base + 4}px;
-    line-height: ${typography.lineHeight.md - 0.1};
+    margin-left: ${spacing(3)} !important;
+    margin-bottom: ${spacing(1.5)} !important;
+    line-height: ${typography.body1.lineHeight};
+    list-style: disc !important;
 
     li {
       margin-bottom: 5px;

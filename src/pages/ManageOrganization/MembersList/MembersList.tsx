@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Column } from 'react-table';
-import { Table } from '@percona/platform-core';
-import { useStyles } from '@grafana/ui';
+import { LinearProgress } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { useStyles } from 'core/utils';
 import { OrgMember } from 'store/types';
 import { getFirstOrgId, getOrgMembers, getIsOrgPending, searchOrgMembersAction } from 'store/orgs';
 import { ReactComponent as UserAvatar } from 'assets/user-avatar.svg';
@@ -22,54 +22,53 @@ export const MembersList: FC = () => {
   const orgId = useSelector(getFirstOrgId);
   const { orgRole } = useSelector(getAuth);
 
-  const columns = useMemo<Column<OrgMember>[]>(
-    () => [
-      {
-        Header: Messages.name,
-        accessor: ({ firstName, lastName, status, memberId }: OrgMember) => {
-          const fullName = `${firstName} ${lastName}`;
+  const columns: GridColDef[] = [
+    {
+      field: 'name',
+      flex: 2,
+      headerName: Messages.name,
+      renderCell: ({ row: { firstName, lastName, status, memberId } }: GridRenderCellParams<OrgMember>) => {
+        const fullName = `${firstName} ${lastName}`;
 
-          return (
-            <>
-              {status === MemberStatus.active ? (
-                <div className={styles.fullNameWrapper}>
-                  <UserAvatar className={styles.userAvatarIcon} />
-                  <span className={styles.fullName}>{fullName}</span>
+        return (
+          <div>
+            {status === MemberStatus.active ? (
+              <div className={styles.fullNameWrapper}>
+                <div className={styles.userAvatarIcon}>
+                  <UserAvatar />
                 </div>
-              ) : (
-                <div className={styles.clockIconWrapper} data-testid="user-not-activated">
-                  <div>
-                    <Clock className={styles.clockIcon} />
-                    <span className={styles.labelsResendEmails}>{Messages.pendingConfirmation}</span>
-                  </div>
-                  {orgRole === MemberRole.admin && status === MemberStatus.provisioned && (
-                    <ResendEmailLink organization={orgId} member={memberId} />
-                  )}
+                <span className={styles.fullName}>{fullName}</span>
+              </div>
+            ) : (
+              <div className={styles.clockIconWrapper} data-testid="user-not-activated">
+                <div className={styles.clockIcon}>
+                  <Clock title={Messages.pendingConfirmation} />
                 </div>
-              )}
-            </>
-          );
-        },
-        width: '30%',
+                {orgRole === MemberRole.admin && status === MemberStatus.provisioned && (
+                  <ResendEmailLink organization={orgId} member={memberId} />
+                )}
+              </div>
+            )}
+          </div>
+        );
       },
-      {
-        Header: Messages.email,
-        accessor: 'email',
-        width: '40%',
-      },
-      {
-        Header: Messages.role,
-        accessor: 'role',
-        width: '25%',
-      },
-      {
-        Header: Messages.actions,
-        accessor: (member: OrgMember) => <MemberActions member={member} />,
-        width: '5%',
-      },
-    ],
-    [styles, orgId, orgRole],
-  ) as any;
+    },
+    {
+      field: 'email',
+      flex: 3,
+      headerName: Messages.email,
+    },
+    {
+      field: 'role',
+      headerName: Messages.role,
+    },
+    {
+      align: 'center',
+      field: 'member',
+      headerName: Messages.actions,
+      renderCell: ({ row }: GridRenderCellParams<OrgMember>) => <MemberActions member={row} />,
+    },
+  ];
 
   useEffect(() => {
     if (orgId && !pending && !members.length) {
@@ -77,14 +76,22 @@ export const MembersList: FC = () => {
     }
   }, [dispatch, orgId, members, pending]);
 
+  const tableComponents = {
+    LoadingOverlay: LinearProgress,
+  };
+
   return (
-    <div data-testid="members-list-wrapper" className={styles.tableWrapper}>
-      <Table
-        data={members}
-        totalItems={members.length}
+    <div className={styles.tableWrapper} data-testid="members-list-wrapper">
+      <DataGrid
+        autoHeight
         columns={columns}
-        emptyMessage={Messages.noData}
-        pendingRequest={pending}
+        components={tableComponents}
+        disableColumnMenu
+        disableSelectionOnClick
+        getRowId={(row) => row.email}
+        hideFooter
+        loading={pending}
+        rows={members}
       />
     </div>
   );

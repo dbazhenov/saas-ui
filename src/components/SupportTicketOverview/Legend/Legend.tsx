@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
-import { Tag, useStyles } from '@grafana/ui';
+import { Chip } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import { useStyles } from 'core';
 import { cx } from 'emotion';
 import { LegendProps } from './Legend.types';
 import { getStyles } from './Legend.styles';
@@ -19,7 +21,9 @@ export const Legend: FC<LegendProps> = ({ values }) => {
                 data-testid="department-color"
               />
               <span data-testid="department-name">{item.department}</span>
-              <strong data-testid="department-ticket-count">{item.ammount}</strong>
+              <Typography component="strong" data-testid="department-ticket-count">
+                {item.ammount}
+              </Typography>
             </div>
           </div>
         ))}
@@ -29,7 +33,7 @@ export const Legend: FC<LegendProps> = ({ values }) => {
           <div className={cx(styles.item, styles.alignTop)} key={item.department}>
             <div className={styles.tagList} data-testid="department-tag-list">
               {item.types.map((type) => (
-                <Tag name={type} className={styles.tag} key={type} data-testid="department-tags" />
+                <Chip label={type} className={styles.tag} key={type} data-testid="department-tags" />
               ))}
             </div>
           </div>

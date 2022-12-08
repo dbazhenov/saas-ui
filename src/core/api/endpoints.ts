@@ -8,6 +8,7 @@ export const ENDPOINTS = {
     SignUp: '/v1/auth/SignUp',
     UpdateProfile: '/v1/auth/UpdateProfile',
     ActivateProfile: '/v1/auth/ActivateProfile',
+    ValidateToken: '/v1/auth/ValidateToken',
   },
   Org: {
     createOrganization: '/v1/orgs',

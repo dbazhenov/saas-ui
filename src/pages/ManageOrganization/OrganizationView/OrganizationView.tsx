@@ -1,7 +1,9 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { IconButton, Spinner, useStyles } from '@grafana/ui';
+import { IconButton, CircularProgress } from '@mui/material';
+import { Edit, Delete } from '@mui/icons-material';
+import { useStyles } from 'core/utils';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import {
   enterOrganizationEditing,
@@ -27,7 +29,7 @@ export const OrganizationView: FC = () => {
   const companyName = useSelector(getUserCompanyName);
   const orgCreationDate = useSelector(getCurrentOrgCreationDate);
   const pending = useSelector(getIsOrgPending);
-  const [displayName, setDisplayName] = useState<string>();
+  const [displayName, setDisplayName] = useState<string>(companyName || orgName);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const isUserAdmin = useSelector(getIsUserAdmin);
 
@@ -73,7 +75,7 @@ export const OrganizationView: FC = () => {
     <>
       <div data-testid="create-organization-wrapper" className={containerStyles}>
         {pending ? (
-          <Spinner />
+          <CircularProgress />
         ) : (
           <>
             <OrganizationLogo />
@@ -94,19 +96,21 @@ export const OrganizationView: FC = () => {
                     {!companyName && (
                       <IconButton
                         data-testid="member-actions-edit"
-                        name="pen"
                         title={Messages.editOrganization}
                         onClick={handleEditOrganizationClick}
                         disabled={!isUserAdmin}
-                      />
+                      >
+                        <Edit />
+                      </IconButton>
                     )}
                     <IconButton
                       data-testid="member-actions-delete"
-                      name="trash-alt"
                       title={Messages.deleteOrganization}
                       onClick={handleDeleteOrganizationClick}
                       disabled={!isUserAdmin}
-                    />
+                    >
+                      <Delete />
+                    </IconButton>
                   </div>
                 </>
               )}
@@ -116,7 +120,7 @@ export const OrganizationView: FC = () => {
       </div>
       <OrganizationDeleteModal
         orgId={orgId}
-        orgName={orgName}
+        orgName={displayName}
         isVisible={isDeleteModalVisible}
         onSubmit={handleDeleteOrganizationSubmit}
         onClose={handleDeleteModalClose}

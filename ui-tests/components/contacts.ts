@@ -49,12 +49,12 @@ export default class Contacts {
     this.contactsLoadingSpinner = page.locator(
       '//div[@data-testid="contacts-section"]//div[data-testid="overlay-spinner"]',
     );
-    this.perconaContactsHeader = page.locator('p', { hasText: 'Percona Contacts' });
+    this.perconaContactsHeader = page.locator('h6', { hasText: 'Percona Contacts' });
     this.emailContactLink = page.locator('//a[@data-testid="email-contact-link"]');
     this.forumContactLink = page.locator('//a[@data-testid="forum-contact-link"]');
     this.discordContactLink = page.locator('//a[@data-testid="discord-contact-link"]');
     this.contactPageLink = page.locator('//a[@data-testid="contact-page-link"]');
-    this.customerContactIcon = page.locator('//button[@data-testid="customer-contact-email-icon"]//div');
-    this.customerContactName = page.locator('//span[@data-testid="customer-contact-name"]');
+    this.customerContactIcon = page.locator('//button[@data-testid="customer-contact-email-icon"]');
+    this.customerContactName = page.locator('//p[@data-testid="customer-contact-name"]');
   }
 }

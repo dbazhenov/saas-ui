@@ -1,72 +1,66 @@
-import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { FORM_PROFILE_WIDTH } from './Profile.constants';
 
-export const getStyles = (theme: GrafanaTheme) => {
-  const { colors, spacing, typography } = theme;
-
-  return {
-    wrapper: css`
-      display: flex;
-      justify-content: center;
-      width: 100%;
-    `,
-    form: css`
-      flex: 1;
-      max-width: 600px;
-    `,
-    legend: css`
-      font-size: ${typography.heading.h3};
-      font-weight: ${typography.weight.regular};
-      margin: ${spacing.formMargin};
-      text-align: center;
-      color: ${colors.text};
-    `,
-    nameFields: css`
-      display: flex;
-
-      & > * {
-        flex: 1;
-        justify-content: space-between;
-
-        &:not(:last-child) {
-          margin-right: ${spacing.md};
-        }
-      }
-    `,
-    buttonWrapper: css`
-      display: flex;
-      justify-content: flex-end;
-      margin-top: ${spacing.md};
-    `,
-    editProfileWrapper: css`
-      margin-top: ${spacing.md};
-      margin-left: ${spacing.xxs};
-    `,
-    externalLink: css`
-      color: ${colors.linkExternal};
-      font-weight: ${typography.weight.semibold};
-      text-decoration: none;
-    `,
-    platformAccessTokenWrapper: css`
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    `,
-    platformAccessTokenButtonWrapper: css`
-      > * {
-        // overrides the default padding for LinkButton
-        padding: 0 0 0 ${spacing.md};
-      }
-    `,
-    platformAccessTokenLabel: css`
-      font-size: ${typography.size.base};
-      margin-bottom: 0;
-    `,
-    platformAccessTokenDescription: css`
-      color: ${colors.text};
-      margin: ${spacing.sm} 0 ${spacing.xl} ${spacing.xxs};
-      text-align: justify;
-      line-height: ${typography.lineHeight.md};
-    `,
-  };
+export const styles = {
+  wrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  form: {
+    flex: 1,
+    maxWidth: FORM_PROFILE_WIDTH,
+  },
+  legend: {
+    textAlign: 'center',
+    fontSize: 21,
+    fontWeight: 'regular',
+    m: 4,
+    color: 'text.primary',
+  },
+  nameFields: {
+    display: 'flex',
+    '& > *': {
+      flex: 1,
+      justifyContent: 'space-between',
+      '&:not(:last-child)': {
+        mr: 2,
+      },
+    },
+  },
+  externalLink: {
+    color: 'primary.main',
+    fontWeight: 500,
+    cursor: 'pointer',
+    textDecoration: 'none',
+  },
+  buttonWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    mt: 2,
+  },
+  submitButton: {
+    textTransform: 'capitalize',
+    backgroundColor: 'primary.main',
+    p: 0.4,
+  },
+  linkEditWrapper: {
+    mt: 2,
+    ml: 0.25,
+  },
+  linkConnectPMMWrapper: {
+    lineHeight: 1.5,
+    textAlign: 'justify',
+    color: 'text.primary',
+    ml: 0.25,
+    mt: 1,
+    mb: 4,
+  },
+  platformAccessTokenWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  spanWrapper: {
+    ml: 0.4,
+  },
 };

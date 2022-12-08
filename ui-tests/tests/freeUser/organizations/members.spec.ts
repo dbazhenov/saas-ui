@@ -65,18 +65,19 @@ test.describe('Spec file for free users members tests', async () => {
   }) => {
     const dashboardPage = new DashboardPage(page);
     const organizationPage = new OrganizationPage(page);
+    const membersPage = new MembersPage(page);
 
     await test.step('Navigate to the Members tab and edit user roles as admin', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
-      await dashboardPage.locators.viewOrgLink.click();
-      await organizationPage.locators.membersTab.click();
-      await organizationPage.isMemberTableEditButtonDisabled(admin1User.email);
-      await organizationPage.changeMemberRoleAndVerify(
+      await dashboardPage.sideMenu.mainMenu.organization.click();
+      await organizationPage.membersTab.click();
+      await membersPage.membersTable.isEditButtonDisabled(admin1User.email);
+      await membersPage.membersTable.changeMemberRoleAndVerify(
         admin2User.email,
         UserRoles.admin,
         UserRoles.technical,
       );
-      await organizationPage.changeMemberRoleAndVerify(
+      await membersPage.membersTable.changeMemberRoleAndVerify(
         technicalUser.email,
         UserRoles.technical,
         UserRoles.admin,
@@ -85,7 +86,7 @@ test.describe('Spec file for free users members tests', async () => {
   });
 
   // Un-skip when https://jira.percona.com/browse/SAAS-1176 is fixed
-  test.skip('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members @tempTest', async ({
+  test.skip('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members', async ({
     page,
     context,
     baseURL,
@@ -98,8 +99,8 @@ test.describe('Spec file for free users members tests', async () => {
 
     await test.step('Invite previously not registered new member to the organization.', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
-      await dashboardPage.locators.viewOrgLink.click();
-      await organizationPage.locators.membersTab.click();
+      await dashboardPage.sideMenu.mainMenu.organization.click();
+      await organizationPage.membersTab.click();
       await membersPage.membersTable.inviteMembers.inviteMember(notRegisteredUser.email);
       message = await getMailosaurMessage(notRegisteredUser.email, `Welcome to ${org.name}`);
       await deleteMailosaurMessage(message.id);
@@ -142,7 +143,7 @@ test.describe('Spec file for free users members tests', async () => {
       await membersPage.membersTable
         .resetEmailLink(secondNotRegisteredUser.email)
         .waitFor({ state: 'visible' });
-      await membersPage.uiUserLogout();
+      await membersPage.userDropdown.logoutUser();
       await signInPage.emailInput.waitFor({ state: 'visible' });
     });
 
@@ -151,10 +152,8 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(technicalUser, page);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.locators.membersTab.click();
-        await membersPage.membersTable.elements
-          .rowByText(secondNotRegisteredUser.email)
-          .waitFor({ state: 'visible' });
+        await organizationPage.membersTab.click();
+        await membersPage.membersTable.rowByText(secondNotRegisteredUser.email).waitFor({ state: 'visible' });
         await membersPage.membersTable
           .resetEmailLink(secondNotRegisteredUser.email)
           .waitFor({ state: 'detached' });
@@ -194,28 +193,15 @@ test.describe('Spec file for free users members tests', async () => {
     usersTable.sort((a, b) => (a.Name < b.Name ? -1 : 1));
 
     await oktaAPI.loginByOktaApi(technicalUser, page);
-    await dashboardPage.locators.viewOrgLink.click();
-    await organizationPage.locators.membersTab.click();
+    await dashboardPage.sideMenu.mainMenu.organization.click();
+    await organizationPage.membersTab.click();
 
     await membersPage.membersTable.verifyMembersTable(usersTable);
-    const membersTableRows = membersPage.membersTable.elements.row;
 
-    // eslint-disable-next-line no-await-in-loop, no-plusplus
-    for (let i = 0; i < (await membersTableRows.count()); i++) {
-      expect(
-        // eslint-disable-next-line no-await-in-loop
-        await membersTableRows
-          .nth(i)
-          .locator(membersPage.membersTable.membersTableEditUser.toString().replace('Locator@', ''))
-          .isDisabled(),
-      ).toBeTruthy();
-      expect(
-        // eslint-disable-next-line no-await-in-loop
-        await membersTableRows
-          .nth(i)
-          .locator(membersPage.membersTable.membersTableDeleteUser.toString().replace('Locator@', ''))
-          .isDisabled(),
-      ).toBeTruthy();
+    // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unused-vars
+    for await (const user of usersTable.entries()) {
+      await membersPage.membersTable.isDeleteButtonDisabled(user[1].Email);
+      await membersPage.membersTable.isEditButtonDisabled(user[1].Email);
     }
   });
 
@@ -228,17 +214,15 @@ test.describe('Spec file for free users members tests', async () => {
 
     await oktaAPI.loginByOktaApi(admin1User, page);
 
-    await dashboardPage.locators.viewOrgLink.click();
-    await organizationPage.locators.membersTab.click();
+    await dashboardPage.sideMenu.mainMenu.organization.click();
+    await organizationPage.membersTab.click();
 
-    await membersPage.membersTable.verifyMembersTableUserButtons(
-      `${admin1User.firstName} ${admin1User.lastName}`,
-      false,
-    );
+    await membersPage.membersTable.isDeleteButtonDisabled(admin1User.email);
+    await membersPage.membersTable.isEditButtonDisabled(admin1User.email);
 
-    await membersPage.membersTable.deleteUserMembersTabByEmail(admin2User.email);
+    await membersPage.membersTable.deleteUserByEmail(admin2User.email);
     await membersPage.toast.toastElementContainer.waitFor({ state: 'detached' });
-    await membersPage.membersTable.deleteUserMembersTabByEmail(technicalUser.email);
+    await membersPage.membersTable.deleteUserByEmail(technicalUser.email);
   });
 
   test('SAAS-T169 Verify Technical User can not invite Org members @freeUser @members', async ({ page }) => {
@@ -249,8 +233,8 @@ test.describe('Spec file for free users members tests', async () => {
     await oktaAPI.loginByOktaApi(technicalUser, page);
 
     await organizationPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.locators.membersTab.click();
-    await membersPage.membersTable.elements.table.waitFor({ state: 'visible' });
+    await organizationPage.membersTab.click();
+    await membersPage.membersTable.table.waitFor({ state: 'visible' });
     await membersPage.membersTable.inviteMembers.inviteMemberButton.waitFor({ state: 'detached' });
   });
 
@@ -265,17 +249,17 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(admin1User, page);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.locators.membersTab.click();
+        await organizationPage.membersTab.click();
         await membersPage.membersTable.inviteMembers.inviteMemberButton.click();
-        await membersPage.membersTable.inviteMembers.getUsernameLocator(0).waitFor({ state: 'visible' });
+        await membersPage.membersTable.inviteMembers.username(0).waitFor({ state: 'visible' });
 
-        await membersPage.membersTable.inviteMembers.getUsernameLocator(1).waitFor({ state: 'detached' });
+        await membersPage.membersTable.inviteMembers.username(1).waitFor({ state: 'detached' });
       },
     );
 
     await test.step('2. Click on "Add another user"', async () => {
       await membersPage.membersTable.inviteMembers.inviteMemberAddRow.click();
-      await membersPage.membersTable.inviteMembers.getUsernameLocator(1).waitFor({ state: 'visible' });
+      await membersPage.membersTable.inviteMembers.username(1).waitFor({ state: 'visible' });
     });
 
     await test.step(
@@ -294,7 +278,7 @@ test.describe('Spec file for free users members tests', async () => {
     await test.step('4. Invite 10 users, with mixed admin and technical roles roles.', async () => {
       invitedUsers = await membersPage.membersTable.inviteMembers.getRandomUserEmailsWithRoles(10);
 
-      await membersPage.membersTable.inviteMembers.buttons.close.click();
+      await membersPage.membersTable.inviteMembers.cancelButton.click();
       await membersPage.membersTable.inviteMembers.inviteMemberButton.click();
       await membersPage.membersTable.inviteMembers.inviteMembers(invitedUsers);
       await membersPage.membersTable.inviteMembers.verifySuccessfullyInvitedMessage(invitedUsers.length);
@@ -304,8 +288,8 @@ test.describe('Spec file for free users members tests', async () => {
       await membersPage.membersTable.inviteMembers.inviteMember(invitedUsers[0].email);
       await membersPage.toast.checkToastMessage(membersPage.membersTable.inviteMembers.errorInviteMessage);
 
-      await membersPage.membersTable.inviteMembers.getUsernameErrorLocator(0).waitFor({ state: 'visible' });
-      await expect(membersPage.membersTable.inviteMembers.getUsernameErrorLocator(0)).toHaveText(
+      await membersPage.membersTable.inviteMembers.usernameError(0).waitFor({ state: 'visible' });
+      await expect(membersPage.membersTable.inviteMembers.usernameError(0)).toHaveText(
         membersPage.membersTable.inviteMembers.alreadyMemberMessage,
       );
     });
@@ -322,11 +306,11 @@ test.describe('Spec file for free users members tests', async () => {
     await test.step('1. Go to Members tab and remove some user from the organization', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
       await organizationPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.locators.membersTab.click();
-      await membersPage.membersTable.elements.table.waitFor({ state: 'visible' });
-      await membersPage.membersTable.deleteUserMembersTabByEmail(admin2User.email);
+      await organizationPage.membersTab.click();
+      await membersPage.membersTable.table.waitFor({ state: 'visible' });
+      await membersPage.membersTable.deleteUserByEmail(admin2User.email);
       await membersPage.membersTable.verifyUserNotPresent(admin2User.email);
-      await membersPage.uiUserLogout();
+      await membersPage.userDropdown.logoutUser();
       await signInPage.emailInput.waitFor({ state: 'visible' });
     });
 
@@ -335,10 +319,10 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(admin2User, page);
         await organizationPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.locators.organizationNameInput.type(orgName);
-        await organizationPage.locators.createOrgButton.click();
-        await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
-        await expect(organizationPage.locators.organizationName).toHaveText(orgName);
+        await organizationPage.organizationNameInput.type(orgName);
+        await organizationPage.createOrgButton.click();
+        await organizationPage.toast.checkToastMessage(organizationPage.orgCreatedSuccessfully);
+        await expect(organizationPage.organizationName).toHaveText(orgName);
       },
     );
   });

@@ -1,32 +1,33 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
+import { blueGrey } from '@mui/material/colors';
 
-export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme) => ({
+export const getStyles = ({ palette, spacing, typography }: Theme) => ({
   cardsContainer: css`
     display: flex;
     flex-wrap: wrap;
   `,
   card: css`
-    color: ${colors.text};
     flex: 1 1 35%;
-    background-color: ${colors.bg3};
+    padding: ${spacing(3)};
+    background-color: ${palette.mode === 'light' ? blueGrey[50] : blueGrey[900]};
 
     @media (max-width: 850px) {
       flex: 0 0 100%;
     }
 
     &:first-child {
-      margin-right: ${spacing.lg};
+      margin-right: ${spacing(3)};
 
       @media (max-width: 850px) {
         margin: 0;
-        margin-bottom: ${spacing.lg};
+        margin-bottom: ${spacing(3)};
       }
     }
   `,
   cardOverlay: css`
     height: 100%;
-    padding: ${spacing.lg};
+    padding: ${spacing(3)};
 
     & > div:first-child {
       top: 0;
@@ -35,14 +36,15 @@ export const getStyles = ({ palette, spacing, colors, typography }: GrafanaTheme
   `,
   cardTitle: css`
     margin-top: 0;
-    font-size: ${typography.size.lg};
-    font-weight: ${typography.weight.bold};
+    font-size: ${typography.h6.fontSize} !important;
+    font-weight: ${typography.fontWeightBold} !important;
   `,
   externalLink: css`
-    color: ${colors.linkExternal};
+    display: block;
+    color: ${palette.primary.main};
   `,
   label: css`
-    margin-right: ${spacing.xs};
+    margin-right: ${spacing(0.5)};
   `,
   mailLink: css`
     display: block;

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStyles } from '@grafana/ui';
-import { Overlay } from '@percona/platform-core';
+import { useStyles } from 'core';
+import { Typography } from '@mui/material';
 import { getIsPerconaCustomer } from 'store/auth';
 import {
   getCustomerSuccessContact,
@@ -55,62 +55,52 @@ export const Contacts: FC = () => {
     <section className={styles.cardsContainer}>
       <PromoBanner />
       <div className={styles.card} data-testid="contacts-section">
-        <Overlay className={styles.cardOverlay}>
-          <p className={styles.cardTitle}>{Messages.perconaContacts}</p>
-          <p>
-            <span className={styles.label}>{Messages.needHelp}</span>
-            <span className={styles.mailLink}>
+        <Typography className={styles.cardTitle} variant="h6">
+          {Messages.perconaContacts}
+        </Typography>
+        <p>
+          <Typography>{Messages.needHelp}</Typography>
+          <a className={styles.externalLink} href={`mailto:${helpEmail}`} data-testid="email-contact-link">
+            {helpEmail}
+          </a>
+        </p>
+        {CSContact.name ? (
+          <CustomerContact />
+        ) : (
+          <>
+            <Typography>{Messages.findUs}</Typography>
+            <a
+              className={styles.externalLink}
+              href={LINKS.forum}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="forum-contact-link"
+            >
+              {Messages.forums}
+            </a>
+            <a
+              className={styles.externalLink}
+              href={LINKS.discord}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="discord-contact-link"
+            >
+              {Messages.discord}
+            </a>
+            <p>
+              <Typography component="span">{Messages.getInTouch} </Typography>
               <a
                 className={styles.externalLink}
-                href={`mailto:${helpEmail}`}
-                data-testid="email-contact-link"
+                href={LINKS.contact}
+                target="_blank"
+                rel="noreferrer noopener"
+                data-testid="contact-page-link"
               >
-                {helpEmail}
+                {Messages.contactsPage}
               </a>
-            </span>
-          </p>
-          {CSContact.name ? (
-            <CustomerContact />
-          ) : (
-            <>
-              <p>{Messages.findUs}</p>
-              <p>
-                <a
-                  className={styles.externalLink}
-                  href={LINKS.forum}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  data-testid="forum-contact-link"
-                >
-                  {Messages.forums}
-                </a>
-              </p>
-              <p>
-                <a
-                  className={styles.externalLink}
-                  href={LINKS.discord}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  data-testid="discord-contact-link"
-                >
-                  {Messages.discord}
-                </a>
-              </p>
-              <p>
-                {Messages.getInTouch}{' '}
-                <a
-                  className={styles.externalLink}
-                  href={LINKS.contact}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  data-testid="contact-page-link"
-                >
-                  {Messages.contactsPage}
-                </a>
-              </p>
-            </>
-          )}
-        </Overlay>
+            </p>
+          </>
+        )}
       </div>
     </section>
   );

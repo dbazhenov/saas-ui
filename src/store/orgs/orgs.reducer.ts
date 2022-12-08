@@ -59,7 +59,7 @@ const DEFAULT_STATE: OrgsState = {
     invitedUsers: [
       {
         username: '',
-        role: ROLES.find((role) => role.value === MemberRole.technical)!,
+        role: ROLES.find((role) => role.value === MemberRole.technical)!.value,
         error: '',
       },
     ],

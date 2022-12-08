@@ -1,16 +1,14 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ spacing }: GrafanaTheme) => ({
+export const getStyles = ({ spacing }: Theme) => ({
   tableWrapper: css`
-    padding: ${spacing.sm};
+    padding: ${spacing(1)};
   `,
-  instanceServerLink: css`
-    text-decoration: none;
-    line-height: 1;
-
-    & > * {
-      padding: 0;
-    }
+  emptyMessage: css`
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
   `,
 });

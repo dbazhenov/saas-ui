@@ -1,73 +1,51 @@
-import { GrafanaTheme } from '@grafana/data';
 import { css } from 'emotion';
-import { OrganizationEntitlement } from 'core/api/types';
-import { Messages } from './EntitlementsModal.messages';
+import { Theme } from '@mui/material';
+import blue from '@mui/material/colors/blue';
 
-const NEXT_CHILD = 1;
-
-// TODO: we can remove the styles for the expiry date in the collapse after
-// updating to Grafana 8 because the Collapse component already allows a ReactNode
-// to be used as header there
-export const getStyles = ({ palette, typography, spacing }: GrafanaTheme) => ({
-  modalWrapper: (entitlements: OrganizationEntitlement[]) => css`
-    div[data-testid='modal-body'] {
-      height: 90vh;
-      max-height: none;
-      max-width: none;
-      overflow: hidden;
-      width: 90vw;
-    }
-
-    div[data-testid='modal-header'] {
-      font-size: ${typography.size.lg};
-      font-weight: ${typography.weight.bold};
-    }
-
-    div[data-testid='modal-content'] {
-      max-height: calc(90vh - ${spacing.xl});
-    }
-
-    div[class$='collapse__header-label'] {
-      position: relative;
-    }
-
-    ${entitlements.map(
-      ({ end_date }, i) =>
-        `div[data-testid="modal-content"] {
-        div[class$="panel-container"]:nth-child(${i + NEXT_CHILD}) {
-          div[class$="collapse__header-label"] {
-            width: 100%;
-
-            &::after {
-              content: "${Messages.expiryDate}: ${new Date(end_date).toLocaleDateString()}";
-              color: ${palette.blue85};
-              font-size: ${typography.size.sm};
-              position: absolute;
-              right: 0;
-            }
-          }
-        }
-      }`,
-    )}
+export const getStyles = ({ palette, typography, spacing }: Theme) => ({
+  modal: css`
+    position: absolute;
+    background-color: ${palette.background.paper};
+    width: 90vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: ${spacing(3)};
+  `,
+  title: css`
+    font-size: ${typography.h6.fontSize} !important;
+    font-weight: ${typography.fontWeightMedium} !important;
+    margin-bottom: ${spacing(2)} !important;
+  `,
+  accordionTitle: css`
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+  expiryDate: css`
+    color: ${blue[700]} !important;
+    font-size: ${typography.caption.fontSize} !important;
+    margin-right: ${spacing(1)} !important;
   `,
   wrapper: css`
-    padding-left: ${spacing.xl};
+    padding-left: ${spacing(4)};
     position: relative;
     span {
-      font-weight: ${typography.weight.bold};
-      margin-right: ${spacing.xs};
+      font-weight: ${typography.fontWeightBold};
+      margin-right: ${spacing(0.5)};
     }
 
     p {
       margin: 0;
-      margin-bottom: ${spacing.xs};
+      margin-bottom: ${spacing(0.5)};
 
       &:nth-child(2) {
-        margin-bottom: ${spacing.md};
+        margin-bottom: ${spacing(2)};
       }
     }
   `,
   advisorsWrapper: css`
-    margin-left: ${spacing.md};
+    margin-left: ${spacing(1)};
   `,
 });

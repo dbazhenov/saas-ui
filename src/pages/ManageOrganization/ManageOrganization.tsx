@@ -1,7 +1,8 @@
-import React, { FC, useCallback, useMemo, useEffect, useState } from 'react';
+import React, { FC, useCallback, useMemo, useEffect, useState, SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { useStyles, Tab, TabsBar, TabContent } from '@grafana/ui';
+import { Tabs, Tab, Typography } from '@mui/material';
+import { useStyles } from 'core/utils';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import { getIsUserPending, getUserCompanyAction, getUserCompanyName } from 'store/auth';
@@ -26,6 +27,7 @@ import { OrganizationCreate } from './OrganizationCreate';
 import { OrganizationEdit } from './OrganizationEdit';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
+import { DEFAULT_TAB_INDEX } from './ManageOrganization.constants';
 
 export const ManageOrganizationPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -39,7 +41,7 @@ export const ManageOrganizationPage: FC = () => {
   const companyName = useSelector(getUserCompanyName);
   const isOrgEditing = useSelector(getIsOrgEditing);
   const activeTab = useSelector(getOrgViewActiveTab);
-  const [activeTabIndex, setActiveTabIndex] = useState<number>();
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(DEFAULT_TAB_INDEX);
   const tabsWrapperStyles = cx({
     [styles.tabsWrapper]: true,
     [styles.tabsWrapperLoading]: isOrgPending || isUserPending,
@@ -130,37 +132,32 @@ export const ManageOrganizationPage: FC = () => {
     [dispatch, tabs],
   );
 
+  const handleChangeTab = (_: SyntheticEvent, value: number) => {
+    changeActiveTab(value);
+  };
+
   const ActiveTab = useCallback(() => tabs.find((tab) => tab.key === activeTab)!.content, [tabs, activeTab]);
 
   return (
     <PrivateLayout>
       <div data-testid="manage-organization-container" className={styles.container}>
-        <header data-testid="manage-organization-header">
+        <Typography variant="h5" data-testid="manage-organization-header" className={styles.header}>
           <OrganizationLogo />
           {Messages.manageOrganization}
-        </header>
+        </Typography>
         <div data-testid="manage-organization-tabs-wrapper" className={tabsWrapperStyles}>
           {isOrgPending || isUserPending ? (
             <OrganizationContentLoader />
           ) : (
             <>
-              <TabsBar>
-                {tabs.map((tab, index) => (
-                  <span key={tab.label} className={cx({ [styles.disabledTab]: tab.disabled })}>
-                    <Tab
-                      // TODO: research why css prop is needed and how to remove it => upgrade Grafana
-                      active={index === activeTabIndex}
-                      css={undefined}
-                      data-testid="manage-organization-tab"
-                      label={tab.label}
-                      onChangeTab={() => changeActiveTab(index)}
-                    />
-                  </span>
+              <Tabs value={activeTabIndex} onChange={handleChangeTab}>
+                {tabs.map((tab) => (
+                  <Tab key={tab.label} data-testid="manage-organization-tab" label={tab.label} />
                 ))}
-              </TabsBar>
-              <TabContent data-testid="manage-organization-tab-content">
+              </Tabs>
+              <div data-testid="manage-organization-tab-content">
                 <ActiveTab />
-              </TabContent>
+              </div>
             </>
           )}
         </div>

@@ -1,84 +1,65 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = (theme: GrafanaTheme) => {
-  const { spacing, typography, colors } = theme;
+export const getStyles = ({ spacing, palette }: Theme) => ({
+  container: css`
+    display: flex;
+    flex-direction: column;
+    padding-top: ${spacing(2)};
+  `,
+  inviteButton: css`
+    align-self: flex-end;
+  `,
+  inviteForm: css`
+    display: flex;
+    flex-direction: column;
+  `,
+  addRowLink: css`
+    margin-top: ${spacing(0)};
+    align-self: flex-end;
+  `,
+  saveButton: css`
+    margin-top: ${spacing(4)};
+    align-self: flex-end;
+    text-decoration: none;
+  `,
+  rowContainer: css`
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  `,
+  emailField: css`
+    flex: 1;
+    margin-right: ${spacing(2)} !important;
+  `,
+  iconButton: css`
+    align-self: flex-end;
+  `,
+  iconButtonContainer: css`
+    padding-left: ${spacing(2)};
+    padding-top: ${spacing(1)};
+  `,
+  footerContainer: css`
+    display: flex;
+    justify-content: space-between;
+  `,
+  footerMessage: css`
+    vertical-align: bottom;
+    margin-top: ${spacing(5)};
+    font-weight: bold;
+    color: ${palette.grey[500]};
+  `,
+  rowWrapper: css`
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    padding: ${spacing(1)};
 
-  return {
-    container: css`
-      display: flex;
-      flex-direction: column;
-      padding-top: ${spacing.md};
-    `,
-    inviteButton: css`
-      align-self: flex-end;
-    `,
-    inviteForm: css`
-      display: flex;
-      flex-direction: column;
-    `,
-    roleSelect: css`
-      // style for Grafana's select
-      // TODO: remove this after a select component is added to core-ui
-      > div {
-        padding-top: 7px;
-        padding-bottom: 7px;
-        font-size: ${typography.size.md};
-        margin-left: ${spacing.xs};
-      }
-    `,
-    roleSelectLabel: css`
-      font-size: ${typography.size.base};
-    `,
-    addRowLink: css`
-      margin-top: ${spacing.xs};
-      align-self: flex-end;
-    `,
-    saveButton: css`
-      margin-top: ${spacing.xl};
-      align-self: flex-end;
-      text-decoration: none;
-    `,
-    rowContainer: css`
-      display: flex;
-      flex-wrap: wrap;
-    `,
-    rowEmailHeader: css`
-      flex: 1 1 50%;
-    `,
-    rowRoleHeader: css`
-      flex: 1 1 50%;
-    `,
-    rowEmail: css`
-      margin-top: 5px;
-      display: block;
-      flex: 1 1 50%;
-    `,
-    rowRole: css`
-      margin-top: 5px;
-      display: flex;
-      flex: 1 1 50%;
-      height: 35px;
-    `,
-    emailField: css`
-      display: block;
-      width: 95%;
-    `,
-    iconButton: css`
-      align-self: flex-end;
-    `,
-    iconButtonContainer: css`
-      padding-left: ${spacing.md};
-    `,
-    footerContainer: css`
-      display: flex;
-      justify-content: space-between;
-    `,
-    footerMessage: css`
-      vertical-align: bottom;
-      margin-top: 40px;
-      font-weight: bold;
-      color: ${colors.textWeak};
-    `,
-  };
-};
+    &:last-child {
+      margin-bottom: ${spacing(1)};
+    }
+  `,
+  buttonsWrapper: css`
+    display: inline-flex;
+  `,
+});

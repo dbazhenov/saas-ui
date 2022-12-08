@@ -1,11 +1,14 @@
 import React, { FC, useCallback } from 'react';
-import { Modal } from '@percona/platform-core';
 import { toast } from 'react-toastify';
-import { useStyles, Button, HorizontalGroup, TextArea } from '@grafana/ui';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { useStyles } from 'core/utils';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import { copyToClipboard } from 'core';
-import { getStyles } from './KubeconfigModal.styles';
 import { Messages } from './KubeconfigModal.messages';
 import { KubeconfigModalProps } from './KubeconfigModal.types';
+import { getStyles } from './KubeconfigModal.styles';
+import { TEXTAREA_ROWS } from './KuberconfigModal.constants';
 
 export const KubeconfigModal: FC<KubeconfigModalProps> = ({ kubeconfig, isVisible, onClose }) => {
   const styles = useStyles(getStyles);
@@ -16,26 +19,44 @@ export const KubeconfigModal: FC<KubeconfigModalProps> = ({ kubeconfig, isVisibl
   }, [kubeconfig]);
 
   return (
-    <div className={styles.modalWrapper}>
-      <Modal title={Messages.k8sClusterConfiguration} isVisible={isVisible} onClose={onClose}>
-        <TextArea
-          data-testid="kubernetes-cluster-config-modal-textarea"
-          className={styles.textArea}
-          name="kubeconfig-yaml"
-          readOnly
-          value={kubeconfig}
-        />
-        <HorizontalGroup justify="flex-end">
+    <div>
+      <Dialog
+        open={isVisible}
+        onClose={onClose}
+        fullWidth
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        maxWidth="md"
+      >
+        <DialogTitle className={styles.dialogTitle}>
+          <span className={styles.dialogTitleText}>{Messages.k8sClusterConfiguration}</span>
+          <IconButton onClick={onClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent className={styles.dialogContent}>
+          <TextField
+            data-testid="kubernetes-cluster-config-modal-textarea"
+            className={styles.textArea}
+            name="kubeconfig-yaml"
+            fullWidth
+            value={kubeconfig}
+            multiline
+            rows={`${TEXTAREA_ROWS}`}
+            InputProps={{ readOnly: true }}
+          />
+        </DialogContent>
+        <DialogActions className={styles.dialogActions}>
           <Button
-            variant="primary"
-            size="md"
             onClick={handleCopyToClipboard}
             data-testid="kubeconfig-copy-button"
+            variant="contained"
+            className={styles.copyClipboardBtn}
           >
             {Messages.copyToClipboard}
           </Button>
-        </HorizontalGroup>
-      </Modal>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

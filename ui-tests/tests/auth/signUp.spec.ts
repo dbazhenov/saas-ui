@@ -50,27 +50,27 @@ test.describe('Spec file for Sign Up tests', async () => {
     invalidUser.email = 'Test3#gmail.c0m';
     // Verify URL
     await expect(page).toHaveURL(`${baseURL + signUpPage.routes.login}`);
-    await signUpPage.locators.createOneLink.click();
-    await signUpPage.locators.inputEmail.type(invalidUser.email);
+    await signUpPage.createOneLink.click();
+    await signUpPage.inputEmail.type(invalidUser.email);
     // trigger Email field validation s
-    await signUpPage.locators.inputPassword.click();
-    await expect(signUpPage.locators.emailFieldValidator).toHaveText(signUpPage.messages.invalidEmail);
+    await signUpPage.inputPassword.click();
+    await expect(signUpPage.emailFieldValidator).toHaveText(signUpPage.invalidEmail);
     // Empty Email input & fill it properly.
-    await signUpPage.locators.inputEmail.fill('');
+    await signUpPage.inputEmail.fill('');
     await signUpPage.fillOutSignUpUserDetails(adminUser);
-    await expect(signUpPage.locators.emailFieldValidator).not.toContain(signUpPage.messages.invalidEmail);
-    await expect(signUpPage.locators.registerButton).toBeEnabled();
+    await expect(signUpPage.emailFieldValidator).not.toContain(signUpPage.invalidEmail);
+    await expect(signUpPage.registerButton).toBeEnabled();
   });
 
   test('SAAS-T85 - Verify Sign Up if user already has Percona account @signUp @auth', async ({ page }) => {
     const signUpPage = new SignUpPage(page);
 
-    await signUpPage.locators.createOneLink.click();
+    await signUpPage.createOneLink.click();
     await signUpPage.fillOutSignUpUserDetails(casualUser);
-    await signUpPage.locators.registerButton.click();
+    await signUpPage.registerButton.click();
 
-    await expect(signUpPage.locators.registrationAlertMessage).toHaveText(
-      signUpPage.messages.emailAlreadyRegistered,
+    await expect(signUpPage.registrationAlertMessage).toHaveText(
+      signUpPage.emailAlreadyRegistered,
       { timeout: 15000 },
     );
   });
@@ -85,27 +85,27 @@ test.describe('Spec file for Sign Up tests', async () => {
     casualUser.lastName = '';
 
     // fill signUp form with required object - empty firstName & lastName.
-    await signUpPage.locators.createOneLink.click();
-    await signUpPage.locators.inputEmail.fill(casualUser.email);
-    await signUpPage.locators.inputFirstName.fill('');
-    await signUpPage.locators.inputPassword.fill(casualUser.password);
-    await signUpPage.locators.inputLastName.fill('');
-    await signUpPage.locators.marketingCheckbox.check();
-    await signUpPage.locators.tosCheckbox.check();
-    await signUpPage.locators.registerButton.click();
+    await signUpPage.createOneLink.click();
+    await signUpPage.inputEmail.fill(casualUser.email);
+    await signUpPage.inputFirstName.fill('');
+    await signUpPage.inputPassword.fill(casualUser.password);
+    await signUpPage.inputLastName.fill('');
+    await signUpPage.marketingCheckbox.check();
+    await signUpPage.tosCheckbox.check();
+    await signUpPage.registerButton.click();
     // Verify error message toast message.
-    await expect(signUpPage.locators.registrationAlertMessage).toHaveText(
-      signUpPage.messages.validationErrorAlert,
+    await expect(signUpPage.registrationAlertMessage).toHaveText(
+      signUpPage.validationErrorAlert,
       { timeout: 15000 },
     );
     // Verify number of errors from input fields and verify the error message.
-    const inputErrorMessagesTexts = await signUpPage.locators.fieldFormValidator.evaluateAll(
+    const inputErrorMessagesTexts = await signUpPage.fieldFormValidator.evaluateAll(
       (inputErrorMessagesText) => inputErrorMessagesText.map((element) => element.textContent),
     );
 
     expect(inputErrorMessagesTexts).toHaveLength(2);
     inputErrorMessagesTexts.forEach((message) => {
-      expect(message).toEqual(signUpPage.messages.blankFieldError);
+      expect(message).toEqual(signUpPage.blankFieldError);
     });
   });
 
@@ -127,14 +127,14 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     successUser.email = getMailosaurEmailAddress(successUser);
     // Fulfill the sign up form and register
-    await signUpPage.locators.createOneLink.click();
+    await signUpPage.createOneLink.click();
     await signUpPage.fillOutSignUpUserDetails(successUser);
-    await signUpPage.locators.registerButton.click();
-    await expect(signUpPage.locators.verificationEmailSentTitleLoc).toHaveText(
-      signUpPage.messages.verificationEmailSentTitle,
+    await signUpPage.registerButton.click();
+    await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(
+      signUpPage.verificationEmailSentTitle,
     );
-    await expect(signUpPage.locators.registrationCompleteDesc).toHaveText(
-      signUpPage.messages.verificationEmailSentDesc(successUser.email),
+    await expect(signUpPage.registrationCompleteDesc).toHaveText(
+      signUpPage.verificationEmailSentDesc(successUser.email),
     );
     // Verify that mailosaur have that email in the box.
     const activationLink = await getVerificationLink(successUser);
@@ -188,7 +188,7 @@ test.describe('Spec file for Sign Up tests', async () => {
         const userSpecification = await oktaAPI.getUserDetails(userDetails.id);
 
         expect(userSpecification.data.profile.marketing).toBeFalsy();
-        await signUpPage.uiUserLogout();
+        await signUpPage.userDropdown.logoutUser();
       },
     );
 
@@ -229,21 +229,21 @@ test.describe('Spec file for Sign Up tests', async () => {
     const signUpPage = new SignUpPage(page);
 
     await test.step('Open Portal and click on "Create one" link', async () => {
-      await signUpPage.locators.createOneLink.click();
+      await signUpPage.createOneLink.click();
     });
 
     await test.step(
       'Fill in all fields, select  required "consent with TOS" checkbox and Leave empty "consent to send emails from Percona" checkbox',
       async () => {
-        await signUpPage.locators.createOneLink.waitFor();
+        await signUpPage.createOneLink.waitFor();
         await signUpPage.fillOutSignUpUserDetails(adminUser, { tos: true, marketing: false });
       },
     );
 
     await test.step('Click on "Create" button and Verify the account successfully created', async () => {
-      await signUpPage.locators.registerButton.click();
-      await expect(signUpPage.locators.verificationEmailSentTitleLoc).toHaveText(
-        signUpPage.messages.verificationEmailSentTitle,
+      await signUpPage.registerButton.click();
+      await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(
+        signUpPage.verificationEmailSentTitle,
       );
       const userDetails = await oktaAPI.getUser(adminUser.email);
 
@@ -265,9 +265,9 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     await test.step('2. Fill in required fields for Sign Up and click on the Register button', async () => {
       await signUpPage.fillOutSignUpUserDetails(adminUser);
-      await signUpPage.locators.registerButton.click();
-      await expect(signUpPage.locators.verificationEmailSentTitleLoc).toHaveText(
-        signUpPage.messages.verificationEmailSentTitle,
+      await signUpPage.registerButton.click();
+      await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(
+        signUpPage.verificationEmailSentTitle,
       );
     });
 

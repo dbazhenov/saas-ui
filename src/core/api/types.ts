@@ -204,3 +204,11 @@ interface Advisors {
   security_advisor: boolean;
   config_advisor: boolean;
 }
+
+export interface ValidateTokenRequest {
+  activation_token: string;
+}
+
+export interface ValidateTokenResponse {
+  state_token: string;
+}

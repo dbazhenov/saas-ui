@@ -1,27 +1,28 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useStyles, Label, LinkButton } from '@grafana/ui';
+import * as yup from 'yup';
+import { TextInputField } from 'components/TextInputField';
 import { toast } from 'react-toastify';
-import { LoaderButton, TextInputField, validators } from '@percona/platform-core';
+import { Box, Button, Link } from '@mui/material';
 import { Routes } from 'core/routes';
-import { MAX_NAME_LENGTH } from 'core/constants';
 import { updateProfileAction, getAuth, getProfileAction } from 'store/auth';
 import { UpdateProfilePayload } from 'store/types';
-import { getPlatformAccessToken, copyToClipboard } from 'core';
+import { getPlatformAccessToken, copyToClipboard, validation } from 'core';
 import { PrivateLayout } from 'components/Layouts';
-import { getStyles } from './Profile.styles';
+import { styles } from './Profile.styles';
 import { Messages } from './Profile.messages';
-import { CONNECT_PMM_DOC_LINK } from './Profile.constants';
-
-const { required, maxLength } = validators;
-const nameValidators = [required, maxLength(MAX_NAME_LENGTH)];
+import { CONNECT_PMM_DOC_LINK, FIRSTNAME_LENGTH_MAX, LASTNAME_LENGTH_MAX } from './Profile.constants';
 
 export const ProfilePage: FC = () => {
-  const styles = useStyles(getStyles);
   const dispatch = useDispatch();
   const { pending, email, firstName, lastName } = useSelector(getAuth);
   const [platformAccessToken, setPlatformAccessToken] = useState('');
+
+  const validationSchema = yup.object({
+    firstName: yup.string().label(Messages.firstNameLabel).required().max(FIRSTNAME_LENGTH_MAX),
+    lastName: yup.string().label(Messages.lastNameLabel).required().max(LASTNAME_LENGTH_MAX),
+  });
 
   useEffect(() => {
     setPlatformAccessToken(getPlatformAccessToken());
@@ -47,81 +48,89 @@ export const ProfilePage: FC = () => {
 
   return (
     <PrivateLayout>
-      <main className={styles.wrapper}>
+      <Box component="main" sx={styles.wrapper}>
         <Form
           initialValues={{ email, firstName, lastName, platformAccessToken }}
           onSubmit={handleUpdateProfileSubmit}
+          validate={validation(validationSchema)}
         >
           {({ handleSubmit, valid, pristine }: FormRenderProps) => (
-            <form
+            <Box
+              component="form"
               name="profile-form"
               data-testid="profile-form"
-              className={styles.form}
               onSubmit={handleSubmit}
+              sx={styles.form}
             >
-              <legend className={styles.legend}>{Messages.profile}</legend>
-              <div className={styles.nameFields}>
+              <Box component="legend" sx={styles.legend} data-testid="profile-settings-header">
+                {Messages.profile}
+              </Box>
+              <Box sx={styles.nameFields}>
                 <TextInputField
-                  disabled={pending}
-                  label={Messages.firstNameLabel}
                   name="firstName"
-                  parse={(value) => value.trim()}
-                  validators={nameValidators}
+                  label={Messages.firstNameLabel}
+                  margin="normal"
+                  size="small"
                 />
-                <TextInputField
-                  disabled={pending}
-                  label={Messages.lastNameLabel}
-                  name="lastName"
-                  parse={(value) => value.trim()}
-                  validators={nameValidators}
-                />
-              </div>
-              <TextInputField disabled label={Messages.emailLabel} name="email" />
-              <div className={styles.platformAccessTokenWrapper}>
-                <Label className={styles.platformAccessTokenLabel}>{Messages.platformAccessToken}</Label>
-                <div className={styles.platformAccessTokenButtonWrapper}>
-                  <LinkButton variant="link" onClick={handleCopyToClipboard}>
+                <TextInputField name="lastName" label={Messages.lastNameLabel} margin="normal" size="small" />
+              </Box>
+              <TextInputField
+                fullWidth
+                disabled
+                label={Messages.emailLabel}
+                name="email"
+                margin="normal"
+                size="small"
+              />
+              <Box sx={styles.platformAccessTokenWrapper}>
+                <Box component="span" sx={styles.spanWrapper}>
+                  {Messages.platformAccessToken}
+                </Box>
+                <Box>
+                  <Link type="link" onClick={handleCopyToClipboard} sx={styles.externalLink}>
                     {Messages.copyToClipboard}
-                  </LinkButton>
-                </div>
-              </div>
-              <p className={styles.platformAccessTokenDescription}>
-                <span>{Messages.platformAccessTokenDescription}</span>
-                <a
-                  className={styles.externalLink}
-                  data-testid="profile-connect-pmm-doc-link"
+                  </Link>
+                </Box>
+              </Box>
+              <Box sx={styles.linkConnectPMMWrapper}>
+                <Box component="span">{Messages.platformAccessTokenDescription}</Box>
+                <Link
                   href={CONNECT_PMM_DOC_LINK}
                   target="_blank"
+                  data-testid="profile-connect-pmm-doc-link"
                   rel="noreferrer noopener"
+                  sx={styles.externalLink}
                 >
                   {Messages.platformAccessTokenConnect}
-                </a>
-                <span>.</span>
-              </p>
-              <div className={styles.editProfileWrapper}>
-                <a
+                </Link>
+                <Box component="span">.</Box>
+              </Box>
+              <Box sx={styles.linkEditWrapper}>
+                <Link
                   href={Routes.editProfile}
                   target="_blank"
                   data-testid="profile-edit-button"
-                  className={styles.externalLink}
                   rel="noreferrer noopener"
+                  sx={styles.externalLink}
                 >
                   {Messages.editProfile}
-                </a>
-              </div>
-              <div className={styles.buttonWrapper}>
-                <LoaderButton
-                  data-qa="profile-submit-button"
+                </Link>
+              </Box>
+              <Box sx={styles.buttonWrapper}>
+                <Button
                   type="submit"
+                  variant="contained"
+                  data-qa="profile-submit-button"
+                  sx={styles.submitButton}
                   disabled={!valid || pending || pristine}
                 >
                   {pending ? Messages.loading : Messages.save}
-                </LoaderButton>
-              </div>
-            </form>
+                </Button>
+              </Box>
+            </Box>
           )}
         </Form>
-      </main>
+      </Box>
     </PrivateLayout>
   );
 };

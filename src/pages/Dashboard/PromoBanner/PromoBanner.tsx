@@ -1,6 +1,6 @@
-import { Overlay } from '@percona/platform-core';
 import React from 'react';
-import { LinkButton, useStyles } from '@grafana/ui';
+import { useStyles } from 'core';
+import { Button, List, Typography } from '@mui/material';
 import { getStyles } from './PromoBanner.styles';
 import { Messages } from './PromoBanner.messages';
 import { resourcesLinks } from './PromoBanner.constants';
@@ -10,47 +10,47 @@ export const PromoBanner: any = () => {
 
   return (
     <div className={styles.promoCard} data-testid="promo-section">
-      <Overlay className={styles.promoBannerContainer}>
-        <p className={styles.cardTitle}>{Messages.pmmAlertingLabel}</p>
-        <ul className={styles.list}>
+      <div className={styles.promoBannerContainer}>
+        <Typography className={styles.cardTitle}>{Messages.pmmAlertingLabel}</Typography>
+        <List className={styles.list}>
           <li>
-            <p>
+            <Typography>
               {Messages.createAlerts}
               <span className={styles.boldPoint}>{Messages.alertingTemplates}</span>
               {Messages.inPMM}
-            </p>
+            </Typography>
           </li>
           <li>
-            <p>
+            <Typography>
               {Messages.includingTemplates}
               <span className={styles.boldPoint}>{Messages.alertTemplates}</span>
               {Messages.createdByPercona}
-            </p>
+            </Typography>
           </li>
           <li>
-            <p>
+            <Typography>
               {Messages.quicklyIdentify}
               <span className={styles.boldPoint}>{Messages.firedAlerts}</span>
               {Messages.inPMM}
-            </p>
+            </Typography>
           </li>
           <li>
-            <p>{Messages.receivingAlerts}</p>
+            <Typography>{Messages.receivingAlerts}</Typography>
           </li>
-        </ul>
+        </List>
         <div className={styles.buttonContainer}>
-          <LinkButton
+          <Button
             target="_blank"
             className={styles.contactBtn}
             rel="noreferrer noopener"
             href={resourcesLinks.documentation}
-            variant="primary"
+            variant="contained"
             data-testid="promo-link"
           >
             {Messages.seeDocumentation}
-          </LinkButton>
+          </Button>
         </div>
-      </Overlay>
+      </div>
     </div>
   );
 };

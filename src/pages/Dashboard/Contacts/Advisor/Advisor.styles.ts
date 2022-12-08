@@ -1,20 +1,20 @@
 import { css } from 'emotion';
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 
-export const getStyles = ({ spacing, palette }: GrafanaTheme) => ({
+export const getStyles = ({ spacing, palette }: Theme) => ({
   wrapper: css`
     align-items: center;
     display: flex;
   `,
   label: css`
-    width: 110px;
+    width: 150px;
   `,
   timesIcon: css`
-    color: ${palette.redBase};
-    margin-left: ${spacing.md};
+    color: ${palette.error.main};
+    margin-left: ${spacing(2)};
   `,
   checkIcon: css`
-    color: ${palette.greenBase};
-    margin-left: ${spacing.md};
+    color: ${palette.success.main};
+    margin-left: ${spacing(2)};
   `,
 });

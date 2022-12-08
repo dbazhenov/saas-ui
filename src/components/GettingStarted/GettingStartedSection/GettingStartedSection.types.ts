@@ -1,10 +1,10 @@
-import { IconName } from '@grafana/ui';
+import { ReactElement } from 'react';
 
 export interface GettingStartedSectionProps {
   description: string;
   disabled?: boolean;
   isTicked?: boolean;
-  linkIcon?: IconName;
+  linkIcon?: ReactElement;
   linkIsExternal?: boolean;
   linkText: string;
   linkTo: string;
