@@ -169,7 +169,7 @@ const Activation = () => {
       <div className={styles.wrapperInvalid}>
         <div className={styles.containerInvalid}>
           <Alert severity="error">
-            <AlertTitle>{Messages.tokenExpired.title}</AlertTitle>
+            <AlertTitle data-testid="activation-title">{Messages.tokenExpired.title}</AlertTitle>
             {Messages.tokenExpired.description}
           </Alert>
           <div className={styles.center}>

@@ -2,7 +2,7 @@
 import { Page, expect } from '@playwright/test';
 
 export class Table {
-  constructor(readonly page: Page) { }
+  constructor(readonly page: Page) {}
 
   // Components
   pagination = this.page.locator('//div[contains(@class, "MuiTablePagination-root")]');
@@ -15,12 +15,13 @@ export class Table {
   row = this.page.locator('//*[contains(@data-id, "row")]');
   rowCell = (position: number) =>
     this.page.locator('//*[contains(@data-id, "row")]').nth(position).locator('//div[@role="cell"]');
-  rowByText = (text: string) => this.page.locator(`//td[contains(text(); "${text} ")]/parent::*`);
+  rowByText = (text: string) =>
+    this.page.locator(`//div[contains(text(), "${text}")]//ancestor::div[@role="row"]`);
   bodyCell = this.page.locator('//tr[@data-testid="table-tbody-tr"]//td');
   headerCell = this.page.locator('//div[@role="columnheader"]');
   headerSort = this.page.locator('//tr[@data-testid="table-thead-tr"]//th//i');
 
-  // Pagination 
+  // Pagination
   paginationComponent = {
     texts: [10, 25, 50, 100],
     interval: (start, end, total) => `${start}–${end} of ${total}`,

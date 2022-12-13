@@ -33,7 +33,7 @@ export class MembersTable extends Table {
     this.confirmDeleteUser = page.locator('//button[@data-testid="delete-member-submit-button"]');
     this.membersRow = (userEmail: string) => this.page.locator(`// div[@data-id="${userEmail}"]`);
     this.resetEmailLink = (userEmail) =>
-      this.elements.rowByText(userEmail).locator('//div[@data-testid="resend-email-link"]');
+      this.rowByText(userEmail).locator('//div[@data-testid="resend-email-link"]');
     this.editMemberRole = (role: UserRoles) =>
       this.page.locator(`//li[@role="option" and contains(text(), '${role}')]`);
     this.editMemberSubmit = page.locator('//button[@data-testid="edit-member-submit-button"]');

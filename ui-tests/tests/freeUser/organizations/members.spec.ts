@@ -85,10 +85,8 @@ test.describe('Spec file for free users members tests', async () => {
     });
   });
 
-  // Un-skip when https://jira.percona.com/browse/SAAS-1176 is fixed
-  test.skip('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members', async ({
+  test('SAAS-T267 Verify resend confirmation emails for organization members. @freeUser @members', async ({
     page,
-    context,
     baseURL,
   }) => {
     const dashboardPage = new DashboardPage(page);
@@ -110,33 +108,40 @@ test.describe('Spec file for free users members tests', async () => {
       'In members tab click link Resend Email for the new user and verify email and activation',
       async () => {
         await membersPage.membersTable.resetEmailLink(notRegisteredUser.email).click();
+        await membersPage.userDropdown.logoutUser();
         const secondMessage = await getMailosaurMessage(notRegisteredUser.email, `Welcome to ${org.name}`);
 
         expect(message.id === secondMessage.id).toBeFalsy();
-        const secondTab = await context.newPage();
-        const activationPage = new ActivationPage(secondTab);
-        const signInPageSecondTabs = new SignInPage(secondTab);
+        const activationPage = new ActivationPage(page);
+        const invalidTokenURL: string[] = message.html.links
+          .find((link) => link.text.includes('Activate'))
+          .href.split('.com');
 
-        await secondTab.goto(message.html.links.find((link) => link.text.includes('Activate')).href);
-        // Skipped due to bug: https://jira.percona.com/browse/SAAS-1140
-        // await activationPage.activationTitle.waitFor({ state: 'visible' });
-        // await expect(activationPage.activationTitle).toHaveText(activationPage.expiredTokenTitle);
+        await page.goto(baseURL + invalidTokenURL[1]);
 
-        await secondTab.goto(secondMessage.html.links.find((link) => link.text.includes('Activate')).href);
+        await activationPage.activationTitle.waitFor({ state: 'visible' });
+        await expect(activationPage.activationTitle).toHaveText(activationPage.expiredTokenTitle);
+
+        const validTokenUrl: string[] = secondMessage.html.links
+          .find((link) => link.text.includes('Activate'))
+          .href.split('.com');
+
+        await page.goto(baseURL + validTokenUrl[1]);
         await activationPage.firstNameInput.type(notRegisteredUser.firstName);
         await activationPage.lastNameInput.type(notRegisteredUser.lastName);
         await activationPage.passwordInput.type(notRegisteredUser.password);
         await activationPage.repeatPasswordInput.type(notRegisteredUser.password);
         await activationPage.tosCheckboxLabel.check();
         await activationPage.activateAccountButton.click();
-        await signInPageSecondTabs.emailInput.waitFor({ state: 'visible' });
-        await secondTab.close();
-
+        await signInPage.emailInput.waitFor({ state: 'visible' });
         await deleteMailosaurMessage(secondMessage.id);
       },
     );
 
     await test.step('In members tab click link Resend Email for the new user.', async () => {
+      await oktaAPI.loginByOktaApi(admin1User, page);
+      await dashboardPage.sideMenu.mainMenu.organization.click();
+      await organizationPage.membersTab.click();
       await membersPage.membersTable.inviteMembers.inviteMember(secondNotRegisteredUser.email);
       message = await getMailosaurMessage(secondNotRegisteredUser.email, `Welcome to ${org.name}`);
       await deleteMailosaurMessage(message.id);
