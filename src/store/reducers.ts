@@ -6,11 +6,13 @@ import { orgsReducer } from 'store/orgs/orgs.reducer';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
 import { authApi } from 'core/api/auth.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
+import { eventsApi } from 'core/api/events.service';
 
 export const rootReducer = {
   [authApi.reducerPath]: authApi.reducer,
   [membersListApi.reducerPath]: membersListApi.reducer,
   [kubernetesApi.reducerPath]: kubernetesApi.reducer,
+  [eventsApi.reducerPath]: eventsApi.reducer,
   auth: authReducer,
   router: connectRouter(history),
   theme: themeReducer,

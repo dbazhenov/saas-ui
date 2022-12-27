@@ -29,6 +29,9 @@ export const ENDPOINTS = {
     searchOrgInventory: (orgId: string) => `/v1/orgs/${orgId}/inventory:search`,
     disconnectOrgPmmInstance: (pmmInstanceId: string) => `v1/orgs/inventory/${pmmInstanceId}:disconnect`,
   },
+  Events: {
+    search: '/v1/events:search',
+  },
   Kubernetes: {
     k8sClusterCreate: '/v1/dbaas/cluster/civo',
     k8sClusterGetStatus: '/v1/dbaas/cluster/civo',

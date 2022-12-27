@@ -1,15 +1,10 @@
 import { createApi, fetchBaseQuery, BaseQueryFn, FetchArgs } from '@reduxjs/toolkit/query/react';
 import { ENDPOINTS } from 'core/api';
-import {
-  ActivateProfileRequest,
-  UpdateProfileRequest,
-  ValidateTokenRequest,
-  ValidateTokenResponse,
-} from 'core/api/types';
+import { EventsSearchRequest, EventsSearchResponse } from 'core/api/types';
 import { oktaAuth } from 'core';
 import { APIError } from './types';
 
-const { Auth } = ENDPOINTS;
+const { Events } = ENDPOINTS;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: '',
@@ -28,33 +23,19 @@ const baseQuery = fetchBaseQuery({
   },
 }) as BaseQueryFn<string | FetchArgs, unknown, APIError, {}>;
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
+export const eventsApi = createApi({
+  reducerPath: 'eventsApi',
   baseQuery,
   refetchOnMountOrArgChange: true,
   endpoints: (builder) => ({
-    editProfile: builder.mutation<void, UpdateProfileRequest>({
+    eventSearch: builder.mutation<EventsSearchResponse, EventsSearchRequest>({
       query: (body) => ({
         method: 'POST',
-        url: Auth.UpdateProfile,
-        body,
-      }),
-    }),
-    activateProfile: builder.mutation<void, ActivateProfileRequest>({
-      query: (body) => ({
-        method: 'POST',
-        url: Auth.ActivateProfile,
-        body,
-      }),
-    }),
-    validateToken: builder.mutation<ValidateTokenResponse, ValidateTokenRequest>({
-      query: (body) => ({
-        method: 'POST',
-        url: Auth.ValidateToken,
+        url: Events.search,
         body,
       }),
     }),
   }),
 });
 
-export const { useEditProfileMutation, useActivateProfileMutation, useValidateTokenMutation } = authApi;
+export const { useEventSearchMutation } = eventsApi;

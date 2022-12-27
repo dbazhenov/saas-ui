@@ -16,4 +16,5 @@ export const Messages = {
   notUsersInvited: 'Error occurred during invite process.',
   userInvited: 'user successfully invited to join your organization',
   usersInvited: 'users successfully invited to join your organization',
+  activityLog: 'Activity Log',
 };

@@ -16,6 +16,7 @@ export const OrganizationContentLoader = () => {
     >
       <rect x="0" y="15" rx="0" ry="0" width="90" height="25" />
       <rect x="120" y="15" rx="0" ry="0" width="90" height="25" />
+      <rect x="240" y="15" rx="0" ry="0" width="90" height="25" />
       <rect x="0" y="70" rx="0" ry="0" width="1720" height="300" />
     </ContentLoader>
   );

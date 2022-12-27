@@ -27,6 +27,7 @@ export interface OrgMember {
 export enum OrganizationViewTabs {
   organization = 'Organization',
   members = 'Members',
+  activityLog = 'Activity Log',
 }
 
 type OrganizationInfo = GetOrganizationResponse;

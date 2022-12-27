@@ -212,3 +212,86 @@ export interface ValidateTokenRequest {
 export interface ValidateTokenResponse {
   state_token: string;
 }
+
+export interface EventsSearchRequest {
+  fsp?: {
+    filters?: {
+      field: { name: string; value: string };
+      filter_type?: number;
+    }[];
+    sorting_params?: {
+      field_name: string;
+      order: number | 'ASC' | 'DESC';
+    };
+    page_params?: {
+      page_size: number;
+      index: number;
+    };
+  };
+}
+
+export interface AuditObject {
+  id: string;
+  name: string;
+  type: AuditObjectType;
+  initial_state: Record<string, unknown>;
+  result_state: Record<string, unknown>;
+}
+
+enum ActionStatusCode {
+  UNSPECIFIED = 0,
+  SUCCESS = 1,
+  FAILURE = 2,
+}
+
+export interface ActionStatus {
+  code: ActionStatusCode;
+  message: string;
+}
+
+export enum EventType {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  LOG_IN = 'LOG_IN',
+  LOG_OUT = 'LOG_OUT',
+  CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+}
+
+export enum AuditObjectType {
+  organization_member = 'organization_member',
+  inventory = 'inventory',
+  organization = 'organization',
+}
+
+export interface AuditEvent {
+  id: string;
+  okta_user_id: string;
+  request_id: string;
+  user_ip_address: string;
+  user_agent: string;
+  user_role: string;
+  organization_id: string;
+  action_type: EventType;
+  timestamp: string;
+  event_source: string;
+  action_status: ActionStatus;
+  objects: AuditObject[];
+}
+
+export interface EventsSearchResponse {
+  events: AuditEvent[];
+  page_totals: {
+    total_items: number;
+    total_pages: number;
+  };
+}
+
+export interface APIError {
+  status: number;
+  data: {
+    message: string;
+    code: number;
+    details: any[];
+  };
+}

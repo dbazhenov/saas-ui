@@ -5,7 +5,7 @@ import { Tabs, Tab, Typography } from '@mui/material';
 import { useStyles } from 'core/utils';
 import { PrivateLayout } from 'components/Layouts';
 import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
-import { getIsUserPending, getUserCompanyAction, getUserCompanyName } from 'store/auth';
+import { getIsUserPending, getUserCompanyAction, getUserCompanyName, getUserOrgRole } from 'store/auth';
 import {
   getFirstOrgId,
   getIsOrgPending,
@@ -20,6 +20,7 @@ import {
 } from 'store/orgs';
 import { OrganizationViewTabs } from 'store/types/orgs';
 import { OrganizationContentLoader } from 'components/ContentLoader/OrganizationContentLoader';
+import { MemberRole } from './ManageOrganization.types';
 import { Messages } from './ManageOrganization.messages';
 import { getStyles } from './ManageOrganization.styles';
 import { OrganizationView } from './OrganizationView';
@@ -28,6 +29,7 @@ import { OrganizationEdit } from './OrganizationEdit';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
 import { DEFAULT_TAB_INDEX } from './ManageOrganization.constants';
+import ActivityLog from './ActivityLog/ActivityLog';
 
 export const ManageOrganizationPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -41,6 +43,7 @@ export const ManageOrganizationPage: FC = () => {
   const companyName = useSelector(getUserCompanyName);
   const isOrgEditing = useSelector(getIsOrgEditing);
   const activeTab = useSelector(getOrgViewActiveTab);
+  const userRole = useSelector(getUserOrgRole);
   const [activeTabIndex, setActiveTabIndex] = useState<number>(DEFAULT_TAB_INDEX);
   const tabsWrapperStyles = cx({
     [styles.tabsWrapper]: true,
@@ -77,26 +80,37 @@ export const ManageOrganizationPage: FC = () => {
   }, [hasOrg, isOrgEditing, isOrgPending, isUserPending]);
 
   const tabs = useMemo(
-    () => [
-      {
-        label: Messages.members,
-        key: OrganizationViewTabs.members,
-        disabled: !members.length,
-        content: (
-          <div data-testid="manage-organization-members-tab">
-            {isUserAdmin && <InviteMember />}
-            <MembersList />
-          </div>
-        ),
-      },
-      {
-        label: Messages.organization,
-        key: OrganizationViewTabs.organization,
-        disabled: false,
-        content: <div data-testid="manage-organization-organization-tab">{orgTabContent}</div>,
-      },
-    ],
-    [members.length, isUserAdmin, orgTabContent],
+    () =>
+      [
+        {
+          label: Messages.members,
+          key: OrganizationViewTabs.members,
+          disabled: !members.length,
+          content: (
+            <div data-testid="manage-organization-members-tab">
+              {isUserAdmin && <InviteMember />}
+              <MembersList />
+            </div>
+          ),
+        },
+        {
+          label: Messages.activityLog,
+          key: OrganizationViewTabs.activityLog,
+          hide: userRole !== MemberRole.admin,
+          content: (
+            <div data-testid="manage-organization-activity-log-tab">
+              <ActivityLog />
+            </div>
+          ),
+        },
+        {
+          label: Messages.organization,
+          key: OrganizationViewTabs.organization,
+          disabled: false,
+          content: <div data-testid="manage-organization-organization-tab">{orgTabContent}</div>,
+        },
+      ].filter((tab) => tab.hide !== true),
+    [members.length, isUserAdmin, userRole, orgTabContent],
   );
 
   useEffect(() => {

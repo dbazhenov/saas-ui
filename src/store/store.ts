@@ -5,6 +5,7 @@ import { Messages } from 'core/api';
 import { loadState } from 'store/persistence/engine';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
 import { authApi } from 'core/api/auth.service';
+import { eventsApi } from 'core/api/events.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
 import { errorUserInfoAction, getAuth, startUserInfoAction, updateUserInfoAction } from './auth';
 import { rootReducer } from './reducers';
@@ -49,7 +50,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .prepend(authMiddleware)
-      .concat(authApi.middleware, membersListApi.middleware, kubernetesApi.middleware),
+      .concat(authApi.middleware, membersListApi.middleware, kubernetesApi.middleware, eventsApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
