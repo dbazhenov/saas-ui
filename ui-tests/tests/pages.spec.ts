@@ -4,6 +4,9 @@ import { DashboardPage } from '@pages/dashboard.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
+import { SignInPage } from '@tests/pages/signIn.page';
+import PMMInstances from '@tests/pages/PMMInstances.page';
+import FreeKubernetes from '@tests/pages/FreeKubernetes.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -40,10 +43,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await notFoundPage.waitForPortalLoaded();
     await page.goto('page1');
     await notFoundPage.notFoundPageContainer.waitFor({ state: 'visible' });
-    await expect(notFoundPage.notFoundPageContainer).toHaveCSS(
-      'background-color',
-      'rgb(255, 255, 255)',
-    );
+    await expect(notFoundPage.notFoundPageContainer).toHaveCSS('background-color', 'rgb(255, 255, 255)');
 
     await expect(notFoundPage.notFoundImage).toBeVisible();
     await notFoundPage.notFoundHomeButton.click();
@@ -51,10 +51,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await notFoundPage.themeSwitch.click();
     await page.goto('page1');
     await notFoundPage.notFoundPageContainer.waitFor({ state: 'visible' });
-    await expect(notFoundPage.notFoundPageContainer).toHaveCSS(
-      'background-color',
-      'rgb(18, 18, 18)',
-    );
+    await expect(notFoundPage.notFoundPageContainer).toHaveCSS('background-color', 'rgb(18, 18, 18)');
     await expect(notFoundPage.notFoundImage).toBeVisible();
     await notFoundPage.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
@@ -70,7 +67,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       await oktaAPI.loginByOktaApi(users[i], page);
       await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute('target', '_blank');
-      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute('href', dashboardPage.sideMenu.documentationLink);
+      await expect(dashboardPage.sideMenu.resourceMenu.documentationLink).toHaveAttribute(
+        'href',
+        dashboardPage.sideMenu.documentationLink,
+      );
 
       await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute('target', '_blank');
       await expect(dashboardPage.sideMenu.resourceMenu.blogLink).toHaveAttribute(
@@ -107,4 +107,61 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.kubernetes}`);
     });
   }
+
+  test('SAAS-T280 - Verify documentation links on Portal @pages @tempTest', async ({ page, context }) => {
+    const signInPage = new SignInPage(page);
+    const dashboardPage = new DashboardPage(page);
+    const pmmInstances = new PMMInstances(page);
+    const freeKubernetes = new FreeKubernetes(page);
+
+    await test.step('1. Login to the portal. and verify Install PMM link.', async () => {
+      await signInPage.uiLogin(adminUser.email, adminUser.password);
+      await expect(dashboardPage.installPmmButton).toHaveAttribute('href', dashboardPage.installPmmLink);
+      const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        dashboardPage.installPmmButton.click(),
+      ]);
+
+      await expect(newPage).toHaveTitle(dashboardPage.installPMMTitle);
+      await newPage.close();
+    });
+    await test.step(
+      '2. Navigate to the PMM Instances page and verify How-to connect Percona Monitoring & Management link',
+      async () => {
+        await dashboardPage.sideMenu.mainMenu.pmmInstances.click();
+        await expect(pmmInstances.readMore).toHaveAttribute('href', pmmInstances.readMoreLink);
+        const [newPage] = await Promise.all([context.waitForEvent('page'), pmmInstances.readMore.click()]);
+
+        await expect(newPage).toHaveTitle(pmmInstances.readMoreTitle);
+        await newPage.close();
+      },
+    );
+    await test.step(
+      '3. Navigate to the Free Kubernetes page and verify Install PMM with DBaaS link',
+      async () => {
+        await dashboardPage.sideMenu.mainMenu.freeKubernetes.click();
+        await expect(freeKubernetes.pmmWithDBaaS).toHaveAttribute('href', freeKubernetes.pmmWithDBaaSLink);
+        const [newPage] = await Promise.all([
+          context.waitForEvent('page'),
+          freeKubernetes.pmmWithDBaaS.click(),
+        ]);
+
+        await expect(newPage).toHaveTitle(freeKubernetes.pmmWithDBaaSTitle);
+        await newPage.close();
+      },
+    );
+    await test.step('4. Verify Operators documentation Link.', async () => {
+      await expect(freeKubernetes.operatorsDocumentation).toHaveAttribute(
+        'href',
+        freeKubernetes.operatorsDocumentationLink,
+      );
+      const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        freeKubernetes.operatorsDocumentation.click(),
+      ]);
+
+      await expect(newPage).toHaveTitle(freeKubernetes.operatorsDocumentationTitle);
+      await newPage.close();
+    });
+  });
 });

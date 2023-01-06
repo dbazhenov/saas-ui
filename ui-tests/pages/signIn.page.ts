@@ -38,4 +38,10 @@ export class SignInPage extends CommonPage {
     await this.nextButton.click();
     await this.passwordInput.type(password);
   };
+
+  uiLogin = async (username: string, password: string) => {
+    await this.fillOutSignInUserDetails(username, password);
+    await this.signInButton.click();
+    await this.waitForPortalLoaded();
+  };
 }

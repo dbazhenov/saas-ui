@@ -184,12 +184,22 @@ export const K8sClusterCreationPage: FC = () => {
           <p className={styles.learnMore}>{Messages.learnMore}</p>
           <ul className={styles.learnMoreLinks}>
             <li>
-              <Link className={styles.learnMoreLink} href={PMM_DBAAS_DOC_LINK} target="_blank">
+              <Link
+                className={styles.learnMoreLink}
+                href={PMM_DBAAS_DOC_LINK}
+                target="_blank"
+                data-testid="install-pmm-with-dbaas"
+              >
                 {Messages.pmmDbaas}
               </Link>
             </li>
             <li>
-              <Link className={styles.learnMoreLink} href={OPERATORS_DOC_LINK} target="_blank">
+              <Link
+                className={styles.learnMoreLink}
+                href={OPERATORS_DOC_LINK}
+                target="_blank"
+                data-testid="operators-documentation"
+              >
                 {Messages.operatorsDoc}
               </Link>
             </li>

@@ -11,8 +11,9 @@ export default class PMMInstances extends CommonPage {
   header = this.page.locator('//header[@data-testid="manage-pmm-instances-header"]');
   readMore = this.page.locator('//a[@data-testid="connect-pmm-link"]');
 
-  // Messages 
+  // Messages
   readMoreMessage = 'How-to connect Percona Monitoring & Management';
+  readMoreTitle = 'Connect your PMM server - Percona Platform';
 
   // links
   readMoreLink = 'https://docs.percona.com/percona-platform/connect-pmm.html';
