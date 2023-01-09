@@ -7,4 +7,3 @@ export * from './SimpleDialog';
 export * from './TestContainer';
 export * from './GettingStarted';
 export * from './SecureRoute';
-export * from './TableCell';

@@ -4,7 +4,6 @@ import { DataGrid, GridColDef, GridSortModel } from '@mui/x-data-grid';
 import { useStyles } from 'core';
 import { useEventSearchMutation } from 'core/api/events.service';
 import { format } from 'date-fns';
-import { TableCell } from 'components';
 import { AuditEvent, AuditObject, EventType } from 'core/api/types';
 import { useSelector } from 'react-redux';
 import { getFirstOrgId } from 'store/orgs';
@@ -17,8 +16,9 @@ import {
   timestampRange,
   TimestampRangeType,
 } from './ActivityLog.constants';
+import { TableCellWithTooltip } from './TableCellWithTooltip';
 
-const ActivityLog = () => {
+export const ActivityLog = () => {
   const [eventSearch, { data, isLoading }] = useEventSearchMutation();
   const orgId = useSelector(getFirstOrgId);
   const styles = useStyles(getStyles);
@@ -107,26 +107,25 @@ const ActivityLog = () => {
       headerName: Messages.time,
       flex: 1,
       valueFormatter: ({ value }) => format(new Date(value), 'P - p'),
-      renderCell: TableCell,
+      renderCell: TableCellWithTooltip,
     },
     {
       field: 'okta_user_id',
       flex: 1,
       headerName: Messages.userId,
-      renderCell: TableCell,
     },
     {
       field: 'action_type',
+      flex: 1,
       headerName: Messages.eventType,
-      renderCell: TableCell,
     },
     {
       field: 'details',
-      flex: 5,
+      flex: 2,
       headerName: Messages.details,
       valueGetter: getDetailsText,
-      renderCell: TableCell,
       sortable: false,
+      renderCell: TableCellWithTooltip,
     },
   ];
 
@@ -170,5 +169,3 @@ const ActivityLog = () => {
     </div>
   );
 };
-
-export default ActivityLog;

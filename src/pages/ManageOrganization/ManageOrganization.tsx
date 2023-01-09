@@ -29,7 +29,7 @@ import { OrganizationEdit } from './OrganizationEdit';
 import { InviteMember } from './InviteMember';
 import { MembersList } from './MembersList';
 import { DEFAULT_TAB_INDEX } from './ManageOrganization.constants';
-import ActivityLog from './ActivityLog/ActivityLog';
+import { ActivityLog } from './ActivityLog/ActivityLog';
 
 export const ManageOrganizationPage: FC = () => {
   const styles = useStyles(getStyles);
