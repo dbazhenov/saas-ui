@@ -108,7 +108,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     });
   }
 
-  test('SAAS-T280 - Verify documentation links on Portal @pages @tempTest', async ({ page, context }) => {
+  test('SAAS-T280 - Verify documentation links on Portal @pages', async ({ page, context }) => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
     const pmmInstances = new PMMInstances(page);

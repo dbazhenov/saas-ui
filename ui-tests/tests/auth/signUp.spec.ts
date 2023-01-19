@@ -69,10 +69,9 @@ test.describe('Spec file for Sign Up tests', async () => {
     await signUpPage.fillOutSignUpUserDetails(casualUser);
     await signUpPage.registerButton.click();
 
-    await expect(signUpPage.registrationAlertMessage).toHaveText(
-      signUpPage.emailAlreadyRegistered,
-      { timeout: 15000 },
-    );
+    await expect(signUpPage.registrationAlertMessage).toHaveText(signUpPage.emailAlreadyRegistered, {
+      timeout: 15000,
+    });
   });
 
   test('SAAS-T121 - Verify Sign Up to Platform is not possible without Last Name and First Name @signUp @auth', async ({
@@ -94,10 +93,9 @@ test.describe('Spec file for Sign Up tests', async () => {
     await signUpPage.tosCheckbox.check();
     await signUpPage.registerButton.click();
     // Verify error message toast message.
-    await expect(signUpPage.registrationAlertMessage).toHaveText(
-      signUpPage.validationErrorAlert,
-      { timeout: 15000 },
-    );
+    await expect(signUpPage.registrationAlertMessage).toHaveText(signUpPage.validationErrorAlert, {
+      timeout: 15000,
+    });
     // Verify number of errors from input fields and verify the error message.
     const inputErrorMessagesTexts = await signUpPage.fieldFormValidator.evaluateAll(
       (inputErrorMessagesText) => inputErrorMessagesText.map((element) => element.textContent),
@@ -130,9 +128,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     await signUpPage.createOneLink.click();
     await signUpPage.fillOutSignUpUserDetails(successUser);
     await signUpPage.registerButton.click();
-    await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(
-      signUpPage.verificationEmailSentTitle,
-    );
+    await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(signUpPage.verificationEmailSentTitle);
     await expect(signUpPage.registrationCompleteDesc).toHaveText(
       signUpPage.verificationEmailSentDesc(successUser.email),
     );
@@ -141,7 +137,7 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     // // visit an emailed link
     await page.goto(activationLink);
-    expect(page.url()).toContain('https://portal-dev.percona.com/login');
+    expect(page.url()).toContain('https://portal-dev.percona.com/');
     await page.goto('/');
     // Verify user able to sign in via verified account from previous sign up stages
     await signInPage.fillOutSignInUserDetails(successUser.email, successUser.password);
