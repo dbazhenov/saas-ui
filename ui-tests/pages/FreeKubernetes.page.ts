@@ -17,6 +17,6 @@ export default class FreeKubernetes extends CommonPage {
   operatorsDocumentationTitle = 'Percona Kubernetes Operators';
 
   // Links
-  pmmWithDBaaSLink = 'https://docs.percona.com/percona-monitoring-and-management/using/dbaas.html';
+  pmmWithDBaaSLink = 'https://docs.percona.com/percona-monitoring-and-management/get-started/dbaas.html';
   operatorsDocumentationLink = 'https://www.percona.com/software/percona-kubernetes-operators#install';
 }
