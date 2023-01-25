@@ -84,7 +84,7 @@ jobs:
         run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Extract Docker image tag
-        uses: percona-platform/extract-docker-tag-action@v1
+        uses: percona-platform/extract-docker-tag-action@v1.4.0
 
       - name: Build platform UI artifacts
         run: make build
