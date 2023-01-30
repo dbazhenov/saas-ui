@@ -53,14 +53,14 @@ export const ActivityLog = () => {
           {
             field: {
               name: 'timestamp',
-              value: timestampRange[timeframe][0].toISOString(),
+              value: timestampRange()[timeframe][0].toISOString(),
             },
             filter_type: FilterType.GREATER_OR_EQUAL,
           },
           {
             field: {
               name: 'timestamp',
-              value: timestampRange[timeframe][1].toISOString(),
+              value: timestampRange()[timeframe][1].toISOString(),
             },
             filter_type: FilterType.LESS_OR_EQUAL,
           },
@@ -165,6 +165,7 @@ export const ActivityLog = () => {
         onPageSizeChange={handlePageSizeChange}
         pagination
         paginationMode="server"
+        columnBuffer={4}
       />
     </div>
   );

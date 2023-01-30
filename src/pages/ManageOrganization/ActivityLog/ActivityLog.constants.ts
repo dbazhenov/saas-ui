@@ -22,7 +22,7 @@ export enum TimestampRangeType {
   LAST_YEAR,
 }
 
-export const timestampRange: Record<TimestampRangeType, Date[]> = {
+export const timestampRange = () => ({
   [TimestampRangeType.LAST_24_HOURS]: [sub(new Date(), { hours: 24 }), endOfToday()],
   [TimestampRangeType.LAST_48_HOURS]: [sub(new Date(), { hours: 48 }), endOfToday()],
   [TimestampRangeType.LAST_3_DAYS]: [sub(new Date(), { days: 3 }), endOfToday()],
@@ -31,7 +31,7 @@ export const timestampRange: Record<TimestampRangeType, Date[]> = {
   [TimestampRangeType.LAST_3_MONTHS]: [sub(new Date(), { months: 3 }), endOfToday()],
   [TimestampRangeType.LAST_6_MONTHS]: [sub(new Date(), { months: 6 }), endOfToday()],
   [TimestampRangeType.LAST_YEAR]: [sub(new Date(), { years: 1 }), endOfToday()],
-};
+});
 
 export const eventTypeMapping: Record<EventType, string> = {
   [EventType.CREATE]: Messages.eventTypeMap.CREATE,

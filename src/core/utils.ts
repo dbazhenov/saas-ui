@@ -114,3 +114,9 @@ export const validation = (schema: ReturnType<typeof yup.object>) => async (valu
 
   return null;
 };
+
+export type DeepPartial<T> = T extends object
+  ? {
+      [P in keyof T]?: DeepPartial<T[P]>;
+    }
+  : T;
