@@ -19,6 +19,9 @@ export class OrganizationPage extends CommonPage {
   organizationTab = this.page.locator('//button[@data-testid="manage-organization-tab"]', {
     hasText: 'Organization',
   });
+  activityLogTab = this.page.locator('//button[@data-testid="manage-organization-tab"]', {
+    hasText: 'Activity Log',
+  });
 
   editOrgButton = this.page.locator('//button[@data-testid="member-actions-edit"]');
   deleteOrgButton = this.page.locator('//button[@data-testid="member-actions-delete"]');
