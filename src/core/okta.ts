@@ -54,7 +54,7 @@ export const authConfig = {
       },
     ],
   },
-  scopes: ['openid', 'profile', 'email', 'percona'],
+  scopes: ['openid', 'profile', 'email', 'percona', 'offline_access'],
   postLogoutRedirectUri: `${PORTAL_ORIGIN}`,
   idpDiscovery: {
     requestContext: `${PORTAL_ORIGIN}/login/callback`,
@@ -63,6 +63,11 @@ export const authConfig = {
     { type: 'GOOGLE', id: GOOGLE_IDP_ID },
     { type: 'GITHUB', id: GITHUB_IDP_ID },
   ],
+  tokenManager: {
+    autoRenew: true,
+    secure: true,
+    storage: 'localStorage',
+  },
 };
 
 export const oktaAuth = new OktaAuth(authConfig);
