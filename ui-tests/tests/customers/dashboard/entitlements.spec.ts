@@ -18,6 +18,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
   let customerTechnical: User;
   let notCustomerUser: User;
   let adminToken: string;
+  let org: any;
 
   test.beforeEach(async ({ page }) => {
     const serviceNowCredentials: ServiceNowResponse = await serviceNowAPI.createServiceNowCredentials();
@@ -37,7 +38,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
   });
 
   test.afterEach(async () => {
-    const org = await portalAPI.getOrg(adminToken);
+    org = await portalAPI.getOrg(adminToken);
 
     if (org.orgs.length) {
       await portalAPI.deleteOrg(adminToken, org.orgs[0].id);
@@ -115,6 +116,39 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
         await dashboardPage.entitlementsModal.entitlementsButton.waitFor({ state: 'detached' });
       },
     );
+  });
+  test('SAAS-T189 Verify Technical user can see entitlements for his Org @customers @dashboard @entitlements', async ({
+    page,
+  }) => {
+    const dashboardPage = new DashboardPage(page);
+
+    await test.step('1. Create Org and invite some members', async () => {
+      const newOrg = await portalAPI.createOrg(adminToken);
+
+      org = newOrg.org;
+      await portalAPI.inviteOrgMember(adminToken, org.id, {
+        username: customerTechnical.email,
+        role: UserRoles.technical,
+      });
+
+      await portalAPI.inviteOrgMember(adminToken, org.id, {
+        username: customerSecondAdmin.email,
+        role: UserRoles.technical,
+      });
+    });
+    await test.step('2. Login via API to Portal', async () => {
+      await oktaAPI.loginByOktaApi(customerTechnical, page);
+    });
+    await test.step('3. Verify number of Entitlements', async () => {
+      await expect(dashboardPage.entitlementsModal.numberEntitlements).toHaveText(
+        String(defaultNumberOfEntitlements),
+      );
+      await dashboardPage.entitlementsModal.entitlementsButton.click();
+      await dashboardPage.entitlementsModal.body.waitFor({ state: 'visible' });
+      await expect(dashboardPage.entitlementsModal.entitlementContainer).toHaveCount(
+        defaultNumberOfEntitlements,
+      );
+    });
   });
 
   test('SAAS-T231 - Verify non-customer user is not able to see entitlements for the Percona customer organization @customers @dashboard @entitlements', async ({

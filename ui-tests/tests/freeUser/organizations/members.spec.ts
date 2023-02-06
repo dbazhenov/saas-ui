@@ -89,6 +89,10 @@ test.describe('Spec file for free users members tests', async () => {
     page,
     baseURL,
   }) => {
+    test.info().annotations.push({
+      type: 'Also Cover',
+      description: 'SAAS-T275 - Verify user cannot activate his account with expired activation link',
+    });
     const dashboardPage = new DashboardPage(page);
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);

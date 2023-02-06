@@ -112,9 +112,10 @@ test.describe('Spec file for Sign Up tests', async () => {
         type: 'Also Covers',
         description: 'SAAS-T124 - Verify user can see notification about Account confirmation email sent.',
       },
+
       {
         type: 'Also Covers',
-        description: 'SAAS-T122 - Verify confirmation email is sent during Portal registration.',
+        description: 'SAAS-T274 - Verify the message appears after registration of the user',
       },
     );
 
