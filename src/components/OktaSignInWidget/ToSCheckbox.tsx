@@ -1,22 +1,17 @@
 import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';
 import { cx } from 'emotion';
 import React, { FC, useCallback, useEffect, useState } from 'react';
+import { useStyles } from 'core/utils';
 import { Messages } from './TosCheckbox.messages';
 import { Messages as WidgetMessages } from './OktaSignInWidget.messages';
 import { ToSCheckboxProps } from './ToSCheckbox.types';
+import { getStyles } from './ToSCheckbox.styles';
 
 const disabledCls = 'link-button-disabled';
 
 export const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
-  const [marketingChecked, setMarketingChecked] = useState(false);
   const [tosChecked, setTosChecked] = useState(false);
-
-  const handleMarketingCheck = useCallback(
-    ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
-      setMarketingChecked(eChecked);
-    },
-    [],
-  );
+  const styles = useStyles(getStyles);
 
   const handleTosCheck = useCallback(
     ({ target: { checked: eChecked } }: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,24 +37,18 @@ export const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
     <div data-se="o-form-fieldset" className="o-form-fieldset o-form-label-top">
       <div data-se="o-form-input-container" className="o-form-input">
         <span data-se="o-form-input-marketing" className="o-form-input-name-marketing">
-          <div className="custom-checkbox">
-            <input
-              type="checkbox"
-              name="marketing"
-              id="input098"
-              checked={marketingChecked}
-              onChange={handleMarketingCheck}
-              value={marketingChecked ? 'on' : 'off'}
-            />
-            <label
-              htmlFor="input098"
-              data-se-for-name="marketing"
-              data-testid="marketing-label"
-              className={cx('marketing-label', { checked: marketingChecked })}
+          <p className={styles.marketingLabel} data-testid="marketing-label">
+            {Messages.marketing}
+            <a
+              className={styles.tosLink}
+              href={PRIVACY_PMM_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              data-testid="privacy-policy-link"
             >
-              {Messages.marketing}
-            </label>
-          </div>
+              {Messages.privacyPolicy}
+            </a>
+          </p>
         </span>
         <span data-se="o-form-input-tos" className="o-form-input-name-tos">
           <div className="custom-checkbox">

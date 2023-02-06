@@ -2,6 +2,7 @@ export const Messages = {
   iAgree: 'I agree with Percona ',
   iHaveRead: 'I have read and accepted the ',
   marketing:
-    'By registering I consent that Percona can use my information to send me relevant communications about Percona Platform and Services.',
+    'By submitting my personal information, I acknowledge that Percona will communicate with me about its products and services. I understand that I can unsubscribe from these communications in accordance with the Percona ',
   perconaPrivacyPolicy: 'Percona Privacy Policy',
+  privacyPolicy: 'Privacy Policy',
 };

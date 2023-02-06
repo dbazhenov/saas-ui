@@ -4,7 +4,7 @@ import OktaSignIn from '@okta/okta-signin-widget';
 import { useStyles } from 'core/utils';
 import { getStyles } from 'pages/Login/Login.styles';
 import ReactDOM from 'react-dom';
-import { PRIVACY_PMM_URL, TERMS_OF_SERVICE_URL } from 'core/constants';
+import { PRIVACY_PMM_URL } from 'core/constants';
 import { ContextProps, RegistrationData } from './OktaSignInWidget.types';
 import { Messages } from './OktaSignInWidget.messages';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
@@ -65,11 +65,7 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
 
     content = (
       <p className="tos-label" data-testid="tos-label">
-        {Messages.byRegistering}
-        <a href={TERMS_OF_SERVICE_URL} target="_blank" rel="noreferrer noopener" data-testid="tos-link">
-          {Messages.tos}
-        </a>
-        {Messages.andPerconas}
+        {Messages.marketing}
         <a href={PRIVACY_PMM_URL} target="_blank" rel="noreferrer noopener" data-testid="privacy-policy-link">
           {Messages.privacyPolicy}
         </a>
@@ -151,9 +147,9 @@ export const OktaSignInWidget = ({
       preSubmit: (postData: RegistrationData, onSuccessSignUp: (postData: any) => {}) => {
         setEmail(postData.email);
         postData.tos = true;
-        const marketingConsent = widgetRef.current?.querySelector('[name=marketing]') as HTMLInputElement;
+        const marketingConsent = true;
 
-        postData.marketing = marketingConsent.checked;
+        postData.marketing = marketingConsent;
         onSuccessSignUp(postData);
       },
     };

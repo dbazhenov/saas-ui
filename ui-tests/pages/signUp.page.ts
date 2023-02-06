@@ -58,7 +58,7 @@ export class SignUpPage extends CommonPage {
   platformPrivacyLink = 'https://per.co.na/pmm/platform-privacy';
   platformTermsLink = 'https://per.co.na/pmm/platform-terms';
 
-  fillOutSignUpUserDetails = async (user: User, options = { tos: true, marketing: true }) => {
+  fillOutSignUpUserDetails = async (user: User, options = { tos: true }) => {
     // Verify placeholders
     await this.verifyPlaceholders();
     // filled the form
@@ -81,13 +81,9 @@ export class SignUpPage extends CommonPage {
     await this.successIcon.waitFor({ state: 'visible', timeout: 60000 });
   };
 
-  private handleCheckBoxes = async (options = { tos: true, marketing: true }) => {
+  private handleCheckBoxes = async (options = { tos: true }) => {
     if (options.tos) {
       await this.tosCheckbox.check();
-    }
-
-    if (options.marketing) {
-      await this.marketingCheckbox.check();
     }
   };
 

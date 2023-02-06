@@ -1,7 +1,7 @@
 export const Messages = {
   byRegistering: "By registering, I agree to Percona's ",
   marketing:
-    'By registering I consent that Percona can use my information to send me relevant communications about Percona Platform and Services.',
+    'By submitting my personal information, I acknowledge that Percona will communicate with me about its products and services. I understand that I can unsubscribe from these communications in accordance with the Percona ',
   tos: 'Terms of Service',
   andPerconas: ' and Percona ',
   privacyPolicy: 'Privacy Policy',

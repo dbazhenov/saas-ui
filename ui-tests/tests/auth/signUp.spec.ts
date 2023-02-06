@@ -89,7 +89,6 @@ test.describe('Spec file for Sign Up tests', async () => {
     await signUpPage.inputFirstName.fill('');
     await signUpPage.inputPassword.fill(casualUser.password);
     await signUpPage.inputLastName.fill('');
-    await signUpPage.marketingCheckbox.check();
     await signUpPage.tosCheckbox.check();
     await signUpPage.registerButton.click();
     // Verify error message toast message.
@@ -219,7 +218,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     });
   });
 
-  test("SAAS-T257 - Verify it's possible to create account with unchecked consent with info sending from Percona @signUp @auth", async ({
+  test("SAAS-T257 - Verify it's possible to create account with unchecked/Default consent(without checkbox) with info sending from Percona @signUp @auth", async ({
     page,
   }) => {
     const signUpPage = new SignUpPage(page);
@@ -229,10 +228,10 @@ test.describe('Spec file for Sign Up tests', async () => {
     });
 
     await test.step(
-      'Fill in all fields, select  required "consent with TOS" checkbox and Leave empty "consent to send emails from Percona" checkbox',
+      'Fill in all fields, select  required "consent with TOS" checkbox and Removed "consent to send emails from Percona" checkbox',
       async () => {
         await signUpPage.createOneLink.waitFor();
-        await signUpPage.fillOutSignUpUserDetails(adminUser, { tos: true, marketing: false });
+        await signUpPage.fillOutSignUpUserDetails(adminUser, { tos: true });
       },
     );
 
@@ -243,7 +242,7 @@ test.describe('Spec file for Sign Up tests', async () => {
       );
       const userDetails = await oktaAPI.getUser(adminUser.email);
 
-      expect(userDetails.profile.marketing).toBeFalsy();
+      expect(userDetails.profile.marketing).toBeTruthy();
       expect(userDetails.profile.tos).toBeTruthy();
     });
   });
