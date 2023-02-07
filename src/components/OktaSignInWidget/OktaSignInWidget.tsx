@@ -1,11 +1,14 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactDOM from 'react-dom';
 // @ts-ignore
 import OktaSignIn from '@okta/okta-signin-widget';
+import { CircularProgress } from '@mui/material';
+import { Routes } from 'core';
+import { useHistory } from 'react-router-dom';
 import { useStyles } from 'core/utils';
-import { getStyles } from 'pages/Login/Login.styles';
-import ReactDOM from 'react-dom';
 import { PRIVACY_PMM_URL } from 'core/constants';
-import { ContextProps, RegistrationData } from './OktaSignInWidget.types';
+import { getStyles } from './OktaSignInWidget.styles';
+import { ContextProps, OktaSignInWidgetProps, RegistrationData } from './OktaSignInWidget.types';
 import { Messages } from './OktaSignInWidget.messages';
 import '@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 import { ToSCheckbox } from './ToSCheckbox';
@@ -81,61 +84,26 @@ const insertToS = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
   ReactDOM.render(content, tosWrapper);
 };
 
-const newRegistrationButton = ({ controller }: ContextProps, widgetRef: HTMLDivElement) => {
-  const authContainer = widgetRef.querySelector('.primary-auth-container');
-  const registrationContainer = widgetRef.querySelector('.registration-container');
-
-  if (
-    registrationContainer?.parentElement === authContainer ||
-    !['idp-discovery', 'primary-auth'].includes(controller)
-  ) {
-    return;
-  }
-
-  authContainer?.prepend(registrationContainer!);
-};
-
-export const OktaSignInWidget = ({
-  config,
-  onSuccess,
-  onError,
-}: {
-  config: any;
-  onSuccess: any;
-  onError: any;
-}) => {
+export const OktaSignInWidget = ({ config, onSuccess, onError }: OktaSignInWidgetProps) => {
   const styles = useStyles(getStyles);
+  const { push: pushToHistory } = useHistory();
   const widgetRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState('');
   const [email, setEmail] = useState('');
+  const [isWidgetLoading, setIsWidgetLoading] = useState(true);
 
-  const showRegisteredEmail = useCallback(
-    (widgetRefCurrent: HTMLDivElement) => {
-      const descriptionText = widgetRefCurrent.querySelector('.registration-complete .desc');
+  const widgetQuerySelector = (selector: string): HTMLElement | null | undefined =>
+    widgetRef.current?.querySelector<HTMLElement>(selector);
+
+  useEffect(() => {
+    if (page === 'registration-complete') {
+      const descriptionText = widgetQuerySelector('.registration-complete .desc');
 
       if (descriptionText) {
         descriptionText.textContent = Messages.checkYourEmail(email);
       }
-    },
-    [email],
-  );
-
-  const handleAfterRender = useCallback((context: ContextProps) => {
-    if (widgetRef.current === null) {
-      return;
     }
-
-    setPage(context.controller);
-
-    insertToS(context, widgetRef.current as HTMLDivElement);
-    newRegistrationButton(context, widgetRef.current as HTMLDivElement);
-  }, []);
-
-  useEffect(() => {
-    if (page === 'registration-complete') {
-      showRegisteredEmail(widgetRef.current as HTMLDivElement);
-    }
-  }, [page, email, showRegisteredEmail]);
+  }, [page, email]);
 
   useEffect(() => {
     if (!widgetRef.current) {
@@ -154,9 +122,63 @@ export const OktaSignInWidget = ({
       },
     };
 
+    const handleRouting = (controller: string) => {
+      if (controller === 'registration') {
+        const backToSignInLink = widgetQuerySelector('.auth-footer a');
+
+        if (backToSignInLink) {
+          backToSignInLink.addEventListener('click', () => {
+            pushToHistory(Routes.login);
+          });
+        }
+      } else if (['idp-discovery', 'primary-auth'].includes(controller)) {
+        const signUpLink = widgetQuerySelector('.registration-link');
+
+        if (signUpLink) {
+          signUpLink.addEventListener('click', () => {
+            pushToHistory(Routes.signup);
+          });
+        }
+      }
+    };
+
     const widget = new OktaSignIn(config);
 
-    widget.on('afterRender', handleAfterRender);
+    widget.on('afterRender', (context: ContextProps) => {
+      if (widgetRef.current === null) {
+        return;
+      }
+
+      setPage(context.controller);
+      handleRouting(context.controller);
+      insertToS(context, widgetRef.current as HTMLDivElement);
+    });
+
+    widget.on('ready', (context: ContextProps) => {
+      if (
+        ['idp-discovery', 'primary-auth'].includes(context.controller) &&
+        window.location.pathname === Routes.signup
+      ) {
+        widgetRef.current!.style.visibility = 'hidden';
+      } else {
+        setIsWidgetLoading(false);
+      }
+
+      if (window.location.pathname === Routes.signup) {
+        const signUpLink = widgetQuerySelector('.registration-link');
+
+        widgetRef.current!.style.visibility = 'hidden';
+
+        if (signUpLink) {
+          signUpLink.click();
+
+          setTimeout(() => {
+            widgetRef.current!.style.visibility = 'visible';
+            setIsWidgetLoading(false);
+          }, 1300);
+        }
+      }
+    });
 
     widget
       .showSignInToGetTokens({
@@ -166,7 +188,12 @@ export const OktaSignInWidget = ({
       .catch(onError);
 
     return () => widget.remove();
-  }, [config, onSuccess, onError, handleAfterRender]);
+  }, [config, onSuccess, onError, pushToHistory]);
 
-  return <div id="auth-center" className={styles.authCenter} ref={widgetRef} />;
+  return (
+    <div className={styles.authState}>
+      {isWidgetLoading && <CircularProgress className={styles.loader} />}
+      <div id="auth-center" className={styles.authCenter} ref={widgetRef} />
+    </div>
+  );
 };

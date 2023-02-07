@@ -7,6 +7,7 @@ import { getUser } from '@helpers/portalHelper';
 import { SignInPage } from '@tests/pages/signIn.page';
 import PMMInstances from '@tests/pages/PMMInstances.page';
 import FreeKubernetes from '@tests/pages/FreeKubernetes.page';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -92,7 +93,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       expect(await dashboardPage.sideMenu.mainMenu.dashboard.isVisible()).toBeTruthy();
       await dashboardPage.sideMenu.mainMenu.dashboard.click();
-      await expect(page).toHaveURL(baseURL);
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.dashboard}`);
 
       await expect(dashboardPage.sideMenu.mainMenu.organization).toBeVisible();
       await dashboardPage.sideMenu.mainMenu.organization.click();
@@ -113,8 +114,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
     const pmmInstances = new PMMInstances(page);
     const freeKubernetes = new FreeKubernetes(page);
+    const landingPage = new LandingPage(page);
 
     await test.step('1. Login to the portal. and verify Install PMM link.', async () => {
+      await landingPage.loginButton.click();
       await signInPage.uiLogin(adminUser.email, adminUser.password);
       await expect(dashboardPage.installPmmButton).toHaveAttribute('href', dashboardPage.installPmmLink);
       const [newPage] = await Promise.all([

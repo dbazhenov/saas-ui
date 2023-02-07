@@ -4,12 +4,13 @@ import User from '@support/types/user.interface';
 import ServiceNowResponse from '@support/types/serviceNowResponse.interface';
 import { getUser } from '@helpers/portalHelper';
 import { DashboardPage } from '@tests/pages/dashboard.page';
-import { SignInPage } from '@tests/pages/signIn.page';
 import { routeHelper } from '@api/helpers';
 import { endpoints } from '@tests/helpers/apiHelper';
 import { OrganizationPage } from '@tests/pages/organization.page';
 import { MembersPage } from '@tests/pages/members.page';
 import { UserRoles } from '@tests/support/enums/userRoles';
+import LandingPage from '@tests/pages/landing.page';
+import { SignInPage } from '@tests/pages/signIn.page';
 
 test.describe('Spec file for percona customers entitlements tests', async () => {
   const defaultNumberOfEntitlements = 3;
@@ -157,7 +158,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     const dashboardPage = new DashboardPage(page);
     const membersPage = new MembersPage(page);
     const organizationPage = new OrganizationPage(page);
-    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
 
     await test.step(
       '1. Navigate to the Members tab and invite user not in SN to the Percona Customer organization',
@@ -173,7 +174,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     );
 
     await test.step('2. Log in as invited user not in SN and check the dashboard', async () => {
-      await signInPage.emailInput.waitFor({ state: 'visible' });
+      await landingPage.landingPageContainer.waitFor({ state: 'visible' });
       await oktaAPI.loginByOktaApi(notCustomerUser, page);
 
       await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });

@@ -67,7 +67,7 @@ export const AccountInfo: FC = () => {
           <Typography className={styles.cardTitle} variant="h6">
             {Messages.yourAccount}
           </Typography>
-          <p className={isCustomer ? styles.noBottomMargin : undefined}>
+          <div className={isCustomer ? styles.noBottomMargin : styles.paragraph}>
             <Typography>
               <span className={styles.cardPoint}>{Messages.name}</span> {firstName} {lastName}
             </Typography>
@@ -81,7 +81,7 @@ export const AccountInfo: FC = () => {
               &nbsp;
               {getAccountType(isCustomer, !!CSContact.name, isPending)}
             </Typography>
-          </p>
+          </div>
           {!isPending && !isCustomer && (
             <>
               <Typography className={styles.paragraph}>{Messages.perconaExperts}</Typography>

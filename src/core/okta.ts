@@ -4,10 +4,10 @@ import {
   OAUTH_HOST,
   OAUTH_ISSUER_URI,
   PORTAL_ORIGIN,
-  PRIVACY_PMM_URL,
-  TERMS_OF_SERVICE_URL,
   GOOGLE_IDP_ID,
   GITHUB_IDP_ID,
+  TERMS_OF_SERVICE_URL,
+  PRIVACY_PMM_URL,
 } from './constants';
 import { Messages } from './messages';
 
@@ -38,6 +38,8 @@ export const authConfig = {
       'registration.form.submit': Messages.signUpButton,
       'socialauth.google.label': Messages.signInGoogle,
       'socialauth.github.label': Messages.signInGithub,
+      'password.forgot.email.or.username.placeholder': Messages.workEmail,
+      'password.forgot.email.or.username.tooltip': Messages.workEmail,
     },
   },
   helpLinks: {

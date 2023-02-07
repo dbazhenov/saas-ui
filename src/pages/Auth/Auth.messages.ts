@@ -1,7 +1,6 @@
 export const Messages = {
   logoAlt: 'Percona platform logo',
   title: 'Monitor, secure, and optimize your database environments on any infrastructure.',
-  subtitle: 'Register to get access to:',
   accessTo: [
     {
       name: 'Open source software and tools',

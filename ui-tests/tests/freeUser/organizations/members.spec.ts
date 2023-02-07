@@ -14,6 +14,7 @@ import {
 import { ActivationPage } from '@tests/pages/activation.page';
 import { SignInPage } from '@tests/pages/signIn.page';
 import { getUser } from '@helpers/portalHelper';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for free users members tests', async () => {
   let admin1User: User;
@@ -97,6 +98,7 @@ test.describe('Spec file for free users members tests', async () => {
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
     let message;
 
     await test.step('Invite previously not registered new member to the organization.', async () => {
@@ -153,7 +155,7 @@ test.describe('Spec file for free users members tests', async () => {
         .resetEmailLink(secondNotRegisteredUser.email)
         .waitFor({ state: 'visible' });
       await membersPage.userDropdown.logoutUser();
-      await signInPage.emailInput.waitFor({ state: 'visible' });
+      await landingPage.landingPageContainer.waitFor({ state: 'visible' });
     });
 
     await test.step(
@@ -308,7 +310,7 @@ test.describe('Spec file for free users members tests', async () => {
     page,
   }) => {
     const orgName = 'Test Org Second User';
-    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
     const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
@@ -320,7 +322,7 @@ test.describe('Spec file for free users members tests', async () => {
       await membersPage.membersTable.deleteUserByEmail(admin2User.email);
       await membersPage.membersTable.verifyUserNotPresent(admin2User.email);
       await membersPage.userDropdown.logoutUser();
-      await signInPage.emailInput.waitFor({ state: 'visible' });
+      await landingPage.landingPageContainer.waitFor({ state: 'visible' });
     });
 
     await test.step(

@@ -15,7 +15,7 @@ on:
 jobs:
   test:
     name: Run unit tests
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     runs-on: ubuntu-18.04
 
@@ -48,7 +48,7 @@ jobs:
 
   docker:
     name: Build Docker image
-    timeout-minutes: 10
+    timeout-minutes: 15
     needs: test
 
     outputs:
@@ -108,7 +108,7 @@ jobs:
 
   e2e:
     name: Dispatch E2E tests
-    timeout-minutes: 10
+    timeout-minutes: 15
     needs: docker
 
     runs-on: ubuntu-18.04

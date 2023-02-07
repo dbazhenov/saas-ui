@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 import { DashboardPage } from '@pages/dashboard.page';
 import { OrganizationPage } from '@pages/organization.page';
-import { SignInPage } from '@pages/signIn.page';
 import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
 import { getUser } from '@helpers/portalHelper';
 import { MembersPage } from '@tests/pages/members.page';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for free users dashboard tests', async () => {
   let newAdmin1User: User;
@@ -89,7 +89,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
     const dashboardPage = new DashboardPage(page);
     const membersPage = new MembersPage(page);
     const organizationPage = new OrganizationPage(page);
-    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
 
     firstUserWithoutOrg = getUser();
     await oktaAPI.createUser(firstUserWithoutOrg);
@@ -135,7 +135,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
 
     await organizationPage.userDropdown.logoutUser();
 
-    await signInPage.signInContainer.waitFor({ state: 'visible' });
+    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
     secondUserWithoutOrg = getUser();
     await oktaAPI.createUser(secondUserWithoutOrg);
     await oktaAPI.loginByOktaApi(secondUserWithoutOrg, page);

@@ -4,6 +4,7 @@ import { SignInPage } from '@pages/signIn.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -20,9 +21,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     }
   });
 
-  test('SAAS-T251 - Verify handling of status 401 @auth', async ({ page }) => {
+  test('SAAS-T251 - Verify handling of status 401 @auth', async ({ page, baseURL }) => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
+    const landingPage = new LandingPage(page);
 
     await oktaAPI.loginByOktaApi(adminUser, page);
     await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
@@ -30,17 +32,19 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await oktaAPI.deleteUserByEmail(adminUser.email);
     await page.reload();
-    await signInPage.signInContainer.waitFor({ state: 'visible' });
-    expect(page.url()).toContain(dashboardPage.routes.login);
+    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
+    expect(page.url()).toEqual(`${baseURL}/`);
     await page.goto(dashboardPage.routes.organization);
-    await signInPage.signInContainer.waitFor({ state: 'visible' });
-    expect(page.url()).toContain(dashboardPage.routes.login);
+    await signInPage.emailInput.waitFor({ state: 'visible' });
+    expect(page.url()).toEqual(baseURL + dashboardPage.routes.login);
   });
 
   test('SAAS-T82 Verify successful login on Percona Portal @login @auth', async ({ page, baseURL }) => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
+    const landingPage = new LandingPage(page);
 
+    await landingPage.loginButton.click();
     await signInPage.fillOutSignInUserDetails(adminUser.email, adminUser.password);
     await signInPage.signInButton.click();
     await signInPage.waitForPortalLoaded();
@@ -54,8 +58,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page, context }) => {
       const signInPage = new SignInPage(page);
       const dashboardPage = new DashboardPage(page);
+      const landingPage = new LandingPage(page);
 
       await test.step('SAAS-T245 Verify user is able to see "Continue with.." buttons', async () => {
+        await landingPage.loginButton.click();
         await expect(signInPage.continueGoogle).toHaveText(signInPage.continueGoogleLabel);
         await expect(signInPage.continueGitHub).toHaveText(signInPage.continueGitHubLabel);
 

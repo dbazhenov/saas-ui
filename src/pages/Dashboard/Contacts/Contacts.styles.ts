@@ -50,4 +50,7 @@ export const getStyles = ({ palette, spacing, typography }: Theme) => ({
     display: block;
     margin-top: 5px;
   `,
+  needHelp: css`
+    margin: ${spacing(2)} 0;
+  `,
 });

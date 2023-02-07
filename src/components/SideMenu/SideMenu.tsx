@@ -1,10 +1,9 @@
 import React, { FC } from 'react';
-import { Box, createTheme, Drawer, List, ThemeProvider, Typography } from '@mui/material';
+import { Box, createTheme, Drawer, List, ThemeProvider } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { ReactComponent as PerconaLogo } from 'assets/percona-logo.svg';
+import { ReactComponent as PerconaLogo } from 'assets/percona-logo-color.svg';
 import { HEADER_HEIGHT } from 'components/Layouts/PrivateLayout/PrivateLayout.constants';
 import { Routes } from 'core';
-import { Messages } from './SideMenu.messages';
 import { mainMenu, resourcesMenu } from './SideMenu.constants';
 import { styles } from './SideMenu.styles';
 import { NavItem } from './NavItem';
@@ -30,15 +29,6 @@ export const SideMenu: FC = () => (
           data-testid="menu-bar-home-link"
         >
           <PerconaLogo />
-          <Typography
-            marginLeft={1}
-            marginTop="3px"
-            fontWeight={500}
-            fontSize={16}
-            sx={styles.logo.typography}
-          >
-            {Messages.portal}
-          </Typography>
         </Box>
         <List data-testid="side-menu-main-section">
           {mainMenu.map((page) => (

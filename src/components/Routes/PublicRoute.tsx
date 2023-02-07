@@ -9,20 +9,22 @@ export const PublicRoute: FC<RouteProps> = ({ children, ...rest }) => {
   const { authState } = useOktaAuth();
 
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        !authState?.isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: Routes.root,
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
+    authState && (
+      <Route
+        {...rest}
+        render={({ location }) =>
+          !authState.isAuthenticated ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: Routes.home,
+                state: { from: location },
+              }}
+            />
+          )
+        }
+      />
+    )
   );
 };

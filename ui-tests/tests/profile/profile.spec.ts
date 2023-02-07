@@ -5,6 +5,7 @@ import { SignInPage } from '@pages//signIn.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let newAdmin1User: User;
@@ -64,22 +65,14 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await profilePage.firstNameInput.fill('');
     await profilePage.lastNameInput.fill('');
     await profilePage.firstNameInput.focus();
-    await expect(profilePage.firstNameValidationError).toHaveText(
-      profilePage.requiredField('First name'),
-    );
-    await expect(profilePage.lastNameValidationError).toHaveText(
-      profilePage.requiredField('Last name'),
-    );
+    await expect(profilePage.firstNameValidationError).toHaveText(profilePage.requiredField('First name'));
+    await expect(profilePage.lastNameValidationError).toHaveText(profilePage.requiredField('Last name'));
     await expect(profilePage.saveProfileButton).toBeDisabled();
 
     await profilePage.firstNameInput.fill(longInput);
-    await expect(profilePage.firstNameValidationError).toHaveText(
-      profilePage.toLongString('First name'),
-    );
+    await expect(profilePage.firstNameValidationError).toHaveText(profilePage.toLongString('First name'));
     await profilePage.lastNameInput.fill(longInput);
-    await expect(profilePage.lastNameValidationError).toHaveText(
-      profilePage.toLongString('Last name'),
-    );
+    await expect(profilePage.lastNameValidationError).toHaveText(profilePage.toLongString('Last name'));
 
     await profilePage.firstNameInput.fill(longInput.slice(0, 50));
     await profilePage.firstNameValidationError.waitFor({ state: 'detached' });
@@ -95,7 +88,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
   test('SAAS-T129 should be able to update user profile @profile', async ({ page }) => {
     const profilePage = new ProfilePage(page);
-    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
 
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
     await profilePage.userDropdown.openUserProfile();
@@ -111,7 +104,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await profilePage.userDropdown.logoutUser();
 
-    await signInPage.emailInput.waitFor({ state: 'visible' });
+    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
     await oktaAPI.loginByOktaApi(newAdmin1User, page);
     await profilePage.userDropdown.openUserProfile();
     await profilePage.waitForEnabled(profilePage.firstNameInput);

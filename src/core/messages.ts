@@ -1,11 +1,11 @@
 export const Messages = {
   productDescription:
     'A unified experience for developers and database administrators to monitor, manage, secure, and optimize database environments on any infrastructure.',
-  signIn: 'Sign in to Percona Platform',
+  signIn: 'Sign In',
   workEmail: 'Work Email',
   registration: {
     label: 'Are you new to Percona Portal?',
-    link: 'Create Account',
+    link: 'Sign Up',
   },
   signUpTitle: 'Create New Account',
   signUpButton: 'Create',

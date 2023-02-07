@@ -11,3 +11,9 @@ export interface RegistrationData {
   password: string;
   tos: boolean;
 }
+
+export interface OktaSignInWidgetProps {
+  config: any;
+  onSuccess: any;
+  onError: any;
+}

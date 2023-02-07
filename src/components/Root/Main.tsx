@@ -3,8 +3,9 @@ import { Route, Switch } from 'react-router-dom';
 import { LoginCallback } from '@okta/okta-react';
 import { PublicRoute, SecureRoute } from 'components';
 import {
+  Auth,
   DashboardPage,
-  LoginPage,
+  LandingPage,
   ManageOrganizationPage,
   ManagePmmInstancesPage,
   K8sClusterCreationPage,
@@ -18,12 +19,15 @@ export const Main: FC = () => (
   <Switch>
     <Route path={Routes.loginCallback} component={LoginCallback} />
     <Route exact path={Routes.activation} component={Activation} />
-    <SecureRoute exact path={Routes.root}>
+    <PublicRoute exact path={[Routes.login, Routes.signup]}>
+      <Auth />
+    </PublicRoute>
+    <PublicRoute exact path={Routes.root}>
+      <LandingPage />
+    </PublicRoute>
+    <SecureRoute exact path={Routes.home}>
       <DashboardPage />
     </SecureRoute>
-    <PublicRoute exact path={Routes.login}>
-      <LoginPage />
-    </PublicRoute>
     <SecureRoute exact path={Routes.profile}>
       <ProfilePage />
     </SecureRoute>

@@ -51,7 +51,7 @@ export const getStyles = ({ palette, spacing, typography }: Theme) => ({
   `,
   entitlementsWrapper: css`
     display: flex;
-    margin-top: 0;
+    margin: 0;
   `,
   icon: css`
     cursor: pointer;
@@ -65,6 +65,7 @@ export const getStyles = ({ palette, spacing, typography }: Theme) => ({
     margin: 16px 0 !important;
   `,
   noBottomMargin: css`
+    margin-top: ${spacing(2)};
     margin-bottom: 0;
   `,
   formatListBulletedIcon: css`

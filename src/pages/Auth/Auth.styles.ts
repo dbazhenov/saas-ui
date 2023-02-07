@@ -1,42 +1,40 @@
 import { css } from 'emotion';
 import { Theme } from '@mui/material';
-import loginBg from 'assets/login-bg.png';
 
-export const getStyles = ({ palette, shape, spacing, typography }: Theme) => ({
+export const getStyles = ({ palette, shape, spacing, typography, shadows }: Theme) => ({
   container: css`
-    background-image: url(${loginBg});
-    background-size: cover;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     box-sizing: border-box;
-    padding: 50px;
     display: flex;
     justify-content: flex-end;
   `,
   leftSide: css`
     display: flex;
+    max-width: 660px;
     flex: 1;
     flex-direction: column;
+    background-color: ${palette.common.white};
+    padding: ${spacing(10)};
   `,
   logo: css`
-    display: flex;
+    margin: ${spacing(10)} 0 ${spacing(4)} 0;
+    height: 133px;
+    width: 154px;
 
-    img {
+    & svg {
+      height: 100%;
       width: 100%;
-      max-width: 350px;
     }
   `,
   texts: css`
-    color: ${palette.common.white};
     display: flex;
-    justify-content: center;
     flex-direction: column;
     padding-right: ${spacing(3)};
     box-sizing: border-box;
-    max-width: 600px;
     flex: 1;
 
     a {
-      color: ${palette.common.white};
       text-decoration: none;
       align-items: center;
       line-height: 30px;
@@ -49,48 +47,29 @@ export const getStyles = ({ palette, shape, spacing, typography }: Theme) => ({
       }
     }
 
-    h2 {
-      font-size: 32px;
-      font-weight: ${typography.fontWeightBold};
+    h5 {
       margin-bottom: ${spacing(5)};
-    }
-
-    h3 {
-      font-size: 24px;
-      font-weight: ${typography.fontWeightMedium};
-      margin-bottom: ${spacing(3)};
     }
 
     li {
       display: flex;
       list-style-type: none;
-      margin-bottom: ${spacing(3)};
+      margin-bottom: ${spacing(1)};
       font-weight: ${typography.fontWeightRegular};
-      font-size: 18px;
-
-      strong {
-        font-weight: ${typography.fontWeightBold};
-      }
-
-      img {
-        margin-right: ${spacing(3)};
-      }
     }
   `,
   leftLi: css`
     display: flex;
     justify-items: center;
-    align-items: center;
+  `,
+  bulletPointText: css`
+    padding-left: ${spacing(2)};
   `,
   auth: css`
-    max-width: 600px;
     flex: 1;
-    background-color: ${palette.common.white};
+    background: #232832;
     border-radius: ${shape.borderRadius};
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 10px;
     flex-direction: column;
 
     #okta-sign-in.auth-container {
@@ -101,18 +80,33 @@ export const getStyles = ({ palette, shape, spacing, typography }: Theme) => ({
       box-shadow: none;
 
       .button-primary {
-        background: ${palette.primary.main};
-        border-color: ${palette.primary.main} !important;
+        display: flex;
+        background: ${palette.primary.main} !important;
+        border: none !important;
+        flex: 1;
+        border-radius: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
           background: none !important;
           background-color: ${palette.primary.light} !important;
-          border-color: ${palette.primary.light} !important;
+        }
+
+        &:active {
+          outline: 0 !important;
         }
 
         &.link-button-disabled {
-          opacity: ${palette.action.disabledOpacity};
+          background-color: #d5d5d7 !important;
+          color: #a9aaab !important;
+          opacity: 1;
         }
+      }
+
+      .focused-input {
+        box-shadow: none !important;
       }
 
       .registration-container {
@@ -121,37 +115,31 @@ export const getStyles = ({ palette, shape, spacing, typography }: Theme) => ({
         .content-container {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          padding: 0 0 ${spacing(4)} 0;
+          padding: ${spacing(2)} 0 ${spacing(2)} 0;
           border: 0;
 
           .registration-link {
             display: inline-flex;
             text-decoration: none;
-            background-color: #fbfbfb;
             color: ${palette.primary.main};
-            padding: 6px 12px;
-            border: 1px solid ${palette.primary.main};
-            border-radius: ${shape.borderRadius};
-            margin-top: ${spacing(2)};
+            font-weight: 600;
           }
 
           .registration-link:hover {
-            text-decoration: none;
-            background-color: #fff;
+            text-decoration: underline;
           }
         }
       }
 
       #tos-wrapper {
-        margin-bottom: 12px;
+        margin-bottom: ${spacing(3)};
       }
 
       .tos-label {
-        font-size: 13px !important;
+        font-size: ${typography.caption.fontSize} !important;
 
         a {
-          color: #007dc1;
+          color: ${palette.primary.main} !important;
         }
       }
     }
@@ -161,19 +149,20 @@ export const getStyles = ({ palette, shape, spacing, typography }: Theme) => ({
     }
 
     .okta-form-title {
-      font-size: 20px !important;
+      font-size: ${typography.h6.fontSize} !important;
       color: ${palette.common.black} !important;
+      margin-bottom: ${spacing(3)} !important;
     }
 
     .auth-footer {
       margin-top: ${spacing(2)} !important;
     }
+
+    .registration-label {
+      font-size: ${typography.caption.fontSize} !important;
+    }
   `,
-  authCenter: css`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
+  bulletPoint: css`
+    color: #7d2897;
   `,
 });

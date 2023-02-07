@@ -1,11 +1,10 @@
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import { useStyles } from '@grafana/ui';
 import { useOktaAuth } from '@okta/okta-react';
 import { useSelector } from 'react-redux';
 import { getAuth } from 'store/auth';
-import { displayAndLogError } from 'core';
-import { LoaderButton } from '@percona/platform-core';
+import { displayAndLogError, useStyles } from 'core';
 import { QueryStatus } from '@reduxjs/toolkit/dist/query';
+import { LoadingButton } from '@mui/lab';
 import { getStyles } from './MarketingBanner.styles';
 import { Messages } from './MarketingBanner.messages';
 import { useEditProfileMutation } from '../../core/api/auth.service';
@@ -73,7 +72,8 @@ export const MarketingBanner: FC = ({ children }) => {
           {Messages.description}
         </p>
         <div className={styles.buttonsWrapper}>
-          <LoaderButton
+          <LoadingButton
+            variant="contained"
             data-testid="accept-marketing"
             type="submit"
             loading={acceptLoading}
@@ -82,9 +82,9 @@ export const MarketingBanner: FC = ({ children }) => {
             onClick={() => handleSubmit(true)}
           >
             {Messages.yes}
-          </LoaderButton>
-          <LoaderButton
-            variant="secondary"
+          </LoadingButton>
+          <LoadingButton
+            variant="contained"
             data-testid="reject-marketing"
             type="submit"
             loading={rejectLoading}
@@ -92,7 +92,7 @@ export const MarketingBanner: FC = ({ children }) => {
             onClick={() => handleSubmit(false)}
           >
             {Messages.no}
-          </LoaderButton>
+          </LoadingButton>
         </div>
       </div>
     </div>

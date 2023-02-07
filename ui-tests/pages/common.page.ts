@@ -39,7 +39,7 @@ export class CommonPage {
     activation: '/activation',
     root: '/',
     welcome: '/welcome',
-    dashboard: '/dashboard',
+    dashboard: '/home',
     kubernetes: '/kubernetes',
   };
 

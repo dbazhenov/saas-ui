@@ -1,9 +1,9 @@
 import { test } from '@playwright/test';
 import { oktaAPI } from '@api/okta';
 import { DashboardPage } from '@pages/dashboard.page';
-import { SignInPage } from '@pages/signIn.page';
 import User from '@support/types/user.interface';
 import { getUser } from '@helpers/portalHelper';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -24,8 +24,8 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await dashboardPage.waitForPortalLoaded();
     await dashboardPage.userDropdown.logoutUser();
-    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
 
-    await signInPage.signInContainer.waitFor({ state: 'visible' });
+    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
   });
 });

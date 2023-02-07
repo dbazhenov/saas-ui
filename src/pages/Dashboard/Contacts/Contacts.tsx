@@ -58,16 +58,16 @@ export const Contacts: FC = () => {
         <Typography className={styles.cardTitle} variant="h6">
           {Messages.perconaContacts}
         </Typography>
-        <p>
+        <div className={styles.needHelp}>
           <Typography>{Messages.needHelp}</Typography>
           <a className={styles.externalLink} href={`mailto:${helpEmail}`} data-testid="email-contact-link">
             {helpEmail}
           </a>
-        </p>
+        </div>
         {CSContact.name ? (
           <CustomerContact />
         ) : (
-          <>
+          <div>
             <Typography>{Messages.findUs}</Typography>
             <a
               className={styles.externalLink}
@@ -99,7 +99,7 @@ export const Contacts: FC = () => {
                 {Messages.contactsPage}
               </a>
             </p>
-          </>
+          </div>
         )}
       </div>
     </section>

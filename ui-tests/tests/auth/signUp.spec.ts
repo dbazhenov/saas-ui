@@ -5,6 +5,7 @@ import { SignInPage } from '@pages/signIn.page';
 import { getMailosaurEmailAddress, getVerificationLink } from '@api/helpers/mailosaurApiHelper';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
+import LandingPage from '@tests/pages/landing.page';
 
 test.describe('Spec file for Sign Up tests', async () => {
   let adminUser: User;
@@ -45,10 +46,12 @@ test.describe('Spec file for Sign Up tests', async () => {
 
   test('SAAS-T115 - Verify validation for email on Sign Up @signUp @auth', async ({ page, baseURL }) => {
     const signUpPage = new SignUpPage(page);
+    const landingPage = new LandingPage(page);
     const invalidUser = { ...adminUser };
 
     invalidUser.email = 'Test3#gmail.c0m';
     // Verify URL
+    await landingPage.loginButton.click();
     await expect(page).toHaveURL(`${baseURL + signUpPage.routes.login}`);
     await signUpPage.createOneLink.click();
     await signUpPage.inputEmail.type(invalidUser.email);
@@ -64,8 +67,9 @@ test.describe('Spec file for Sign Up tests', async () => {
 
   test('SAAS-T85 - Verify Sign Up if user already has Percona account @signUp @auth', async ({ page }) => {
     const signUpPage = new SignUpPage(page);
+    const landingPage = new LandingPage(page);
 
-    await signUpPage.createOneLink.click();
+    await landingPage.createAccountButton.click();
     await signUpPage.fillOutSignUpUserDetails(casualUser);
     await signUpPage.registerButton.click();
 
@@ -79,17 +83,16 @@ test.describe('Spec file for Sign Up tests', async () => {
   }) => {
     // prepare test data
     const signUpPage = new SignUpPage(page);
+    const landingPage = new LandingPage(page);
 
     casualUser.firstName = '';
     casualUser.lastName = '';
 
     // fill signUp form with required object - empty firstName & lastName.
-    await signUpPage.createOneLink.click();
+    await landingPage.createAccountButton.click();
     await signUpPage.inputEmail.fill(casualUser.email);
-    await signUpPage.inputFirstName.fill('');
     await signUpPage.inputPassword.fill(casualUser.password);
-    await signUpPage.inputLastName.fill('');
-    await signUpPage.tosCheckbox.check();
+    await signUpPage.tosCheckbox.check({ force: true });
     await signUpPage.registerButton.click();
     // Verify error message toast message.
     await expect(signUpPage.registrationAlertMessage).toHaveText(signUpPage.validationErrorAlert, {
@@ -122,10 +125,11 @@ test.describe('Spec file for Sign Up tests', async () => {
     // Prepare data
     const signUpPage = new SignUpPage(page);
     const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
 
     successUser.email = getMailosaurEmailAddress(successUser);
     // Fulfill the sign up form and register
-    await signUpPage.createOneLink.click();
+    await landingPage.createAccountButton.click();
     await signUpPage.fillOutSignUpUserDetails(successUser);
     await signUpPage.registerButton.click();
     await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(signUpPage.verificationEmailSentTitle);
@@ -140,6 +144,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     expect(page.url()).toContain('https://portal-dev.percona.com/');
     await page.goto('/');
     // Verify user able to sign in via verified account from previous sign up stages
+    await landingPage.loginButton.click();
     await signInPage.fillOutSignInUserDetails(successUser.email, successUser.password);
     await signInPage.signInButton.click();
     await signInPage.waitForPortalLoaded();
@@ -223,15 +228,15 @@ test.describe('Spec file for Sign Up tests', async () => {
     page,
   }) => {
     const signUpPage = new SignUpPage(page);
+    const landingPage = new LandingPage(page);
 
     await test.step('Open Portal and click on "Create one" link', async () => {
-      await signUpPage.createOneLink.click();
+      await landingPage.createAccountButton.click();
     });
 
     await test.step(
       'Fill in all fields, select  required "consent with TOS" checkbox and Removed "consent to send emails from Percona" checkbox',
       async () => {
-        await signUpPage.createOneLink.waitFor();
         await signUpPage.fillOutSignUpUserDetails(adminUser, { tos: true });
       },
     );
@@ -254,9 +259,10 @@ test.describe('Spec file for Sign Up tests', async () => {
   }) => {
     const signInPage = new SignInPage(page);
     const signUpPage = new SignUpPage(page);
+    const landingPage = new LandingPage(page);
 
     await test.step('1. Navigate to Percona Platform and click on Sign Up', async () => {
-      await signInPage.signUpLink.click();
+      await landingPage.createAccountButton.click();
     });
 
     await test.step('2. Fill in required fields for Sign Up and click on the Register button', async () => {
@@ -271,6 +277,9 @@ test.describe('Spec file for Sign Up tests', async () => {
       '3. Do not complete the registration by following a link from Okta and try to login',
       async () => {
         await page.reload();
+
+        await signUpPage.backToSingIn.click();
+        await signInPage.emailInput.waitFor({ state: 'visible' });
         await signInPage.fillOutSignInUserDetails(adminUser.email, adminUser.password);
         await signInPage.signInButton.click();
         await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);

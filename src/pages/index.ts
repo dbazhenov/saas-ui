@@ -1,4 +1,5 @@
-export * from './Login';
+export * from './Auth';
+export * from './LandingPage';
 export * from './ManageOrganization';
 export * from './ManagePmmInstances';
 export * from './NotFound';
