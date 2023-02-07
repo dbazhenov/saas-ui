@@ -1,4 +1,4 @@
-export const TERMS_OF_SERVICE_URL = 'https://per.co.na/pmm/platform-terms';
+export const TERMS_OF_SERVICE_URL = 'https://www.percona.com/legal/platform-terms-of-service';
 
 export const PRIVACY_PMM_URL = 'https://www.percona.com/privacy-policy';
 

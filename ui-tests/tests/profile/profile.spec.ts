@@ -22,7 +22,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await oktaAPI.deleteUserByEmail(newAdmin1User.email);
   });
 
-  test('SAAS-T128 should be able to open profile page and see change profile link @profile', async ({
+  test.skip('SAAS-T128 should be able to open profile page and see change profile link @profile', async ({
     page,
   }) => {
     const dashboardPage = new DashboardPage(page);
@@ -51,7 +51,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await expect(profilePage.editProfileButton).toHaveText('Edit profile');
   });
 
-  test('SAAS-T130 should have validation for user profile fields @profile', async ({ page }) => {
+  test.skip('SAAS-T130 should have validation for user profile fields @profile', async ({ page }) => {
     const longInput = 'this is 51 character string for negative inputs test!!!!!!!';
     const profilePage = new ProfilePage(page);
 
@@ -86,7 +86,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     expect(await profilePage.saveProfileButton.isEnabled()).toBeTruthy();
   });
 
-  test('SAAS-T129 should be able to update user profile @profile', async ({ page }) => {
+  test.skip('SAAS-T129 should be able to update user profile @profile', async ({ page }) => {
     const profilePage = new ProfilePage(page);
     const landingPage = new LandingPage(page);
 

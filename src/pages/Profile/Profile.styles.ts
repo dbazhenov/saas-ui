@@ -1,66 +1,33 @@
-import { FORM_PROFILE_WIDTH } from './Profile.constants';
+import { css } from 'emotion';
+import { Theme } from '@mui/material';
 
-export const styles = {
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    width: '100%',
-  },
-  form: {
-    flex: 1,
-    maxWidth: FORM_PROFILE_WIDTH,
-  },
-  legend: {
-    textAlign: 'center',
-    fontSize: 21,
-    fontWeight: 'regular',
-    m: 4,
-    color: 'text.primary',
-  },
-  nameFields: {
-    display: 'flex',
-    '& > *': {
-      flex: 1,
-      justifyContent: 'space-between',
-      '&:not(:last-child)': {
-        mr: 2,
-      },
-    },
-  },
-  externalLink: {
-    color: 'primary.main',
-    fontWeight: 500,
-    cursor: 'pointer',
-    textDecoration: 'none',
-  },
-  buttonWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    mt: 2,
-  },
-  submitButton: {
-    textTransform: 'capitalize',
-    backgroundColor: 'primary.main',
-    p: 0.4,
-  },
-  linkEditWrapper: {
-    mt: 2,
-    ml: 0.25,
-  },
-  linkConnectPMMWrapper: {
-    lineHeight: 1.5,
-    textAlign: 'justify',
-    color: 'text.primary',
-    ml: 0.25,
-    mt: 1,
-    mb: 4,
-  },
-  platformAccessTokenWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  spanWrapper: {
-    ml: 0.4,
-  },
-};
+export const getStyles = ({ spacing, typography, shape }: Theme) => ({
+  wrapper: css`
+    margin: 0 auto;
+  `,
+  card: css`
+    padding-right: ${spacing(4)};
+    width: ${spacing(90)};
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: ${spacing(3)};
+  `,
+  cardContent: css`
+    padding: ${spacing(3)} 0 ${spacing(1)} ${spacing(4)};
+
+    > :not(:first-child) {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    > :last-child {
+      margin-bottom: ${spacing(2)};
+    }
+
+    > :first-child {
+      margin-bottom: ${spacing(2)};
+    }
+  `,
+});
