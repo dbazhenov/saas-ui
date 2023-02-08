@@ -51,7 +51,7 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     invalidUser.email = 'Test3#gmail.c0m';
     // Verify URL
-    await landingPage.loginButton.click();
+    await landingPage.buttons.login.click();
     await expect(page).toHaveURL(`${baseURL + signUpPage.routes.login}`);
     await signUpPage.createOneLink.click();
     await signUpPage.inputEmail.type(invalidUser.email);
@@ -69,7 +69,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     const signUpPage = new SignUpPage(page);
     const landingPage = new LandingPage(page);
 
-    await landingPage.createAccountButton.click();
+    await landingPage.buttons.createAccount.click();
     await signUpPage.fillOutSignUpUserDetails(casualUser);
     await signUpPage.registerButton.click();
 
@@ -89,7 +89,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     casualUser.lastName = '';
 
     // fill signUp form with required object - empty firstName & lastName.
-    await landingPage.createAccountButton.click();
+    await landingPage.buttons.createAccount.click();
     await signUpPage.inputEmail.fill(casualUser.email);
     await signUpPage.inputPassword.fill(casualUser.password);
     await signUpPage.tosCheckbox.check({ force: true });
@@ -129,7 +129,7 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     successUser.email = getMailosaurEmailAddress(successUser);
     // Fulfill the sign up form and register
-    await landingPage.createAccountButton.click();
+    await landingPage.buttons.createAccount.click();
     await signUpPage.fillOutSignUpUserDetails(successUser);
     await signUpPage.registerButton.click();
     await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(signUpPage.verificationEmailSentTitle);
@@ -144,7 +144,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     expect(page.url()).toContain('https://portal-dev.percona.com/');
     await page.goto('/');
     // Verify user able to sign in via verified account from previous sign up stages
-    await landingPage.loginButton.click();
+    await landingPage.buttons.login.click();
     await signInPage.fillOutSignInUserDetails(successUser.email, successUser.password);
     await signInPage.signInButton.click();
     await signInPage.waitForPortalLoaded();
@@ -231,7 +231,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     const landingPage = new LandingPage(page);
 
     await test.step('Open Portal and click on "Create one" link', async () => {
-      await landingPage.createAccountButton.click();
+      await landingPage.buttons.createAccount.click();
     });
 
     await test.step(
@@ -262,7 +262,7 @@ test.describe('Spec file for Sign Up tests', async () => {
     const landingPage = new LandingPage(page);
 
     await test.step('1. Navigate to Percona Platform and click on Sign Up', async () => {
-      await landingPage.createAccountButton.click();
+      await landingPage.buttons.createAccount.click();
     });
 
     await test.step('2. Fill in required fields for Sign Up and click on the Register button', async () => {

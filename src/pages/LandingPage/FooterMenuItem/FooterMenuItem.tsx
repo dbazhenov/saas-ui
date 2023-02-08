@@ -4,7 +4,7 @@ import { FooterMenuItemProps } from './FooterMenuItem.types';
 
 export const FooterMenuItem: FC<FooterMenuItemProps> = ({ href, children }) => (
   <Link
-    data-testid="footer-menu-item"
+    data-testid={`${children}-footer-menu-item`}
     color="inherit"
     underline="none"
     variant="body2"

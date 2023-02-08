@@ -6,6 +6,11 @@ export class SignUpPage extends CommonPage {
   constructor(page: Page) {
     super(page);
   }
+
+  messages = {
+    tosAgree: "By registering, I agree to Percona's Terms of Service and Percona Privacy Policy.",
+  };
+
   // Elements
   inputEmail = this.page.locator('//span[@data-se="o-form-input-email"]//input');
   inputPassword = this.page.locator('//span[@data-se="o-form-input-password"]//input');
@@ -19,9 +24,9 @@ export class SignUpPage extends CommonPage {
   registrationCompleteBackLink = this.page.locator('//a[@class="back-btn"]');
   registrationContainer = this.page.locator('[data-se="o-form-error-container"]');
   verificationContainer = this.page.locator('[data-se="auth-container"]');
-  tosLabel = this.page.locator('[data-testid="tos-label"]');
-  tosLink = this.page.locator('tos-link');
-  privacyPolicyLink = this.page.locator('privacy-policy-link');
+  tosLabel = this.page.getByTestId('tos-label');
+  tosLink = this.page.getByTestId('tos-link');
+  privacyPolicyLink = this.page.getByTestId('privacy-policy-link');
   createOneLink = this.page.locator('.registration-link');
   marketingCheckbox = this.page.locator('[data-se-for-name="marketing"]');
   tosCheckbox = this.page.locator('//input[@name="tos"]');
@@ -54,7 +59,7 @@ export class SignUpPage extends CommonPage {
 
   // Links
   registerAddressLink = 'https://id-dev.percona.com/signin/register';
-  platformPrivacyLink = 'https://per.co.na/pmm/platform-privacy';
+  platformPrivacyLink = 'https://www.percona.com/privacy-policy';
   platformTermsLink = 'https://per.co.na/pmm/platform-terms';
 
   fillOutSignUpUserDetails = async (user: User, options = { tos: true }) => {

@@ -9,7 +9,7 @@ describe('FooterMenuItem', () => {
 
     render(<FooterMenuItem href={TEST_HREF}>{TEST_TEXT}</FooterMenuItem>);
 
-    const item = screen.queryByTestId('footer-menu-item');
+    const item = screen.queryByTestId(`${TEST_TEXT}-footer-menu-item`);
 
     expect(item).toBeInTheDocument();
     expect(item).toHaveTextContent(TEST_TEXT);

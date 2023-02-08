@@ -1,5 +1,6 @@
 import ServiceNowResponse from '@support/types/serviceNowResponse.interface';
 import { serviceNowRequest } from '@api/helpers';
+import { oktaAPI } from './okta';
 
 export const serviceNowAPI = {
   async createServiceNowCredentials(): Promise<ServiceNowResponse> {
@@ -15,5 +16,15 @@ export const serviceNowAPI = {
         ),
       },
     };
+  },
+
+  async createServiceNowUsers() {
+    const credentials: ServiceNowResponse = await this.createServiceNowCredentials();
+
+    const firstAdmin = await oktaAPI.createTestUser(credentials.contacts.admin1.email);
+    const secondAdmin = await oktaAPI.createTestUser(credentials.contacts.admin2.email);
+    const technical = await oktaAPI.createTestUser(credentials.contacts.technical.email);
+
+    return [firstAdmin, secondAdmin, technical];
   },
 };

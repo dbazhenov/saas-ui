@@ -117,7 +117,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const landingPage = new LandingPage(page);
 
     await test.step('1. Login to the portal. and verify Install PMM link.', async () => {
-      await landingPage.loginButton.click();
+      await landingPage.buttons.login.click();
       await signInPage.uiLogin(adminUser.email, adminUser.password);
       await expect(dashboardPage.installPmmButton).toHaveAttribute('href', dashboardPage.installPmmLink);
       const [newPage] = await Promise.all([

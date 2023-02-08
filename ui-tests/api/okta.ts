@@ -2,6 +2,7 @@ import User from '@support/types/user.interface';
 import { expect, Page } from '@playwright/test';
 import { oktaRequest } from '@api/helpers';
 import config from '@root/playwright.config';
+import { getUser } from '@tests/helpers/portalHelper';
 
 const oktaUrl = `https://${process.env.REACT_APP_OAUTH_DEV_HOST}`;
 const oktaToken = `SSWS ${process.env.OKTA_TOKEN}`;
@@ -88,6 +89,14 @@ export const oktaAPI = {
     return response;
   },
 
+  async createTestUser(userEmail?: string): Promise<User> {
+    const user = getUser(userEmail);
+
+    await this.createUser(user);
+
+    return user;
+  },
+
   async createUserWithoutMarketingConsent(user: User, activate = true) {
     const data = {
       profile: {
@@ -130,13 +139,24 @@ export const oktaAPI = {
     return response;
   },
 
+  async getUserDetailsByEmail(userEmail: string) {
+    const user = await this.getUser(userEmail);
+    const response = await oktaRequest(oktaUrl, `/api/v1/users/${user.id}`, 'GET', oktaToken, {});
+
+    expect(response.status).toEqual(200);
+
+    return response;
+  },
+
   async deactivateUserById(userId: string) {
     return oktaRequest(oktaUrl, `/api/v1/users/${userId}`, 'DELETE', oktaToken, {});
   },
+
   async deleteUserById(userId: string) {
     await this.deactivateUserById(userId);
     await this.deactivateUserById(userId);
   },
+
   async deleteUserByEmail(email: string) {
     const userDetails = await this.getUser(email);
 
@@ -144,6 +164,19 @@ export const oktaAPI = {
       const userId = userDetails.id;
 
       await this.deleteUserById(userId);
+    }
+  },
+
+  async deleteUserByEmailIfExists(userEmail: string) {
+    if (await this.getUser(userEmail)) {
+      await this.deleteUserByEmail(userEmail);
+    }
+  },
+
+  async deleteUsers(users: User[]) {
+    // eslint-disable-next-line no-restricted-syntax
+    for await (const email of users) {
+      await this.deleteUserByEmail(email.email);
     }
   },
 };

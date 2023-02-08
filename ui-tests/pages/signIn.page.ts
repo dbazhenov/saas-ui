@@ -1,11 +1,23 @@
 /* eslint-disable lines-between-class-members */
 import { Page } from '@playwright/test';
+import ResetPassword from '@tests/components/Auth/ResetPassword';
 import { CommonPage } from './common.page';
 
 export class SignInPage extends CommonPage {
   constructor(page: Page) {
     super(page);
   }
+
+  resetPassword = new ResetPassword(this.page);
+
+  elements = {
+    tosLabel: this.page.getByTestId('tos-label'),
+  };
+
+  messages = {
+    tosAgree: "By registering, I agree to Percona's Terms of Service and Percona Privacy Policy.",
+  };
+
   forgotPassword = 'Forgot password?';
   formHeaderText = 'Sign in to Percona Platform';
   helpLinkText = 'Help';
@@ -13,8 +25,6 @@ export class SignInPage extends CommonPage {
   nextButtonText = 'Next';
   signUpLinkText = 'Create one';
   unableToSignIn = 'Unable to sign in';
-  tosAgree =
-    "By registering, I agree to Percona's Terms of Service and Percona Privacy Policy. I consent to receive relevant communications about Percona services and understand that I can unsubscribe from these communications at any time in accordance with the Percona Privacy Policy.";
   continueGoogleLabel = 'Continue with Google';
   continueGitHubLabel = 'Continue with GitHub';
   signInContainer = this.page.locator('//div[@id="auth-center"]');
@@ -22,7 +32,7 @@ export class SignInPage extends CommonPage {
   forgotPasswordLink = this.page.locator('[data-se=forgot-password]');
   formHeader = this.page.locator('[data-se=o-form-head]');
   helpLink = this.page.locator('[data-se=help-link]');
-  needHelp = this.page.locator('[data-se=needhelp]');
+  needHelp = this.page.locator('//*[@data-se="needhelp"]');
   nextButton = this.page.locator('[id=idp-discovery-submit]');
   passwordInput = this.page.locator('[id=okta-signin-password]');
   signInButton = this.page.locator('[id=okta-signin-submit]');

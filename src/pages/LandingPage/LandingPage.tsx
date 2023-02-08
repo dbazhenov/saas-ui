@@ -73,7 +73,7 @@ export const LandingPage: FC = () => {
           <USPCard title={Messages.ticketsTitle} text={Messages.ticketsText} icon={Checklist} />
         </div>
         <div className={styles.mainSectionCtaWrapper}>
-          <Button href={Routes.signup} variant="contained" size="large">
+          <Button href={Routes.signup} variant="contained" size="large" data-testid="create-percona-account">
             {Messages.createAccount}
           </Button>
         </div>
@@ -89,6 +89,7 @@ export const LandingPage: FC = () => {
               variant="outlined"
               size="large"
               className={styles.demoCta}
+              data-testid="get-demo"
             >
               {Messages.getDemo}
             </Button>

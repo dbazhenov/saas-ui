@@ -49,3 +49,6 @@ export const deleteMailosaurMessage = async (messageId: string) => {
 
   await mailosaur.messages.del(messageId);
 };
+
+export const getMessageLinkByText = (message, text: string) =>
+  message.html.links.find((link) => link.text === text).href;

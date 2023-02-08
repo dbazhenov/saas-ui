@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-function */
 import { Page, expect } from '@playwright/test';
 
 export class Table {
@@ -6,19 +5,20 @@ export class Table {
 
   // Components
   pagination = this.page.locator('//div[contains(@class, "MuiTablePagination-root")]');
+  tableData = this.page.locator("//div[contains(@class, 'MuiDataGrid-virtualScroller')]");
 
   // Elements
   table = this.page.locator('//div[@role="grid"]');
   emptyTable = this.page.locator('//div[@data-testid="table-no-data"]');
   body = this.page.locator('//tbody[@data-testid="table-tbody"]');
-  header = this.page.locator('//div[contains(@class, "columnHeaderRow")]');
-  row = this.page.locator('//*[contains(@data-id, "row")]');
+  header = this.page.getByRole('rowgroup');
+  headerCell = this.page.getByRole('columnheader');
+  row = this.tableData.getByRole('row');
   rowCell = (position: number) =>
     this.page.locator('//*[contains(@data-id, "row")]').nth(position).locator('//div[@role="cell"]');
   rowByText = (text: string) =>
     this.page.locator(`//div[contains(text(), "${text}")]//ancestor::div[@role="row"]`);
   bodyCell = this.page.locator('//tr[@data-testid="table-tbody-tr"]//td');
-  headerCell = this.page.locator('//div[@role="columnheader"]');
   headerSort = this.page.locator('//tr[@data-testid="table-thead-tr"]//th//i');
 
   // Pagination
