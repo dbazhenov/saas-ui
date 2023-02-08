@@ -1,16 +1,12 @@
 import { expect, test } from '@playwright/test';
 import ProfilePage from '@pages/profile.page';
-import { DashboardPage } from '@pages//dashboard.page';
-import { SignInPage } from '@pages//signIn.page';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
-import LandingPage from '@tests/pages/landing.page';
+import pageHelper from '@tests/helpers/pageHelper';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let newAdmin1User: User;
-  const firstName = 'John';
-  const lastName = 'Doe';
 
   test.beforeEach(async ({ page }) => {
     newAdmin1User = getUser();
@@ -22,94 +18,42 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await oktaAPI.deleteUserByEmail(newAdmin1User.email);
   });
 
-  test.skip('SAAS-T128 should be able to open profile page and see change profile link @profile', async ({
-    page,
-  }) => {
-    const dashboardPage = new DashboardPage(page);
+  test('SAAS-T128 - Verify Percona Portal Profile page @profile', async ({ page, context }) => {
+    await context.grantPermissions(['clipboard-write', 'clipboard-read']);
     const profilePage = new ProfilePage(page);
 
-    await oktaAPI.loginByOktaApi(newAdmin1User, page);
-    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.contacts.contactsLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.userDropdown.openUserProfile();
-    expect(page.url()).toContain(dashboardPage.routes.profile);
-    await expect(profilePage.profileHeader).toHaveText(profilePage.profileSettingsTitle);
+    await test.step('1. Login to the portal and navigate to the profile section', async () => {
+      await oktaAPI.loginByOktaApi(newAdmin1User, page);
+      await profilePage.userDropdown.openUserProfile();
+    });
 
-    await expect(profilePage.emailInput).toBeDisabled();
-    await expect(profilePage.emailInputLabel).toHaveText('Email');
-    await expect(profilePage.emailInput).toHaveValue(newAdmin1User.email);
+    await test.step('2. Check "My Profile" elements', async () => {
+      await expect(profilePage.elements.myProfileHeader).toHaveText(profilePage.labels.myProfileHeader);
+      await expect(profilePage.elements.userName).toContainText(
+        `${newAdmin1User.firstName} ${newAdmin1User.lastName}`,
+      );
+      await expect(profilePage.elements.userEmail).toContainText(newAdmin1User.email);
+      await expect(profilePage.buttons.editProfile).toHaveText(profilePage.labels.editProfile);
 
-    await expect(profilePage.firstNameInput).toHaveValue(newAdmin1User.firstName);
-    await expect(profilePage.firstNameInputLabel).toHaveText('First name');
+      const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        profilePage.buttons.editProfile.click(),
+      ]);
 
-    await expect(profilePage.lastNameInput).toHaveValue(newAdmin1User.lastName);
-    await expect(profilePage.lastNameInputLabel).toHaveText('Last name');
+      expect(newPage.url()).toEqual(profilePage.links.oktaUrl);
+      await newPage.close();
+    });
 
-    await expect(profilePage.saveProfileButton).toBeDisabled();
-    await expect(profilePage.editProfileButton).toHaveAttribute('href', profilePage.editUser);
-    await expect(profilePage.editProfileButton).toHaveAttribute('target', '_blank');
-    await expect(profilePage.editProfileButton).toHaveText('Edit profile');
-  });
+    await test.step('3. Check Percona Platform Access Token', async () => {
+      const bearerToken = await pageHelper.getAccessToken(page);
 
-  test.skip('SAAS-T130 should have validation for user profile fields @profile', async ({ page }) => {
-    const longInput = 'this is 51 character string for negative inputs test!!!!!!!';
-    const profilePage = new ProfilePage(page);
+      await expect(profilePage.elements.tokenHeader).toHaveText(profilePage.labels.tokenHeader);
+      await expect(profilePage.buttons.copyToken).toHaveText(profilePage.labels.copyToken);
+      await profilePage.buttons.copyToken.click();
+      await profilePage.toast.checkToastMessage(profilePage.messages.tokenCopied);
+      const clipboardContent = await page.evaluate(() => navigator.clipboard.readText());
 
-    await oktaAPI.loginByOktaApi(newAdmin1User, page);
-    await profilePage.userDropdown.openUserProfile();
-
-    await profilePage.waitForEnabled(profilePage.firstNameInput);
-    await expect(profilePage.firstNameInput).toHaveValue(newAdmin1User.firstName);
-    await expect(profilePage.lastNameInput).toHaveValue(newAdmin1User.lastName);
-
-    await profilePage.firstNameInput.fill('');
-    await profilePage.lastNameInput.fill('');
-    await profilePage.firstNameInput.focus();
-    await expect(profilePage.firstNameValidationError).toHaveText(profilePage.requiredField('First name'));
-    await expect(profilePage.lastNameValidationError).toHaveText(profilePage.requiredField('Last name'));
-    await expect(profilePage.saveProfileButton).toBeDisabled();
-
-    await profilePage.firstNameInput.fill(longInput);
-    await expect(profilePage.firstNameValidationError).toHaveText(profilePage.toLongString('First name'));
-    await profilePage.lastNameInput.fill(longInput);
-    await expect(profilePage.lastNameValidationError).toHaveText(profilePage.toLongString('Last name'));
-
-    await profilePage.firstNameInput.fill(longInput.slice(0, 50));
-    await profilePage.firstNameValidationError.waitFor({ state: 'detached' });
-    await profilePage.lastNameInput.fill(longInput.slice(0, 50));
-    await profilePage.lastNameValidationError.waitFor({ state: 'detached' });
-
-    await profilePage.firstNameInput.fill(firstName);
-    await profilePage.firstNameValidationError.waitFor({ state: 'detached' });
-    await profilePage.lastNameInput.fill(lastName);
-    await profilePage.lastNameValidationError.waitFor({ state: 'detached' });
-    expect(await profilePage.saveProfileButton.isEnabled()).toBeTruthy();
-  });
-
-  test.skip('SAAS-T129 should be able to update user profile @profile', async ({ page }) => {
-    const profilePage = new ProfilePage(page);
-    const landingPage = new LandingPage(page);
-
-    await oktaAPI.loginByOktaApi(newAdmin1User, page);
-    await profilePage.userDropdown.openUserProfile();
-
-    await profilePage.waitForEnabled(profilePage.firstNameInput);
-    await profilePage.firstNameInput.fill(firstName);
-    await profilePage.lastNameInput.fill(lastName);
-
-    await expect(profilePage.saveProfileButton).toBeEnabled();
-
-    await profilePage.saveProfileButton.click();
-    await profilePage.toast.checkToastMessage(profilePage.profileUpdated);
-
-    await profilePage.userDropdown.logoutUser();
-
-    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
-    await oktaAPI.loginByOktaApi(newAdmin1User, page);
-    await profilePage.userDropdown.openUserProfile();
-    await profilePage.waitForEnabled(profilePage.firstNameInput);
-
-    await expect(profilePage.firstNameInput).toHaveValue(firstName);
-    await expect(profilePage.lastNameInput).toHaveValue(lastName);
+      expect(clipboardContent).toEqual(bearerToken);
+    });
   });
 });

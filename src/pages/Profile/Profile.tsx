@@ -39,15 +39,20 @@ export const ProfilePage: FC = () => {
             <Typography variant="h5" data-testid="profile-details-header">
               {Messages.myProfileLabel}
             </Typography>
-            <p>
+            <p data-testid="first-last-name">
               <span>{Messages.nameLable}</span> {firstName} {lastName}
             </p>
-            <p>
+            <p data-testid="user-email">
               <span>{Messages.emailLabel}</span> {email}
             </p>
           </div>
           <div>
-            <Button href={Routes.editProfile} variant="outlined" target="_blank">
+            <Button
+              href={Routes.editProfile}
+              variant="outlined"
+              target="_blank"
+              data-testid="edit-profile-button"
+            >
               {Messages.editProfile}
             </Button>
           </div>
