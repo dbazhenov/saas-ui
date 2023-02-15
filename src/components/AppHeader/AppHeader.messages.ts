@@ -3,4 +3,5 @@ export const Messages = {
   logout: 'Logout',
   profile: 'Profile',
   portal: 'Percona Portal',
+  mode: 'Dark Mode',
 };

@@ -21,7 +21,6 @@ export class CommonPage {
 
   // Locators
   perconaLogo = this.page.locator('//a[@data-testid="menu-bar-home-link"]');
-  themeSwitch = this.page.locator('//button[@data-testid="theme-switch"]');
 
   // Messages
   customerOrgCreated = 'We found your organization on Percona Customer Portal and used it';

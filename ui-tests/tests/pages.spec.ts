@@ -49,7 +49,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await expect(notFoundPage.notFoundImage).toBeVisible();
     await notFoundPage.notFoundHomeButton.click();
     await notFoundPage.waitForPortalLoaded();
-    await notFoundPage.themeSwitch.click();
+    await notFoundPage.userDropdown.switchTheme();
     await page.goto('page1');
     await notFoundPage.notFoundPageContainer.waitFor({ state: 'visible' });
     await expect(notFoundPage.notFoundPageContainer).toHaveCSS('background-color', 'rgb(18, 18, 18)');
