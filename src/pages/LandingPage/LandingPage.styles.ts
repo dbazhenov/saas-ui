@@ -48,9 +48,6 @@ export const getStyles = ({ spacing, palette }: Theme) => ({
       margin-right: ${spacing(3)};
     }
   `,
-  loginButtonWrapper: css`
-    color: ${palette.grey[200]};
-  `,
   loginButton: css`
     color: ${palette.common.black};
   `,

@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LinkButton } from '@grafana/ui';
 import { useStyles } from 'core';
-import { IconButton, Typography } from '@mui/material';
+import { IconButton, Typography, Button } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 import { getAuth, getUserOrgRole, getIsPerconaCustomer } from 'store/auth';
@@ -82,20 +81,6 @@ export const AccountInfo: FC = () => {
               {getAccountType(isCustomer, !!CSContact.name, isPending)}
             </Typography>
           </div>
-          {!isPending && !isCustomer && (
-            <>
-              <Typography className={styles.paragraph}>{Messages.perconaExperts}</Typography>
-              <LinkButton
-                target="_blank"
-                rel="noreferrer noopener"
-                className={styles.contactBtn}
-                variant="primary"
-                href={LINKS.contactUs}
-              >
-                {Messages.contactUs}
-              </LinkButton>
-            </>
-          )}
           {isCustomer && (
             <p className={styles.entitlementsWrapper} data-testid="entitlements-row">
               <span className={styles.cardPoint}>{Messages.entitlements}</span>
@@ -113,6 +98,20 @@ export const AccountInfo: FC = () => {
                 </IconButton>
               ) : null}
             </p>
+          )}
+          {!isPending && !isCustomer && (
+            <>
+              <Typography className={styles.paragraph}>{Messages.perconaExperts}</Typography>
+              <Button
+                target="_blank"
+                rel="noreferrer noopener"
+                className={styles.contactBtn}
+                variant="contained"
+                href={LINKS.contactUs}
+              >
+                {Messages.contactUs}
+              </Button>
+            </>
           )}
         </div>
         {isEntitlementsVisible && (

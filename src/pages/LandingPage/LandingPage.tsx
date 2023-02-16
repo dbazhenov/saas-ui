@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 import { useStyles } from 'core/utils';
+import { perconaDarkTheme } from 'perconaTheme';
+import { createTheme, ThemeProvider, Button, Typography } from '@mui/material';
 import { ReactComponent as PerconaLogo } from 'assets/percona-logo-color.svg';
 import { ReactComponent as PerconaPortalLogo } from 'assets/percona-portal-logo.svg';
 import { ReactComponent as PerconaAccountInfo } from 'assets/percona-account-info.svg';
@@ -7,7 +9,6 @@ import { ReactComponent as Bell } from 'assets/bell.svg';
 import { ReactComponent as Database } from 'assets/database.svg';
 import { ReactComponent as Book } from 'assets/book.svg';
 import { ReactComponent as Checklist } from 'assets/checklist.svg';
-import { Button, Typography } from '@mui/material';
 import { Routes } from 'core/routes';
 import { Messages } from './LandingPage.messages';
 import { getStyles } from './LandingPage.styles';
@@ -22,48 +23,50 @@ import {
   TOS_LINK,
 } from './LandingPage.constants';
 
+const sideMenuTheme = createTheme(perconaDarkTheme);
+
 export const LandingPage: FC = () => {
   const styles = useStyles(getStyles);
 
   return (
     <main data-testid="landing-page-container" className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.headerContent}>
-          <div className={styles.headerLeft}>
-            <PerconaLogo data-testid="landing-page-logo" className={styles.platformLogo} />
-            <Typography data-testid="landing-page-title" variant="h4" className={styles.title}>
-              {Messages.title}
-            </Typography>
-            <Typography data-testid="landing-page-description" variant="h6">
-              {Messages.description}
-            </Typography>
-            <div data-testid="landing-page-main-ctas" className={styles.ctas}>
-              <Button
-                href={Routes.signup}
-                size="large"
-                variant="contained"
-                color="secondary"
-                data-testid="create-account"
-              >
-                {Messages.createAccount}
-              </Button>
-              <span className={styles.loginButtonWrapper}>
+      <ThemeProvider theme={sideMenuTheme}>
+        <header className={styles.header}>
+          <div className={styles.headerContent}>
+            <div className={styles.headerLeft}>
+              <PerconaLogo data-testid="landing-page-logo" className={styles.platformLogo} />
+              <Typography data-testid="landing-page-title" variant="h4" className={styles.title}>
+                {Messages.title}
+              </Typography>
+              <Typography data-testid="landing-page-description" variant="h6">
+                {Messages.description}
+              </Typography>
+              <div data-testid="landing-page-main-ctas" className={styles.ctas}>
+                <Button
+                  href={Routes.signup}
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  data-testid="create-account"
+                >
+                  {Messages.createAccount}
+                </Button>
                 <Button
                   href={Routes.login}
                   size="large"
-                  color="inherit"
+                  color="primary"
                   variant="outlined"
                   className={styles.loginButton}
                   data-testid="login-button"
                 >
                   {Messages.login}
                 </Button>
-              </span>
+              </div>
             </div>
+            <PerconaPortalLogo className={styles.portalLogo} />
           </div>
-          <PerconaPortalLogo className={styles.portalLogo} />
-        </div>
-      </header>
+        </header>
+      </ThemeProvider>
       <section className={styles.mainContent}>
         <Typography variant="h4">{Messages.mainSectionTitle}</Typography>
         <div className={styles.cards}>

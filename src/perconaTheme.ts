@@ -25,10 +25,10 @@ export const perconaLightTheme: ThemeOptions = merge(
     palette: {
       mode: 'light',
       primary: {
-        main: '#0e5fb5',
+        main: '#774faa',
       },
       secondary: {
-        main: '#f3c25e',
+        main: '#f5cc78',
       },
     },
     components: {
@@ -50,10 +50,10 @@ export const perconaDarkTheme: ThemeOptions = merge(
     palette: {
       mode: 'dark',
       primary: {
-        main: '#93c6fc',
+        main: '#f5cc78',
       },
       secondary: {
-        main: '#f8dca3',
+        main: '#774faa',
       },
     },
   },
