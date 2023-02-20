@@ -26,11 +26,10 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 8 : 1,
-  reporter: [['html', { open: 'never' }]],
-
+  reporter: [['github'], ['line'], ['html', { open: 'never' }]],
   use: {
     navigationTimeout: 30 * 1000,
-    baseURL: process.env.PORTAL_BASE_URL || 'https://portal.localhost',
+    baseURL: process.env.PORTAL_BASE_URL || 'https://portal.local',
     ignoreHTTPSErrors: true,
     screenshot: 'only-on-failure',
     video: 'on',
@@ -44,9 +43,6 @@ const config: PlaywrightTestConfig = {
       use: {
         contextOptions: {
           ignoreHTTPSErrors: true,
-        },
-        launchOptions: {
-          args: [`--host-rules=MAP portal.localhost ${process.env.PROXY_URL}`],
         },
         screenshot: 'on',
         ...devices['Desktop Chrome'],
