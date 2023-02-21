@@ -28,4 +28,7 @@ export const getStyles = ({ typography, palette, spacing }: Theme) => ({
     cursor: default !important;
     color: ${palette.text.secondary} !important;
   `,
+  pageTitle: css`
+    padding-left: ${spacing(3)};
+  `,
 });

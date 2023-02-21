@@ -5,7 +5,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Button, Link } from '@mui/material';
 import { PrivateLayout } from 'components/Layouts';
-import { ReactComponent as KubernetesLogo } from 'assets/percona-sidebar-k8s.svg';
 import { DEFAULT_DATE_LOCALE } from 'core/constants';
 import { errorHasStatus, useStyles } from 'core/utils';
 import { K8sClusterStatus } from 'core/api/types';
@@ -139,10 +138,6 @@ export const K8sClusterCreationPage: FC = () => {
   return (
     <PrivateLayout>
       <div className={styles.pageWrapper}>
-        <header data-testid="kubernetes-header">
-          <KubernetesLogo />
-          {Messages.title}
-        </header>
         <div className={styles.contentWrapper}>
           <p className={styles.description}>{Messages.description}</p>
           {(isStatusUninitialized || isRequestPending || isClusterBuilding) && (

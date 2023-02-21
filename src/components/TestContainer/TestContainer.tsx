@@ -1,10 +1,11 @@
 import React, { FC } from 'react';
 import { ConnectedRouter } from 'connected-react-router';
+import { History } from 'history';
 import { ThemeContext } from '@grafana/ui';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider, ReactReduxContext } from 'react-redux';
 import { getTheme } from '@percona/platform-core';
-import { history } from 'core/history';
+import { history as defaultHistory } from 'core/history';
 import { authApi } from 'core/api/auth.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
@@ -33,13 +34,14 @@ export const store = (preloadedState?: AppState) =>
 
 interface TestContainerProps {
   preloadedState?: DeepPartial<AppState>;
+  history?: History;
 }
 
-export const TestContainer: FC<TestContainerProps> = ({ children, preloadedState }) => (
+export const TestContainer: FC<TestContainerProps> = ({ children, preloadedState, history }) => (
   <React.StrictMode>
     <ThemeContext.Provider value={light}>
       <Provider store={store(preloadedState as AppState)} context={ReactReduxContext}>
-        <ConnectedRouter history={history} context={ReactReduxContext}>
+        <ConnectedRouter history={history ?? defaultHistory} context={ReactReduxContext}>
           {children}
         </ConnectedRouter>
       </Provider>

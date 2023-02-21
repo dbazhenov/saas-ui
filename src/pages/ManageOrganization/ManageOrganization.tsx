@@ -1,10 +1,9 @@
 import React, { FC, useCallback, useMemo, useEffect, useState, SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { cx } from 'emotion';
-import { Tabs, Tab, Typography } from '@mui/material';
+import { Tabs, Tab } from '@mui/material';
 import { useStyles } from 'core/utils';
 import { PrivateLayout } from 'components/Layouts';
-import { ReactComponent as OrganizationLogo } from 'assets/organization.svg';
 import { getIsUserPending, getUserCompanyAction, getUserCompanyName, getUserOrgRole } from 'store/auth';
 import {
   getFirstOrgId,
@@ -155,10 +154,6 @@ export const ManageOrganizationPage: FC = () => {
   return (
     <PrivateLayout>
       <div data-testid="manage-organization-container" className={styles.container}>
-        <Typography variant="h5" data-testid="manage-organization-header" className={styles.header}>
-          <OrganizationLogo />
-          {Messages.manageOrganization}
-        </Typography>
         <div data-testid="manage-organization-tabs-wrapper" className={tabsWrapperStyles}>
           {isOrgPending || isUserPending ? (
             <OrganizationContentLoader />

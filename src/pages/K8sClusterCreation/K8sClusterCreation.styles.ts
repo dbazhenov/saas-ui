@@ -4,19 +4,6 @@ import { Theme } from '@mui/material';
 export const getStyles = ({ spacing, typography }: Theme) => ({
   pageWrapper: css`
     width: 100%;
-
-    header {
-      align-items: center;
-      display: flex;
-      font-size: ${typography.fontSize + 10}px;
-      font-weight: ${typography.fontWeightRegular};
-      margin: 0 0 ${spacing(2)};
-
-      svg {
-        height: ${spacing(3.5)};
-        margin-right: ${spacing(2)};
-      }
-    }
   `,
 
   contentWrapper: css`

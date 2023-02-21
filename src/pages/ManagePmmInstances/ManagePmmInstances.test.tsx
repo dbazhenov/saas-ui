@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { TestContainer } from 'components/TestContainer';
 import { ENDPOINTS } from 'core/api/endpoints';
 import { ManagePmmInstancesPage } from '.';
@@ -25,20 +25,6 @@ const mockPost = jest.fn().mockResolvedValue({
 });
 
 describe('Manage PMM Instances', () => {
-  test('renders header and container', async () => {
-    render(
-      <TestContainer>
-        <ManagePmmInstancesPage />
-      </TestContainer>,
-    );
-
-    const header = await screen.findByTestId('manage-instances-container');
-    const tabsWrapper = await screen.findByTestId('manage-instances-header');
-
-    expect(header).toBeInTheDocument();
-    expect(tabsWrapper).toBeInTheDocument();
-  });
-
   test('calls API to get the list of connected PMM instances', async () => {
     render(
       <TestContainer>

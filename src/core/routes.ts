@@ -18,3 +18,11 @@ export const Routes = {
   dashboard: '/dashboard',
   kubernetes: '/kubernetes',
 };
+
+export const RouteNames = {
+  [Routes.home]: 'Home',
+  [Routes.organization]: 'My Organization',
+  [Routes.instances]: 'PMM Instances',
+  [Routes.kubernetes]: 'Free Kubernetes Cluster',
+  [Routes.profile]: 'Percona Account',
+};

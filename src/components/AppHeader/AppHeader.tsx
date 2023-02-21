@@ -10,12 +10,13 @@ import {
   Divider,
   useTheme,
   Switch,
+  Typography,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { themeChangeAction } from 'store/theme';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Routes } from 'core';
+import { Link, useLocation } from 'react-router-dom';
+import { Routes, RouteNames } from 'core';
 import { getAuth, logoutAction } from 'store/auth';
 import { useStyles } from 'core/utils';
 import { Messages } from './AppHeader.messages';
@@ -28,6 +29,7 @@ export const AppHeader: FC = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const styles = useStyles(getStyles);
+  const location = useLocation();
 
   const handleOpenPropfileMenu = (e: React.MouseEvent<HTMLElement>) => {
     setProfileAnchor(e.currentTarget);
@@ -41,6 +43,9 @@ export const AppHeader: FC = () => {
   return (
     <AppBar position="fixed" className={styles.appBar} elevation={1}>
       <Toolbar>
+        <Typography data-testid="page-title" className={styles.pageTitle} variant="subtitle1">
+          {RouteNames[location.pathname] ?? ''}
+        </Typography>
         <Box display="flex" flexGrow={1} />
         <Box display="flex" flexGrow={0} alignItems="center" gap={4}>
           <IconButton onClick={handleOpenPropfileMenu} data-testid="menu-bar-profile-dropdown-toggle">
