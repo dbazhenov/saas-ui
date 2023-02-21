@@ -48,6 +48,7 @@ export const ToSCheckbox: FC<ToSCheckboxProps> = ({ submitBtn }) => {
             >
               {Messages.privacyPolicy}
             </a>
+            .
           </p>
         </span>
         <span data-se="o-form-input-tos" className="o-form-input-name-tos">

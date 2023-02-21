@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { SignUpPage } from '@pages/signUp.page';
 import User from '@support/types/user.interface';
 import { SignInPage } from '@pages/signIn.page';
-import { getMailosaurEmailAddress, getVerificationLink } from '@api/helpers/mailosaurApiHelper';
+import { getRandomMailosaurEmailAddress, getVerificationLink } from '@api/helpers/mailosaurApiHelper';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
 import LandingPage from '@tests/pages/landing.page';
@@ -17,7 +17,7 @@ test.describe('Spec file for Sign Up tests', async () => {
   test.beforeEach(async ({ page }) => {
     casualUser = getUser();
     adminUser = getUser();
-    successUser = getUser();
+    successUser = getUser(getRandomMailosaurEmailAddress());
     firstUserWithoutMarketingConsent = getUser();
     secondUserWithoutMarketingConsent = getUser();
     await oktaAPI.createUser(casualUser, true);
@@ -122,34 +122,58 @@ test.describe('Spec file for Sign Up tests', async () => {
       },
     );
 
-    // Prepare data
     const signUpPage = new SignUpPage(page);
     const signInPage = new SignInPage(page);
     const landingPage = new LandingPage(page);
 
-    successUser.email = getMailosaurEmailAddress(successUser);
-    // Fulfill the sign up form and register
-    await landingPage.buttons.createAccount.click();
-    await signUpPage.fillOutSignUpUserDetails(successUser);
-    await signUpPage.registerButton.click();
-    await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(signUpPage.verificationEmailSentTitle);
-    await expect(signUpPage.registrationCompleteDesc).toHaveText(
-      signUpPage.verificationEmailSentDesc(successUser.email),
-    );
-    // Verify that mailosaur have that email in the box.
-    const activationLink = await getVerificationLink(successUser);
+    await test.step('1. Select create new account and fill out credentials', async () => {
+      await landingPage.buttons.createAccount.click();
+      await signUpPage.fillOutSignUpUserDetails(successUser);
+    });
 
-    // // visit an emailed link
-    await page.goto(activationLink);
-    expect(page.url()).toContain('https://portal-dev.percona.com/');
-    await page.goto('/');
-    // Verify user able to sign in via verified account from previous sign up stages
-    await landingPage.buttons.login.click();
-    await signInPage.fillOutSignInUserDetails(successUser.email, successUser.password);
-    await signInPage.signInButton.click();
-    await signInPage.waitForPortalLoaded();
-    expect(page.url()).toContain(baseURL);
-    await signInPage.waitForPortalLoaded();
+    await test.step('2. Verify terms of service displayed on sign in widget.', async () => {
+      await expect(signUpPage.elements.marketingLabel).toHaveText(signInPage.messages.tosAgree);
+      await expect(signUpPage.elements.tosLabel).toHaveText(signUpPage.messages.tosAgree);
+      await signUpPage.tosCheckbox.waitFor({ state: 'visible' });
+    });
+
+    await test.step('3. Click register and verify message about email being sent', async () => {
+      await signUpPage.registerButton.click();
+      await expect(signUpPage.verificationEmailSentTitleLoc).toHaveText(
+        signUpPage.verificationEmailSentTitle,
+      );
+      await expect(signUpPage.registrationCompleteDesc).toHaveText(
+        signUpPage.verificationEmailSentDesc(successUser.email),
+      );
+    });
+
+    let activationLink;
+
+    await test.step('4. Verify Activation email was sent.', async () => {
+      activationLink = await getVerificationLink(successUser);
+    });
+
+    await test.step('5. Activate user with the link in the email.', async () => {
+      await page.goto(activationLink);
+      expect(page.url()).toContain('https://portal-dev.percona.com/');
+      await page.goto('/');
+    });
+
+    await test.step('6. Verify user able to sign in via verified account.', async () => {
+      await landingPage.buttons.login.click();
+      await signInPage.fillOutSignInUserDetails(successUser.email, successUser.password);
+      await signInPage.buttons.signIn.click();
+      await signInPage.waitForPortalLoaded();
+      expect(page.url()).toContain(baseURL);
+      await signInPage.waitForPortalLoaded();
+    });
+
+    await test.step('7. Verify user has marketing and tos set to true.', async () => {
+      const userDetails = await oktaAPI.getUser(successUser.email);
+
+      expect(userDetails.profile.marketing).toBeTruthy();
+      expect(userDetails.profile.tos).toBeTruthy();
+    });
   });
 
   test('SAAS-T268 - Verify all user can agree with receiving emails from Percona @signUp @auth', async ({
@@ -279,10 +303,10 @@ test.describe('Spec file for Sign Up tests', async () => {
         await page.reload();
 
         await signUpPage.backToSingIn.click();
-        await signInPage.emailInput.waitFor({ state: 'visible' });
+        await signInPage.fields.email.waitFor({ state: 'visible' });
         await signInPage.fillOutSignInUserDetails(adminUser.email, adminUser.password);
-        await signInPage.signInButton.click();
-        await expect(signInPage.signInErrorContainer).toHaveText(signInPage.unableToSignIn);
+        await signInPage.buttons.signIn.click();
+        await expect(signInPage.elements.signInErrorContainer).toHaveText(signInPage.labels.unableToSignIn);
         await expect(page).toHaveURL(`${baseURL}/login`);
       },
     );

@@ -139,7 +139,7 @@ test.describe('Spec file for free users members tests', async () => {
         await activationPage.repeatPasswordInput.type(notRegisteredUser.password);
         await activationPage.tosCheckboxLabel.check();
         await activationPage.activateAccountButton.click();
-        await signInPage.emailInput.waitFor({ state: 'visible' });
+        await signInPage.fields.email.waitFor({ state: 'visible' });
         await deleteMailosaurMessage(secondMessage.id);
       },
     );

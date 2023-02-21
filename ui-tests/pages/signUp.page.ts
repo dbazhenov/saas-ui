@@ -7,8 +7,13 @@ export class SignUpPage extends CommonPage {
     super(page);
   }
 
+  elements = {
+    marketingLabel: this.page.getByTestId('marketing-label'),
+    tosLabel: this.page.getByTestId('tos-label'),
+  };
+
   messages = {
-    tosAgree: "By registering, I agree to Percona's Terms of Service and Percona Privacy Policy.",
+    tosAgree: 'I agree with Percona Terms of Service. I have read and accepted the Percona Privacy Policy. *',
   };
 
   // Elements
@@ -24,9 +29,9 @@ export class SignUpPage extends CommonPage {
   registrationCompleteBackLink = this.page.locator('//a[@class="back-btn"]');
   registrationContainer = this.page.locator('[data-se="o-form-error-container"]');
   verificationContainer = this.page.locator('[data-se="auth-container"]');
-  tosLabel = this.page.getByTestId('tos-label');
-  tosLink = this.page.getByTestId('tos-link');
-  privacyPolicyLink = this.page.getByTestId('privacy-policy-link');
+
+  tosLink = this.page.locator('tos-link');
+  privacyPolicyLink = this.page.locator('privacy-policy-link');
   createOneLink = this.page.locator('.registration-link');
   marketingCheckbox = this.page.locator('[data-se-for-name="marketing"]');
   tosCheckbox = this.page.locator('//input[@name="tos"]');
@@ -55,7 +60,6 @@ export class SignUpPage extends CommonPage {
   activateEmailHeader = 'Welcome to Percona Platform!';
   activateEmailSubject = 'Percona Account Activation';
   verificationEmailBackToSignIn = 'Back to sign in';
-  tosAgree: 'I agree with Percona Terms of Service. I have read and accepted the Percona Privacy Policy.\xa0*';
 
   // Links
   registerAddressLink = 'https://id-dev.percona.com/signin/register';

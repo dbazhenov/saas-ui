@@ -82,7 +82,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
     });
 
     await test.step('2. In first tab user should be asked to login on Portal to see info', async () => {
-      await signInPage.emailInput.waitFor({ state: 'visible' });
+      await signInPage.fields.email.waitFor({ state: 'visible' });
     });
 
     await test.step('2. Login on Portal and check Entitlements', async () => {
