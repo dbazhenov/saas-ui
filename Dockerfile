@@ -1,4 +1,4 @@
-FROM nginx:stable
+FROM nginx:stable-alpine
 
 # Backup the default config files
 RUN mv -v /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf_
