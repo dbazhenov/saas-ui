@@ -132,10 +132,13 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       '2. Navigate to the PMM Instances page and verify How-to connect Percona Monitoring & Management link',
       async () => {
         await dashboardPage.sideMenu.mainMenu.pmmInstances.click();
-        await expect(pmmInstances.readMore).toHaveAttribute('href', pmmInstances.readMoreLink);
-        const [newPage] = await Promise.all([context.waitForEvent('page'), pmmInstances.readMore.click()]);
+        await expect(pmmInstances.elements.readMore).toHaveAttribute('href', pmmInstances.links.readMore);
+        const [newPage] = await Promise.all([
+          context.waitForEvent('page'),
+          pmmInstances.elements.readMore.click(),
+        ]);
 
-        await expect(newPage).toHaveTitle(pmmInstances.readMoreTitle);
+        await expect(newPage).toHaveTitle(pmmInstances.labels.readMore);
         await newPage.close();
       },
     );

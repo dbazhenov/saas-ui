@@ -18,7 +18,8 @@ export default class ResetPassword {
 
   buttons = {
     reset: this.container.locator('//*[@data-se="email-button" or @type="submit"]'),
-    back: this.container.locator('//*[@data-se="back-link" or @data-se="back-button"]'),
+    backButton: this.container.locator('//*[@data-se="back-button"]'),
+    backLink: this.container.locator('//*[@data-se="back-link"]'),
   };
 
   labels = {

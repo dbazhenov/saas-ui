@@ -119,7 +119,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
         await googleSigInPage.fields.googleEmail.waitFor({ state: 'visible', timeout: 60000 });
 
-        expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth/');
+        expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth');
         await googlePage.close();
 
         const [gitHubPage] = await Promise.all([
@@ -356,7 +356,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     await test.step(
       '6. Click on "Back to Sign in page" button and verify Sign in page is displayed',
       async () => {
-        await signInPage.resetPassword.buttons.back.click();
+        await signInPage.resetPassword.buttons.backButton.click();
         await signInPage.fields.email.waitFor({ state: 'visible' });
       },
     );

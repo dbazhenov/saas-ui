@@ -1,6 +1,7 @@
 import { portalAPIHelper } from '@api/helpers';
 import InviteUserToOrg from '@support/types/inviteUser.interface';
 import { UserRoles } from '@tests/support/enums/userRoles';
+import User from '@tests/support/types/user.interface';
 import faker from 'faker';
 
 export interface Inventory {
@@ -113,6 +114,15 @@ export const portalAPI = {
     await portalAPIHelper.post({
       baseURL: this.portalUrl,
       path: `v1/orgs/inventory/${pmmServerId}:disconnect`,
+      accessToken,
+      data: {},
+    });
+  },
+
+  async getInventory(accessToken: string, orgId: string) {
+    return portalAPIHelper.post({
+      baseURL: this.portalUrl,
+      path: `v1/orgs/${orgId}/inventory:search`,
       accessToken,
       data: {},
     });

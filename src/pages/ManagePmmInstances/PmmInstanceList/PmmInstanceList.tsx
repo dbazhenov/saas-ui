@@ -39,7 +39,7 @@ export const PmmInstanceList: FC<PmmInstanceListProps> = ({ pmmInstances, loadin
       flex: 1,
       headerName: Messages.url,
       renderCell: ({ value }: GridRenderCellParams<string>) => (
-        <Link href={value} target="_blank" rel="noreferrer">
+        <Link href={value} target="_blank" rel="noreferrer" data-testid="pmm-instance-link">
           {value}
         </Link>
       ),
