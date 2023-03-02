@@ -81,7 +81,7 @@ export const copyToClipboard = async (text: string) => {
 export const errorHasStatus = (error: FetchBaseQueryError | SerializedError | undefined, status: number) =>
   error && 'status' in error && error?.status === status;
 
-const stylesFactory = <ResultFn extends (this: any, ...newArgs: any[]) => ReturnType<ResultFn>>(
+export const stylesFactory = <ResultFn extends (this: any, ...newArgs: any[]) => ReturnType<ResultFn>>(
   stylesCreator: ResultFn,
 ) => memoizeOne(stylesCreator);
 

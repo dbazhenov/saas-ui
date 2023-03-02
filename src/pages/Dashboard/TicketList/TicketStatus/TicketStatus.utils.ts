@@ -1,10 +1,10 @@
-import { GrafanaTheme } from '@grafana/data';
+import { Theme } from '@mui/material';
 import { OrgTicketStatus } from 'core/api/types';
 
-export const getColor = ({ colors, palette }: GrafanaTheme, status: OrgTicketStatus) => {
+export const getColor = ({ palette }: Theme, status: OrgTicketStatus) => {
   if (status === OrgTicketStatus.Open || status === OrgTicketStatus.New) {
-    return palette.greenBase;
+    return palette.success.main;
   }
 
-  return colors.textStrong;
+  return palette.text.primary;
 };

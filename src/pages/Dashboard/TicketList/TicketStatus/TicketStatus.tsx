@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useTheme } from '@grafana/ui';
+import { useTheme } from '@mui/material';
 import { StatusMap, TicketStatusProps } from './TicketStatus.types';
 import { getStyles } from './TicketStatus.styles';
 
