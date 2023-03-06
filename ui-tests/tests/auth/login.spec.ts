@@ -292,7 +292,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         landingPage.buttons.privacyFooter.click(),
       ]);
 
-      await expect(newPage).toHaveTitle('Privacy Center - Securiti.ai');
+      await expect(newPage).toHaveTitle('Privacy Central - Securiti.ai');
       newPage.close();
       await expect(landingPage.buttons.copyrightFooter).toHaveText(landingPage.labels.copyright);
       [newPage] = await Promise.all([

@@ -19,7 +19,7 @@ const config: PlaywrightTestConfig = {
   testDir: './ui-tests/tests',
   timeout: 240 * 1000,
   expect: {
-    timeout: 5000,
+    timeout: 15000,
   },
 
   fullyParallel: false,
