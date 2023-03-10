@@ -65,13 +65,12 @@ test.describe('Spec file for free users members tests', async () => {
     page,
   }) => {
     const dashboardPage = new DashboardPage(page);
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
     await test.step('Navigate to the Members tab and edit user roles as admin', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
       await dashboardPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.isEditButtonDisabled(admin1User.email);
       await membersPage.membersTable.changeMemberRoleAndVerify(
         admin2User.email,
@@ -95,7 +94,6 @@ test.describe('Spec file for free users members tests', async () => {
       description: 'SAAS-T275 - Verify user cannot activate his account with expired activation link',
     });
     const dashboardPage = new DashboardPage(page);
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     const signInPage = new SignInPage(page);
     const landingPage = new LandingPage(page);
@@ -104,7 +102,7 @@ test.describe('Spec file for free users members tests', async () => {
     await test.step('Invite previously not registered new member to the organization.', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
       await dashboardPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.inviteMembers.inviteMember(notRegisteredUser.email);
       message = await getMailosaurMessage(notRegisteredUser.email, `Welcome to ${org.name}`);
       await deleteMailosaurMessage(message.id);
@@ -147,7 +145,7 @@ test.describe('Spec file for free users members tests', async () => {
     await test.step('In members tab click link Resend Email for the new user.', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
       await dashboardPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.inviteMembers.inviteMember(secondNotRegisteredUser.email);
       message = await getMailosaurMessage(secondNotRegisteredUser.email, `Welcome to ${org.name}`);
       await deleteMailosaurMessage(message.id);
@@ -163,7 +161,7 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(technicalUser, page);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.membersTab.click();
+        await membersPage.organizationTabs.elements.members.click();
         await membersPage.membersTable.rowByText(secondNotRegisteredUser.email).waitFor({ state: 'visible' });
         await membersPage.membersTable
           .resetEmailLink(secondNotRegisteredUser.email)
@@ -181,23 +179,22 @@ test.describe('Spec file for free users members tests', async () => {
       description: 'SAAS-T176 Verify sorting of Org Members by First name',
     });
     const dashboardPage = new DashboardPage(page);
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     const usersTable = [
       {
         Name: `${admin1User.firstName} ${admin1User.lastName}`,
         Email: admin1User.email,
-        Role: organizationPage.userRoles.admin,
+        Role: membersPage.userRoles.admin,
       },
       {
         Name: `${admin2User.firstName} ${admin2User.lastName}`,
         Email: admin2User.email,
-        Role: organizationPage.userRoles.admin,
+        Role: membersPage.userRoles.admin,
       },
       {
         Name: `${technicalUser.firstName} ${technicalUser.lastName}`,
         Email: technicalUser.email,
-        Role: organizationPage.userRoles.technical,
+        Role: membersPage.userRoles.technical,
       },
     ];
 
@@ -205,7 +202,7 @@ test.describe('Spec file for free users members tests', async () => {
 
     await oktaAPI.loginByOktaApi(technicalUser, page);
     await dashboardPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.membersTab.click();
+    await membersPage.organizationTabs.elements.members.click();
 
     await membersPage.membersTable.verifyMembersTable(usersTable);
 
@@ -219,14 +216,13 @@ test.describe('Spec file for free users members tests', async () => {
   test('SAAS-T215 Verify admin is able to remove users from organization @freeUser @members', async ({
     page,
   }) => {
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     const dashboardPage = new DashboardPage(page);
 
     await oktaAPI.loginByOktaApi(admin1User, page);
 
     await dashboardPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.membersTab.click();
+    await membersPage.organizationTabs.elements.members.click();
 
     await membersPage.membersTable.isDeleteButtonDisabled(admin1User.email);
     await membersPage.membersTable.isEditButtonDisabled(admin1User.email);
@@ -237,20 +233,18 @@ test.describe('Spec file for free users members tests', async () => {
   });
 
   test('SAAS-T169 Verify Technical User can not invite Org members @freeUser @members', async ({ page }) => {
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
     await page.goto('');
     await oktaAPI.loginByOktaApi(technicalUser, page);
 
-    await organizationPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.membersTab.click();
+    await membersPage.sideMenu.mainMenu.organization.click();
+    await membersPage.organizationTabs.elements.members.click();
     await membersPage.membersTable.table.waitFor({ state: 'visible' });
     await membersPage.membersTable.inviteMembers.inviteMemberButton.waitFor({ state: 'detached' });
   });
 
   test('SAAS-T249 Verify user can invite more than 1 person at once @freeUser @members', async ({ page }) => {
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     const dashboardPage = new DashboardPage(page);
     let invitedUsers = [];
@@ -260,7 +254,7 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(admin1User, page);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.membersTab.click();
+        await membersPage.organizationTabs.elements.members.click();
         await membersPage.membersTable.inviteMembers.inviteMemberButton.click();
         await membersPage.membersTable.inviteMembers.username(0).waitFor({ state: 'visible' });
 
@@ -316,8 +310,8 @@ test.describe('Spec file for free users members tests', async () => {
 
     await test.step('1. Go to Members tab and remove some user from the organization', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
-      await organizationPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.sideMenu.mainMenu.organization.click();
+      await membersPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.table.waitFor({ state: 'visible' });
       await membersPage.membersTable.deleteUserByEmail(admin2User.email);
       await membersPage.membersTable.verifyUserNotPresent(admin2User.email);
@@ -330,10 +324,10 @@ test.describe('Spec file for free users members tests', async () => {
       async () => {
         await oktaAPI.loginByOktaApi(admin2User, page);
         await organizationPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.organizationNameInput.type(orgName);
-        await organizationPage.createOrgButton.click();
-        await organizationPage.toast.checkToastMessage(organizationPage.orgCreatedSuccessfully);
-        await expect(organizationPage.organizationName).toHaveText(orgName);
+        await organizationPage.fields.orgName.type(orgName);
+        await organizationPage.buttons.createOrg.click();
+        await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
+        await expect(organizationPage.elements.orgName).toHaveText(orgName);
       },
     );
   });

@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import { CommonPage } from '@pages/common.page';
 import { ActivityLogTable } from '@tests/components/ActivityLog/ActivityLogTable';
+import OrganizationTabs from '@tests/components/organizationTabs';
 
 export default class ActivityLogPage extends CommonPage {
   constructor(page: Page) {
@@ -8,6 +9,7 @@ export default class ActivityLogPage extends CommonPage {
   }
 
   activityLogTable = new ActivityLogTable(this.page);
+  organizationTabs = new OrganizationTabs(this.page);
 
   elements = {};
 

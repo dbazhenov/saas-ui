@@ -12,7 +12,6 @@ import {
 } from '@tests/api/helpers';
 import { SignUpPage } from '@tests/pages/signUp.page';
 import Duration from '@tests/helpers/Duration';
-import { OrganizationPage } from '@tests/pages/organization.page';
 import { MembersPage } from '@tests/pages/members.page';
 import { getUser } from '@tests/helpers/portalHelper';
 import { portalAPI } from '@tests/api';
@@ -148,7 +147,6 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const landingPage = new LandingPage(page);
     const signUpPage = new SignUpPage(page);
     const signInPage = new SignInPage(page);
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
 
     await test.step('1. Register new User.', async () => {
@@ -201,10 +199,9 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       await portalAPI.createOrg(adminToken);
       await page.goto('/');
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(notRegisteredUser.email, notRegisteredUser.password);
       await signInPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.inviteMembers.inviteMember(invitedUser.email);
     });
 
@@ -384,7 +381,6 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await test.step('9. Login with the new password', async () => {
       await page.goto('/');
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(adminUser.email, newPassword);
     });
   });

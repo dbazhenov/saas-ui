@@ -6,7 +6,6 @@ import User from '@support/types/user.interface';
 import { DashboardPage } from '@tests/pages/dashboard.page';
 import PMMInstances from '@tests/pages/PMMInstances.page';
 import { SignInPage } from '@tests/pages/signIn.page';
-import LandingPage from '@tests/pages/landing.page';
 import { pmmAPI } from '@tests/api/pmmApi';
 import { UserRoles } from '@tests/support/enums/userRoles';
 import Timeout from '@tests/helpers/timeout';
@@ -63,7 +62,6 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
   test('SAAS-T227 Verify user is able to see list of connected pmm instances @customers @pmmInstances', async ({
     page,
   }) => {
-    const landingPage = new LandingPage(page);
     const signInPage = new SignInPage(page);
     const pmmInstances = new PMMInstances(page);
     let serverInfo;
@@ -75,7 +73,6 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
     });
 
     await test.step('2. Login to the portal, navigate to the pmm instances page.', async () => {
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(admin1User.email, admin1User.password);
       await pmmInstances.sideMenu.mainMenu.pmmInstances.click();
     });
@@ -94,12 +91,10 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
     page,
     context,
   }) => {
-    const landingPage = new LandingPage(page);
     const signInPage = new SignInPage(page);
     const pmmInstances = new PMMInstances(page);
 
     await test.step('1. Login to the portal, navigate to the pmm instances page.', async () => {
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(admin1User.email, admin1User.password);
       await pmmInstances.sideMenu.mainMenu.pmmInstances.click();
     });
@@ -135,12 +130,10 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
   test('SAAS-T244 Verify user with Org Technical role can NOT remove PMM instance form the list @customers @pmmInstances', async ({
     page,
   }) => {
-    const landingPage = new LandingPage(page);
     const signInPage = new SignInPage(page);
     const pmmInstances = new PMMInstances(page);
 
     await test.step('1. Login as technical user and navigate to the PMM Instances page.', async () => {
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(technicalUser.email, technicalUser.password);
       await pmmInstances.sideMenu.mainMenu.pmmInstances.click();
     });
@@ -154,12 +147,10 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
   test('SAAS-T243 Verify user with Org Amin role can remove PMM instance form the list @customers @pmmInstances', async ({
     page,
   }) => {
-    const landingPage = new LandingPage(page);
     const signInPage = new SignInPage(page);
     const pmmInstances = new PMMInstances(page);
 
     await test.step('1. Login as admin user and navigate to the PMM Instances page.', async () => {
-      await landingPage.buttons.login.click();
       await signInPage.uiLogin(admin1User.email, admin1User.password);
       await pmmInstances.sideMenu.mainMenu.pmmInstances.click();
     });

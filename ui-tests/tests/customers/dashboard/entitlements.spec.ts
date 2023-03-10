@@ -6,7 +6,6 @@ import { getUser } from '@helpers/portalHelper';
 import { DashboardPage } from '@tests/pages/dashboard.page';
 import { routeHelper } from '@api/helpers';
 import { endpoints } from '@tests/helpers/apiHelper';
-import { OrganizationPage } from '@tests/pages/organization.page';
 import { MembersPage } from '@tests/pages/members.page';
 import { UserRoles } from '@tests/support/enums/userRoles';
 import LandingPage from '@tests/pages/landing.page';
@@ -157,7 +156,6 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
   }) => {
     const dashboardPage = new DashboardPage(page);
     const membersPage = new MembersPage(page);
-    const organizationPage = new OrganizationPage(page);
     const landingPage = new LandingPage(page);
 
     await test.step(
@@ -166,7 +164,7 @@ test.describe('Spec file for percona customers entitlements tests', async () => 
         await oktaAPI.loginByOktaApi(customerFirstAdmin, page);
         await dashboardPage.toast.checkToastMessage(dashboardPage.customerOrgCreated);
         await dashboardPage.sideMenu.mainMenu.organization.click();
-        await organizationPage.membersTab.click();
+        await membersPage.organizationTabs.elements.members.click();
         await membersPage.membersTable.inviteMembers.inviteMember(notCustomerUser.email, UserRoles.admin);
         await membersPage.membersTable.verifyUserMembersTable(notCustomerUser, UserRoles.admin);
         await membersPage.userDropdown.logoutUser();

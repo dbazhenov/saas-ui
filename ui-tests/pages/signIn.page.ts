@@ -1,6 +1,7 @@
 import { Page } from '@playwright/test';
 import ResetPassword from '@tests/components/Auth/ResetPassword';
 import { CommonPage } from './common.page';
+import LandingPage from './landing.page';
 
 export class SignInPage extends CommonPage {
   constructor(page: Page) {
@@ -63,6 +64,7 @@ export class SignInPage extends CommonPage {
   };
 
   uiLogin = async (username: string, password: string) => {
+    await new LandingPage(this.page).buttons.login.click();
     await this.fillOutSignInUserDetails(username, password);
     await this.buttons.signIn.click();
     await this.waitForPortalLoaded();

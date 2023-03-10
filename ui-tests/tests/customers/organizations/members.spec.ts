@@ -58,7 +58,6 @@ test.describe('Spec file for organization tests for customers', async () => {
   test('SAAS-T174 Verify OrgAdmin can view list of Org Members @customers @members', async ({ page }) => {
     const signInPage = new SignInPage(page);
     const membersPage = new MembersPage(page);
-    const organizationPage = new OrganizationPage(page);
 
     const users = [
       {
@@ -96,7 +95,7 @@ test.describe('Spec file for organization tests for customers', async () => {
     await page.reload();
     await signInPage.sideMenu.mainMenu.organization.click();
 
-    await organizationPage.membersTab.click();
+    await membersPage.organizationTabs.elements.members.click();
 
     await membersPage.membersTable.verifyMembersTable(users);
   });
@@ -121,7 +120,7 @@ test.describe('Spec file for organization tests for customers', async () => {
     await oktaAPI.loginByOktaApi(customerAdmin1User, page);
     await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
     await organizationPage.sideMenu.mainMenu.organization.click();
-    await organizationPage.membersTab.click();
+    await organizationPage.organizationTabs.elements.members.click();
 
     await membersPage.membersTable.verifyUserMembersTable(customerAdmin1User, UserRoles.admin);
     await membersPage.membersTable.inviteMembers.inviteMember(customerAdmin2User.email);
@@ -157,17 +156,16 @@ test.describe('Spec file for organization tests for customers', async () => {
   test('SAAS-T229 Verify admin can invite other members to organization (percona customer account) @customers @members', async ({
     page,
   }) => {
-    const organizationPage = new OrganizationPage(page);
     const membersPage = new MembersPage(page);
     let org;
 
     await test.step('1. Login to the portal and navigate to the members tab', async () => {
       await oktaAPI.loginByOktaApi(customerAdmin1User, page);
-      await organizationPage.toast.checkToastMessage(organizationPage.customerOrgCreated);
+      await membersPage.toast.checkToastMessage(membersPage.customerOrgCreated);
       org = await portalAPI.getOrg(adminToken);
 
-      await organizationPage.sideMenu.mainMenu.organization.click();
-      await organizationPage.membersTab.click();
+      await membersPage.sideMenu.mainMenu.organization.click();
+      await membersPage.organizationTabs.elements.members.click();
     });
 
     await test.step(
