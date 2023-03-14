@@ -11,7 +11,6 @@ import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
 import { eventsApi } from 'core/api/events.service';
 import { rootReducer } from 'store/reducers';
-import { authMiddleware } from 'store';
 import { AppState } from 'store/types';
 import { DeepPartial } from 'core';
 
@@ -22,14 +21,12 @@ export const store = (preloadedState?: AppState) =>
     reducer: rootReducer,
     preloadedState: preloadedState || undefined,
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware()
-        .prepend(authMiddleware)
-        .concat(
-          authApi.middleware,
-          membersListApi.middleware,
-          kubernetesApi.middleware,
-          eventsApi.middleware,
-        ),
+      getDefaultMiddleware().concat(
+        authApi.middleware,
+        membersListApi.middleware,
+        kubernetesApi.middleware,
+        eventsApi.middleware,
+      ),
   });
 
 interface TestContainerProps {

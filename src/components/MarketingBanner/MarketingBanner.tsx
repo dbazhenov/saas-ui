@@ -5,11 +5,17 @@ import { getAuth } from 'store/auth';
 import { displayAndLogError, useStyles } from 'core';
 import { QueryStatus } from '@reduxjs/toolkit/dist/query';
 import { LoadingButton } from '@mui/lab';
+import { UserClaims } from '@okta/okta-auth-js';
 import { getStyles } from './MarketingBanner.styles';
 import { Messages } from './MarketingBanner.messages';
 import { useEditProfileMutation } from '../../core/api/auth.service';
 
-export const MarketingBanner: FC = ({ children }) => {
+interface MarketingBannerProps {
+  userInfo?: UserClaims;
+  children: React.ReactNode;
+}
+
+export const MarketingBanner: FC<MarketingBannerProps> = ({ children, userInfo }) => {
   const styles = useStyles(getStyles);
   const { oktaAuth } = useOktaAuth();
   const [show, setShow] = useState(false);
@@ -19,16 +25,10 @@ export const MarketingBanner: FC = ({ children }) => {
   const [editProfile, { status, isLoading, error }] = useEditProfileMutation();
 
   useEffect(() => {
-    const getMarketing = async () => {
-      const { marketing } = await oktaAuth.getUser();
-
-      if (marketing === undefined) {
-        setShow(true);
-      }
-    };
-
-    getMarketing();
-  }, [oktaAuth]);
+    if (userInfo?.email && userInfo?.marketing === undefined) {
+      setShow(true);
+    }
+  }, [userInfo, oktaAuth]);
 
   useEffect(() => {
     if (status === QueryStatus.fulfilled) {

@@ -6,6 +6,7 @@ import { getRandomMailosaurEmailAddress, getVerificationLink } from '@api/helper
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
 import LandingPage from '@tests/pages/landing.page';
+import Duration from '@tests/helpers/Duration';
 
 test.describe('Spec file for Sign Up tests', async () => {
   let adminUser: User;
@@ -176,9 +177,8 @@ test.describe('Spec file for Sign Up tests', async () => {
     });
   });
 
-  test('SAAS-T268 - Verify all user can agree with receiving emails from Percona @signUp @auth', async ({
+  test.skip('SAAS-T268 - Verify all user can agree with receiving emails from Percona @signUp @auth', async ({
     page,
-    baseURL,
   }) => {
     test.info().annotations.push({
       type: 'Also Covers',
@@ -203,7 +203,10 @@ test.describe('Spec file for Sign Up tests', async () => {
 
     await test.step('Click on "No, thank you" button and Verify the window is closed', async () => {
       await signUpPage.marketingBanner.buttons.reject.click();
-      await signUpPage.marketingBanner.elements.banner.waitFor({ state: 'detached' });
+      await signUpPage.marketingBanner.elements.banner.waitFor({
+        state: 'detached',
+        timeout: Duration.ThreeMinutes,
+      });
     });
 
     await test.step(

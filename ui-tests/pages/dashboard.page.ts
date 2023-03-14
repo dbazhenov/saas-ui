@@ -32,7 +32,7 @@ export class DashboardPage extends CommonPage {
 
   // Messages
   emailCopiedClipboard = 'Email copied to clipboard';
-  installPMMTitle = 'Percona Monitoring and Management - Percona';
+  installPMMTitle = 'Installing Percona Monitoring and Management (PMM) Software - Percona';
 
   // Links
   serviceNowAddress = 'https://perconadev.service-now.com/percona';
