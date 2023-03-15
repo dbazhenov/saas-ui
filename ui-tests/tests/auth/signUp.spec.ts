@@ -179,6 +179,7 @@ test.describe('Spec file for Sign Up tests', async () => {
 
   test.skip('SAAS-T268 - Verify all user can agree with receiving emails from Percona @signUp @auth', async ({
     page,
+    baseURL,
   }) => {
     test.info().annotations.push({
       type: 'Also Covers',

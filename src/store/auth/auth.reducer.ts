@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { getUserRoleAction } from 'store/orgs';
 import { AuthState } from 'store/types';
-import { getUserCompanyAction, updateUserInfoAction } from '.';
+import { errorUserInfoAction, getUserCompanyAction, startUserInfoAction, updateUserInfoAction } from '.';
 import { getProfileAction, loginAction, updateProfileAction } from './auth.actions';
 
 const DEFAULT_STATE: AuthState = {
@@ -34,6 +34,12 @@ export const authReducer = createReducer<AuthState>(DEFAULT_STATE, (builder) => 
       state.email = payload.email;
       state.firstName = payload.firstName;
       state.lastName = payload.lastName;
+      state.pending = false;
+    })
+    .addCase(startUserInfoAction, (state) => {
+      state.pending = true;
+    })
+    .addCase(errorUserInfoAction, (state) => {
       state.pending = false;
     })
     // Get Profile
