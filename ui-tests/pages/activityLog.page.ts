@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 import { CommonPage } from '@pages/common.page';
-import { ActivityLogTable } from '@tests/components/ActivityLog/ActivityLogTable';
+import { ActivityLogTable } from '@tests/components/ActivityLog/activityLogTable';
 import OrganizationTabs from '@tests/components/organizationTabs';
 
 export default class ActivityLogPage extends CommonPage {

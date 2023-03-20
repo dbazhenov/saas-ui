@@ -1,6 +1,6 @@
 /* eslint-disable lines-between-class-members */
 import { Page, expect } from '@playwright/test';
-import { Table } from './Table';
+import { Table } from './table';
 
 enum TableHeader {
   Number = 'Number',
@@ -17,6 +17,10 @@ export class TicketsTable extends Table {
     super(page);
   }
   tableHeaders = TableHeader;
+
+  elements = {
+    ...super.getTableElements(),
+  };
 
   getTableColumnsData = async (columns: string[] = Object.values(this.elements.header)): Promise<unknown> => {
     const columnPromise = columns.map(async (column) => {
@@ -48,11 +52,11 @@ export class TicketsTable extends Table {
   };
 
   verifyRowData = async (ticket, rowNumber = 0) => {
-    await expect(this.rowCell(rowNumber).nth(0)).toHaveText(ticket.number);
-    await expect(this.rowCell(rowNumber).nth(1)).toHaveText(ticket.state);
-    await expect(this.rowCell(rowNumber).nth(2)).toHaveText(ticket.short_description);
-    await expect(this.rowCell(rowNumber).nth(3)).toHaveText(ticket.department);
-    await expect(this.rowCell(rowNumber).nth(4)).toHaveText(ticket.priority);
-    await expect(this.rowCell(rowNumber).nth(6)).toHaveText(ticket.requester);
+    await expect(this.elements.rowCell(rowNumber).nth(0)).toHaveText(ticket.number);
+    await expect(this.elements.rowCell(rowNumber).nth(1)).toHaveText(ticket.state);
+    await expect(this.elements.rowCell(rowNumber).nth(2)).toHaveText(ticket.short_description);
+    await expect(this.elements.rowCell(rowNumber).nth(3)).toHaveText(ticket.department);
+    await expect(this.elements.rowCell(rowNumber).nth(4)).toHaveText(ticket.priority);
+    await expect(this.elements.rowCell(rowNumber).nth(6)).toHaveText(ticket.requester);
   };
 }

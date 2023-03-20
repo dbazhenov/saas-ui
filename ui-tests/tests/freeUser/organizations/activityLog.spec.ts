@@ -5,7 +5,7 @@ import { UserRoles } from '@support/enums/userRoles';
 import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
-import ActivityLogPage from '@tests/pages/ActivityLog.page';
+import ActivityLogPage from '@tests/pages/activityLog.page';
 import { SignInPage } from '@tests/pages/signIn.page';
 import { MembersPage } from '@tests/pages/members.page';
 

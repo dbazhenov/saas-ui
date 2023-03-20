@@ -94,7 +94,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       await signInPage.waitForPortalLoaded();
       expect(page.url()).toContain(baseURL);
 
-      await dashboardPage.gettingStartedContainer.waitFor({ state: 'visible' });
+      await dashboardPage.elements.gettingStartedContainer.waitFor({ state: 'visible' });
     });
   });
 
@@ -139,7 +139,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       await expect(signInPage.elements.signInErrorContainer).toHaveText(signInPage.labels.unableToSignIn);
       expect(page.url()).toContain(dashboardPage.routes.login);
 
-      await dashboardPage.gettingStartedContainer.waitFor({ state: 'detached' });
+      await dashboardPage.elements.gettingStartedContainer.waitFor({ state: 'detached' });
     });
   }
 

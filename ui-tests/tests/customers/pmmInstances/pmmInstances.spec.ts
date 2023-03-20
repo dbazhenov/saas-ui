@@ -4,7 +4,7 @@ import { oktaAPI } from '@api/okta';
 import { portalAPI } from '@api/portal';
 import User from '@support/types/user.interface';
 import { DashboardPage } from '@tests/pages/dashboard.page';
-import PMMInstances from '@tests/pages/PMMInstances.page';
+import PMMInstances from '@tests/pages/pmmInstances.page';
 import { SignInPage } from '@tests/pages/signIn.page';
 import { pmmAPI } from '@tests/api/pmmApi';
 import { UserRoles } from '@tests/support/enums/userRoles';
@@ -78,7 +78,7 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
     });
 
     await test.step('3. Verify PMM Instances table shows connected PMM', async () => {
-      await pmmInstances.instancesTable.rowByText(serverName).waitFor({ state: 'visible' });
+      await pmmInstances.instancesTable.elements.rowByText(serverName).waitFor({ state: 'visible' });
       await pmmInstances.instancesTable.verifyInstanceInTable(
         serverName,
         serverInfo.pmm_server_id,
@@ -100,13 +100,13 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
     });
 
     await test.step('2. Verify headers in pmm instances table.', async () => {
-      await expect(pmmInstances.instancesTable.headerCell.nth(0)).toHaveText(
+      await expect(pmmInstances.instancesTable.elements.headerCell.nth(0)).toHaveText(
         pmmInstances.instancesTable.labels.serverName,
       );
-      await expect(pmmInstances.instancesTable.headerCell.nth(1)).toHaveText(
+      await expect(pmmInstances.instancesTable.elements.headerCell.nth(1)).toHaveText(
         pmmInstances.instancesTable.labels.serverId,
       );
-      await expect(pmmInstances.instancesTable.headerCell.nth(2)).toHaveText(
+      await expect(pmmInstances.instancesTable.elements.headerCell.nth(2)).toHaveText(
         pmmInstances.instancesTable.labels.serverUrl,
       );
     });
@@ -163,7 +163,7 @@ test.describe('Spec file for PMM instances list tests for customers', async () =
         pmmInstances.messages.removePmmBody(serverName),
       );
       await pmmInstances.buttons.submitRemovePmm.click();
-      await expect(pmmInstances.instancesTable.table).not.toContainText(serverName);
+      await expect(pmmInstances.instancesTable.elements.table).not.toContainText(serverName);
     });
   });
 });

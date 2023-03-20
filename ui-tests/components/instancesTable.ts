@@ -1,5 +1,5 @@
 import { Page, expect } from '@playwright/test';
-import { Table } from './Table';
+import { Table } from './table';
 
 export default class InstancesTable extends Table {
   constructor(page: Page) {
@@ -7,26 +7,21 @@ export default class InstancesTable extends Table {
   }
 
   elements = {
-    removePmm: (serverName: string) => this.rowByText(serverName).getByTestId('pmm-instance-actions-remove'),
+    ...super.getTableElements(),
+    removePmm: (serverName: string) =>
+      this.elements.rowByText(serverName).getByTestId('pmm-instance-actions-remove'),
   };
 
-  fields = {};
-
   labels = {
+    ...super.getTableLabels(),
     serverName: 'Server Name',
     serverId: 'Server ID',
     serverUrl: 'Server URL',
     actions: 'Actions',
   };
 
-  buttons = {};
-
-  messages = {};
-
-  links = {};
-
   verifyInstanceInTable = async (serverName: string, serverId: string, serverUrl: string) => {
-    const response = (await this.rowByText(serverName).allInnerTexts())[0].split(/\r?\n/);
+    const response = (await this.elements.rowByText(serverName).allInnerTexts())[0].split(/\r?\n/);
 
     expect(response[0]).toEqual(serverName);
     expect(response[1]).toEqual(serverId);

@@ -1,5 +1,5 @@
 import { ElementHandle, Page } from '@playwright/test';
-import { Table } from '../Table';
+import { Table } from '../table';
 
 interface Columns {
   Time: string;
@@ -13,9 +13,24 @@ export class ActivityLogTable extends Table {
     super(page);
   }
 
-  elements = {};
+  elements = {
+    ...super.getTableElements(),
+  };
+
+  fields = {
+    ...super.getTableFields(),
+  };
+
+  labels = {
+    ...super.getTableLabels(),
+  };
+
+  buttons = {
+    ...super.getTableButtons(),
+  };
 
   messages = {
+    ...super.getTableMessages(),
     orgCreated: (userId: string, orgName: string) => `User ${userId} created "${orgName}" organization`,
     userDeleted: (adminUser: string, deletedUser: string) =>
       `User ${adminUser} deleted "${deletedUser}" organization member`,
@@ -27,16 +42,20 @@ export class ActivityLogTable extends Table {
       `User ${adminUser} deleted "${inventoryName}" inventory`,
   };
 
+  links = {
+    ...super.getTableLinks(),
+  };
+
   getRowByText = async (
     text: string,
     position: 'Time' | 'UserId' | 'EventType' | 'Details',
   ): Promise<Columns> => {
     try {
-      await this.row.waitFor({ state: 'visible' });
+      await this.elements.row.waitFor({ state: 'visible' });
       // eslint-disable-next-line no-empty
     } catch (e) {}
 
-    const rows: ElementHandle<Node>[] = await this.row.elementHandles();
+    const rows: ElementHandle<Node>[] = await this.elements.row.elementHandles();
     const parsedRows: Columns[] = [];
 
     // eslint-disable-next-line no-restricted-syntax

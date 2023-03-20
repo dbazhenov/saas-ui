@@ -11,10 +11,7 @@ export class DashboardPage extends CommonPage {
   constructor(page: Page) {
     super(page);
   }
-  // Labels
-  addOrganizationLabel = 'Add Organization';
 
-  // Components
   entitlementsModal = new EntitlementsModal(this.page);
   ticketTable = new TicketsTable(this.page);
   contacts = new Contacts(this.page);
@@ -22,25 +19,36 @@ export class DashboardPage extends CommonPage {
   ticketOverview = new TicketOverview(this.page);
   accountSection = new AccountSection(this.page);
 
-  // Elements
-  viewOrgLink = this.page.locator('span', { hasText: 'View Organization' });
-  ticketSection = this.page.locator('//*[@data-testid="dashboard-ticket-section"]');
-  openNewTicketButton = this.page.locator('a', { has: this.page.locator('text="Open new ticket"') });
-  gettingStartedContainer = this.page.locator('//div[@data-testid="getting-started-container"]');
-  addOrganizationLocator = this.page.locator('a', { hasText: this.addOrganizationLabel });
-  installPmmButton = this.page.getByTestId('promo-link');
+  elements = {
+    viewOrgLink: this.page.locator('span', { hasText: 'View Organization' }),
+    ticketSection: this.page.getByTestId('dashboard-ticket-section'),
+    gettingStartedContainer: this.page.getByTestId('getting-started-container'),
+    addOrganizationLocator: this.page.getByText('Add Organization'),
+  };
 
-  // Messages
-  emailCopiedClipboard = 'Email copied to clipboard';
-  installPMMTitle = 'Installing Percona Monitoring and Management (PMM) Software - Percona';
+  fields = {};
 
-  // Links
-  serviceNowAddress = 'https://perconadev.service-now.com/percona';
-  installPmmLink =
-    'https://www.percona.com/software/pmm/quickstart?utm_source=portal&utm_medium=banner&utm_id=pmminstall';
+  labels = {
+    installPMMTitle: 'Installing Percona Monitoring and Management (PMM) Software - Percona',
+  };
+
+  buttons = {
+    installPmm: this.page.getByTestId('promo-link'),
+    openNewTicket: this.page.getByText('Open new ticket'),
+  };
+
+  messages = {
+    emailCopiedClipboard: 'Email copied to clipboard',
+  };
+
+  links = {
+    serviceNow: 'https://perconadev.service-now.com/percona',
+    installPmm:
+      'https://www.percona.com/software/pmm/quickstart?utm_source=portal&utm_medium=banner&utm_id=pmminstall',
+  };
 
   verifyOpenNewTicketButton = async () => {
-    await expect(this.openNewTicketButton).toHaveAttribute('href', this.serviceNowAddress);
-    await expect(this.openNewTicketButton).toHaveAttribute('target', '_blank');
+    await expect(this.buttons.openNewTicket).toHaveAttribute('href', this.links.serviceNow);
+    await expect(this.buttons.openNewTicket).toHaveAttribute('target', '_blank');
   };
 }

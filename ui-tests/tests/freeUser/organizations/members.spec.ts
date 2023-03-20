@@ -111,7 +111,7 @@ test.describe('Spec file for free users members tests', async () => {
     await test.step(
       'In members tab click link Resend Email for the new user and verify email and activation',
       async () => {
-        await membersPage.membersTable.resetEmailLink(notRegisteredUser.email).click();
+        await membersPage.membersTable.buttons.resendEmail(notRegisteredUser.email).click();
         await membersPage.userDropdown.logoutUser();
         const secondMessage = await getMailosaurMessage(notRegisteredUser.email, `Welcome to ${org.name}`);
 
@@ -149,8 +149,8 @@ test.describe('Spec file for free users members tests', async () => {
       await membersPage.membersTable.inviteMembers.inviteMember(secondNotRegisteredUser.email);
       message = await getMailosaurMessage(secondNotRegisteredUser.email, `Welcome to ${org.name}`);
       await deleteMailosaurMessage(message.id);
-      await membersPage.membersTable
-        .resetEmailLink(secondNotRegisteredUser.email)
+      await membersPage.membersTable.buttons
+        .resendEmail(secondNotRegisteredUser.email)
         .waitFor({ state: 'visible' });
       await membersPage.userDropdown.logoutUser();
       await landingPage.landingPageContainer.waitFor({ state: 'visible' });
@@ -162,11 +162,15 @@ test.describe('Spec file for free users members tests', async () => {
         await oktaAPI.loginByOktaApi(technicalUser, page);
         await dashboardPage.sideMenu.mainMenu.organization.click();
         await membersPage.organizationTabs.elements.members.click();
-        await membersPage.membersTable.rowByText(secondNotRegisteredUser.email).waitFor({ state: 'visible' });
-        await membersPage.membersTable
-          .resetEmailLink(secondNotRegisteredUser.email)
+        await membersPage.membersTable.elements
+          .rowByText(secondNotRegisteredUser.email)
+          .waitFor({ state: 'visible' });
+        await membersPage.membersTable.buttons
+          .resendEmail(secondNotRegisteredUser.email)
           .waitFor({ state: 'detached' });
-        await membersPage.membersTable.resetEmailLink(notRegisteredUser.email).waitFor({ state: 'detached' });
+        await membersPage.membersTable.buttons
+          .resendEmail(notRegisteredUser.email)
+          .waitFor({ state: 'detached' });
       },
     );
   });
@@ -240,7 +244,7 @@ test.describe('Spec file for free users members tests', async () => {
 
     await membersPage.sideMenu.mainMenu.organization.click();
     await membersPage.organizationTabs.elements.members.click();
-    await membersPage.membersTable.table.waitFor({ state: 'visible' });
+    await membersPage.membersTable.elements.table.waitFor({ state: 'visible' });
     await membersPage.membersTable.inviteMembers.inviteMemberButton.waitFor({ state: 'detached' });
   });
 
@@ -312,7 +316,7 @@ test.describe('Spec file for free users members tests', async () => {
       await oktaAPI.loginByOktaApi(admin1User, page);
       await membersPage.sideMenu.mainMenu.organization.click();
       await membersPage.organizationTabs.elements.members.click();
-      await membersPage.membersTable.table.waitFor({ state: 'visible' });
+      await membersPage.membersTable.elements.table.waitFor({ state: 'visible' });
       await membersPage.membersTable.deleteUserByEmail(admin2User.email);
       await membersPage.membersTable.verifyUserNotPresent(admin2User.email);
       await membersPage.userDropdown.logoutUser();

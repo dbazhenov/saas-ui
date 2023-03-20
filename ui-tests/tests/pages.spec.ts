@@ -5,8 +5,8 @@ import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
 import { SignInPage } from '@tests/pages/signIn.page';
-import PMMInstances from '@tests/pages/PMMInstances.page';
-import FreeKubernetes from '@tests/pages/FreeKubernetes.page';
+import PMMInstances from '@tests/pages/pmmInstances.page';
+import FreeKubernetes from '@tests/pages/freeKubernetes.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -116,13 +116,13 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
     await test.step('1. Login to the portal. and verify Install PMM link.', async () => {
       await signInPage.uiLogin(adminUser.email, adminUser.password);
-      await expect(dashboardPage.installPmmButton).toHaveAttribute('href', dashboardPage.installPmmLink);
+      await expect(dashboardPage.buttons.installPmm).toHaveAttribute('href', dashboardPage.links.installPmm);
       const [newPage] = await Promise.all([
         context.waitForEvent('page'),
-        dashboardPage.installPmmButton.click(),
+        dashboardPage.buttons.installPmm.click(),
       ]);
 
-      await expect(newPage).toHaveTitle(dashboardPage.installPMMTitle);
+      await expect(newPage).toHaveTitle(dashboardPage.labels.installPMMTitle);
       await newPage.close();
     });
     await test.step(
