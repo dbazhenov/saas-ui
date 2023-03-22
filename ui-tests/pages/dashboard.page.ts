@@ -22,6 +22,7 @@ export class DashboardPage extends CommonPage {
   elements = {
     viewOrgLink: this.page.locator('span', { hasText: 'View Organization' }),
     ticketSection: this.page.getByTestId('dashboard-ticket-section'),
+
     gettingStartedContainer: this.page.getByTestId('getting-started-container'),
     addOrganizationLocator: this.page.getByText('Add Organization'),
   };

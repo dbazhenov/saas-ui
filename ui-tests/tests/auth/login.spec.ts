@@ -16,7 +16,7 @@ import { MembersPage } from '@tests/pages/members.page';
 import { getUser } from '@tests/helpers/portalHelper';
 import { portalAPI } from '@tests/api';
 
-test.describe('Spec file for dashboard tests for customers', async () => {
+test.describe('Spec file for login tests', async () => {
   let adminUser: User;
   const notRegisteredUser: User = getUser(getRandomMailosaurEmailAddress());
   let invitedUser: User;
@@ -33,17 +33,9 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   });
 
   test.afterEach(async () => {
-    if (await oktaAPI.getUser(adminUser.email)) {
-      await oktaAPI.deleteUserByEmail(adminUser.email);
-    }
-
-    if (await oktaAPI.getUser(notRegisteredUser.email)) {
-      await oktaAPI.deleteUserByEmail(notRegisteredUser.email);
-    }
-
-    if (await oktaAPI.getUser(invitedUser.email)) {
-      await oktaAPI.deleteUserByEmail(invitedUser.email);
-    }
+    await oktaAPI.deleteUserByEmailIfExists(adminUser.email);
+    await oktaAPI.deleteUserByEmailIfExists(notRegisteredUser.email);
+    await oktaAPI.deleteUserByEmailIfExists(invitedUser.email);
   });
 
   test('SAAS-T251 - Verify handling of status 401 @auth', async ({ page, baseURL }) => {
@@ -51,17 +43,24 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const dashboardPage = new DashboardPage(page);
     const landingPage = new LandingPage(page);
 
-    await oktaAPI.loginByOktaApi(adminUser, page);
-    await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
-    await dashboardPage.contacts.contactsLoadingSpinner.waitFor({ state: 'detached' });
+    await test.step('1. Login to the portal.', async () => {
+      await oktaAPI.loginByOktaApi(adminUser, page);
+      await dashboardPage.contacts.accountLoadingSpinner.waitFor({ state: 'detached' });
+      await dashboardPage.contacts.contactsLoadingSpinner.waitFor({ state: 'detached' });
+    });
 
-    await oktaAPI.deleteUserByEmail(adminUser.email);
-    await page.reload();
-    await landingPage.landingPageContainer.waitFor({ state: 'visible' });
-    expect(page.url()).toEqual(`${baseURL}/`);
-    await page.goto(dashboardPage.routes.organization);
-    await signInPage.fields.email.waitFor({ state: 'visible' });
-    expect(page.url()).toEqual(baseURL + dashboardPage.routes.login);
+    await test.step('2. Delete user on BE and verify that user is logged out.', async () => {
+      await oktaAPI.deleteUserByEmail(adminUser.email);
+      await page.reload();
+      await landingPage.landingPageContainer.waitFor({ state: 'visible' });
+      expect(page.url()).toEqual(`${baseURL}/`);
+    });
+
+    await test.step('3. Verify user cannot access private routes.', async () => {
+      await page.goto(dashboardPage.routes.organization);
+      await signInPage.fields.email.waitFor({ state: 'visible' });
+      expect(page.url()).toEqual(baseURL + dashboardPage.routes.login);
+    });
   });
 
   test('SAAS-T82 Verify successful login on Percona Portal @login @auth', async ({ page, baseURL }) => {
@@ -69,6 +68,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       type: 'Also Covers',
       description: 'SAAS-T246 - Verify Terms of Service and Privacy Policy are displayed on Login page.',
     });
+
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
     const landingPage = new LandingPage(page);
@@ -101,45 +101,62 @@ test.describe('Spec file for dashboard tests for customers', async () => {
   if (process.env.CI) {
     // Test Fails on local, runs only in CI.
     test('SAAS-T86 Verify unsuccessful login on Percona Portal @login @auth', async ({ page, context }) => {
+      test.info().annotations.push({
+        type: 'Also Covers',
+        description: 'SAAS-T245 Verify user is able to see "Continue with.." buttons',
+      });
+
       const signInPage = new SignInPage(page);
       const dashboardPage = new DashboardPage(page);
       const landingPage = new LandingPage(page);
 
-      await test.step('SAAS-T245 Verify user is able to see "Continue with.." buttons', async () => {
+      await test.step('1. Verify text for the social login buttons', async () => {
         await landingPage.buttons.login.click();
         await expect(signInPage.buttons.continueGoogle).toHaveText(signInPage.labels.continueGoogle);
         await expect(signInPage.buttons.continueGitHub).toHaveText(signInPage.labels.continueGitHub);
-
-        const [googlePage] = await Promise.all([
-          context.waitForEvent('page'),
-          signInPage.buttons.continueGoogle.click(),
-        ]);
-        const googleSigInPage = new SignInPage(googlePage);
-
-        await googleSigInPage.fields.googleEmail.waitFor({ state: 'visible', timeout: 60000 });
-
-        expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth');
-        await googlePage.close();
-
-        const [gitHubPage] = await Promise.all([
-          context.waitForEvent('page'),
-          signInPage.buttons.continueGitHub.click(),
-        ]);
-        const gitHubSigInPage = new SignInPage(gitHubPage);
-
-        await gitHubSigInPage.fields.gitHubEmail.waitFor({ state: 'visible', timeout: 60000 });
-
-        expect(gitHubPage.url()).toContain('https://github.com/login');
-        await gitHubPage.close();
       });
 
-      await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
-      await signInPage.buttons.signIn.click();
-      await signInPage.elements.signInErrorContainer.waitFor({ state: 'visible' });
-      await expect(signInPage.elements.signInErrorContainer).toHaveText(signInPage.labels.unableToSignIn);
-      expect(page.url()).toContain(dashboardPage.routes.login);
+      await test.step(
+        '2. Click login with google and verify that user is reddirected correctly.',
+        async () => {
+          const [googlePage] = await Promise.all([
+            context.waitForEvent('page'),
+            signInPage.buttons.continueGoogle.click(),
+          ]);
+          const googleSigInPage = new SignInPage(googlePage);
 
-      await dashboardPage.elements.gettingStartedContainer.waitFor({ state: 'detached' });
+          await googleSigInPage.fields.googleEmail.waitFor({ state: 'visible', timeout: 60000 });
+
+          expect(googlePage.url()).toContain('https://accounts.google.com/o/oauth2/auth');
+          await googlePage.close();
+        },
+      );
+
+      await test.step(
+        '3. Click login with github and verify that user is reddirected correctly.',
+        async () => {
+          const [gitHubPage] = await Promise.all([
+            context.waitForEvent('page'),
+            signInPage.buttons.continueGitHub.click(),
+          ]);
+          const gitHubSigInPage = new SignInPage(gitHubPage);
+
+          await gitHubSigInPage.fields.gitHubEmail.waitFor({ state: 'visible', timeout: 60000 });
+
+          expect(gitHubPage.url()).toContain('https://github.com/login');
+          await gitHubPage.close();
+        },
+      );
+
+      await test.step('4. Login with incorrect credenitals and verify error.', async () => {
+        await signInPage.fillOutSignInUserDetails('Wrong Username', 'WrongPassword');
+        await signInPage.buttons.signIn.click();
+        await signInPage.elements.signInErrorContainer.waitFor({ state: 'visible' });
+        await expect(signInPage.elements.signInErrorContainer).toHaveText(signInPage.labels.unableToSignIn);
+        expect(page.url()).toContain(dashboardPage.routes.login);
+
+        await dashboardPage.elements.gettingStartedContainer.waitFor({ state: 'detached' });
+      });
     });
   }
 

@@ -12,12 +12,28 @@ export default class InstancesTable extends Table {
       this.elements.rowByText(serverName).getByTestId('pmm-instance-actions-remove'),
   };
 
+  fields = {
+    ...super.getTableFields(),
+  };
+
   labels = {
     ...super.getTableLabels(),
     serverName: 'Server Name',
     serverId: 'Server ID',
     serverUrl: 'Server URL',
     actions: 'Actions',
+  };
+
+  buttons = {
+    ...super.getTableButtons(),
+  };
+
+  messages = {
+    ...super.getTableMessages(),
+  };
+
+  links = {
+    ...super.getTableLinks(),
   };
 
   verifyInstanceInTable = async (serverName: string, serverId: string, serverUrl: string) => {

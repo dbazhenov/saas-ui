@@ -22,6 +22,26 @@ export class TicketsTable extends Table {
     ...super.getTableElements(),
   };
 
+  fields = {
+    ...super.getTableFields(),
+  };
+
+  labels = {
+    ...super.getTableLabels(),
+  };
+
+  buttons = {
+    ...super.getTableButtons(),
+  };
+
+  messages = {
+    ...super.getTableMessages(),
+  };
+
+  links = {
+    ...super.getTableLinks(),
+  };
+
   getTableColumnsData = async (columns: string[] = Object.values(this.elements.header)): Promise<unknown> => {
     const columnPromise = columns.map(async (column) => {
       const returnedValues = await this.getValuesForColumn(column);
