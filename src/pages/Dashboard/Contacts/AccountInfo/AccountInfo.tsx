@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from 'core';
-import { IconButton, Typography, Button } from '@mui/material';
+import { Card, IconButton, Typography, Button } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 import { getAuth, getUserOrgRole, getIsPerconaCustomer } from 'store/auth';
@@ -61,7 +61,7 @@ export const AccountInfo: FC = () => {
 
   return (
     <>
-      <section className={styles.cardsContainer}>
+      <Card className={styles.cardsContainer}>
         <div className={styles.card} data-testid="account-section">
           <Typography className={styles.cardTitle} variant="h6">
             {Messages.yourAccount}
@@ -117,7 +117,7 @@ export const AccountInfo: FC = () => {
         {isEntitlementsVisible && (
           <EntitlementsModal entitlements={entitlements} onClose={() => setIsEntilementsVisible(false)} />
         )}
-      </section>
+      </Card>
     </>
   );
 };

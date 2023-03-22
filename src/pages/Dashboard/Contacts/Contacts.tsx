@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useStyles } from 'core';
-import { Typography } from '@mui/material';
+import { Card, Typography } from '@mui/material';
 import { getIsPerconaCustomer } from 'store/auth';
 import {
   getCustomerSuccessContact,
@@ -17,7 +17,6 @@ import { getStyles } from './Contacts.styles';
 import { Messages } from './Contacts.messages';
 import { FREE_USER_HELP_EMAIL, CUSTOMER_HELP_EMAIL, LINKS } from './Contacts.constants';
 import { CustomerContact } from './CustomerContact/CustomerContact';
-import { PromoBanner } from '../PromoBanner';
 
 export const Contacts: FC = () => {
   const styles = useStyles(getStyles);
@@ -52,8 +51,7 @@ export const Contacts: FC = () => {
   }, [dispatch, orgId, orgName, entitlements.length]);
 
   return (
-    <section className={styles.cardsContainer}>
-      <PromoBanner />
+    <Card className={styles.cardsContainer}>
       <div className={styles.card} data-testid="contacts-section">
         <Typography className={styles.cardTitle} variant="h6">
           {Messages.perconaContacts}
@@ -102,6 +100,6 @@ export const Contacts: FC = () => {
           </div>
         )}
       </div>
-    </section>
+    </Card>
   );
 };

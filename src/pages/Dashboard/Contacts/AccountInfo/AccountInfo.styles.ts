@@ -1,17 +1,14 @@
 import { css } from 'emotion';
 import { Theme } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
 
 export const getStyles = ({ palette, spacing, typography }: Theme) => ({
   cardsContainer: css`
     display: flex;
     flex-wrap: wrap;
-    margin-top: ${spacing(3)};
+    flex: 1;
   `,
   card: css`
-    flex: 0 1 35%;
     padding: ${spacing(3)};
-    background-color: ${palette.mode === 'light' ? blueGrey[50] : blueGrey[900]};
 
     @media (max-width: 850px) {
       flex: 0 0 100%;

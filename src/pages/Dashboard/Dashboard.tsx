@@ -89,7 +89,10 @@ export const DashboardPage: FC = () => {
           <DashBoardContentLoader />
         ) : (
           <>
-            <Contacts />
+            <div className={styles.cardsWrapper}>
+              <Contacts />
+              <AccountInfo />
+            </div>
             {showGettingStarted ? <GettingStarted /> : <></>}
             <SupportTicketOverview />
             {companyName && orgId && (
@@ -111,7 +114,6 @@ export const DashboardPage: FC = () => {
                 <TicketList />
               </section>
             )}
-            <AccountInfo />
           </>
         )}
       </div>

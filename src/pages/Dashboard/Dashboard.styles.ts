@@ -23,4 +23,11 @@ export const getStyles = ({ spacing, typography }: Theme) => ({
   newTicketButton: css`
     text-decoration: none;
   `,
+  cardsWrapper: css`
+    display: flex;
+
+    & :not(:last-child) {
+      margin-right: ${spacing(2)};
+    }
+  `,
 });
