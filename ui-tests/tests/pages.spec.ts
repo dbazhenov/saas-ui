@@ -114,17 +114,10 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const pmmInstances = new PMMInstances(page);
     const freeKubernetes = new FreeKubernetes(page);
 
-    await test.step('1. Login to the portal. and verify Install PMM link.', async () => {
+    await test.step('1. Login to the portal.', async () => {
       await signInPage.uiLogin(adminUser.email, adminUser.password);
-      await expect(dashboardPage.buttons.installPmm).toHaveAttribute('href', dashboardPage.links.installPmm);
-      const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        dashboardPage.buttons.installPmm.click(),
-      ]);
-
-      await expect(newPage).toHaveTitle(dashboardPage.labels.installPMMTitle);
-      await newPage.close();
     });
+
     await test.step(
       '2. Navigate to the PMM Instances page and verify How-to connect Percona Monitoring & Management link',
       async () => {
@@ -139,6 +132,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         await newPage.close();
       },
     );
+
     await test.step(
       '3. Navigate to the Free Kubernetes page and verify Install PMM with DBaaS link',
       async () => {
@@ -153,6 +147,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         await newPage.close();
       },
     );
+
     await test.step('4. Verify Operators documentation Link.', async () => {
       await expect(freeKubernetes.operatorsDocumentation).toHaveAttribute(
         'href',

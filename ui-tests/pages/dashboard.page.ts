@@ -34,7 +34,6 @@ export class DashboardPage extends CommonPage {
   };
 
   buttons = {
-    installPmm: this.page.getByTestId('promo-link'),
     openNewTicket: this.page.getByText('Open new ticket'),
   };
 
@@ -44,8 +43,6 @@ export class DashboardPage extends CommonPage {
 
   links = {
     serviceNow: 'https://perconadev.service-now.com/percona',
-    installPmm:
-      'https://www.percona.com/software/pmm/quickstart?utm_source=portal&utm_medium=banner&utm_id=pmminstall',
   };
 
   verifyOpenNewTicketButton = async () => {
