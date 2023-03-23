@@ -5,6 +5,7 @@ import User from '@support/types/user.interface';
 import { oktaAPI } from '@api/okta';
 import { getUser } from '@helpers/portalHelper';
 import { SignInPage } from '@tests/pages/signIn.page';
+import LandingPage from '@tests/pages/landing.page';
 import PMMInstances from '@tests/pages/pmmInstances.page';
 import FreeKubernetes from '@tests/pages/freeKubernetes.page';
 
@@ -160,6 +161,43 @@ test.describe('Spec file for dashboard tests for customers', async () => {
 
       await expect(newPage).toHaveTitle(freeKubernetes.operatorsDocumentationTitle);
       await newPage.close();
+    });
+  });
+
+  test('SAAS-T285 - Verify Profile Menu @pages', async ({ page, context }) => {
+    const signInPage = new SignInPage(page);
+    const landingPage = new LandingPage(page);
+    const dashboardPage = new DashboardPage(page);
+
+    await test.step('1. Login to the portal. And Open Dropdown.', async () => {
+      await signInPage.uiLogin(adminUser.email, adminUser.password);
+      await dashboardPage.userDropdown.openUserDropdown();
+    });
+
+    await test.step(
+      '2. Verify name and email are displayed and toggle for dark mode is visible',
+      async () => {
+        await dashboardPage.userDropdown.name.isVisible();
+        await expect(dashboardPage.userDropdown.name).toContainText(
+          `${adminUser.firstName} ${adminUser.lastName}`,
+        );
+
+        await dashboardPage.userDropdown.email.isVisible();
+        await expect(dashboardPage.userDropdown.email).toContainText(adminUser.email)
+        await dashboardPage.userDropdown.themeSwitch.isVisible();
+      },
+    );
+
+    await test.step('3. Verify profile link and logout link', async () => {
+      await dashboardPage.userDropdown.profileOption.isVisible();
+      await expect(dashboardPage.userDropdown.profileOption).toHaveAttribute(
+        'href',
+        dashboardPage.routes.profile,
+      );
+
+      await dashboardPage.userDropdown.logoutOption.isVisible();
+      await dashboardPage.userDropdown.logoutOption.click();
+      await landingPage.landingPageContainer.isVisible();
     });
   });
 });

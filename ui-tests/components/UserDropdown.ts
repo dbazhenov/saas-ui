@@ -10,6 +10,8 @@ export class UserDropDown {
   logoutOption = this.container.locator('//li[@data-testid="menu-bar-profile-dropdown-logout"]');
   profileOption = this.container.locator('//a[@data-testid="menu-bar-profile-dropdown-profile"]');
   themeSwitch = this.container.getByTestId('theme-switch');
+  name = this.container.getByTestId('menu-bar-profile-dropdown-name');
+  email = this.container.getByTestId('menu-bar-profile-dropdown-email');
 
   logoutUser = async () => {
     await this.openUserDropdown();
