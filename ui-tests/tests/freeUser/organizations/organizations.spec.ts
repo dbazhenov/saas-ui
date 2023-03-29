@@ -76,6 +76,10 @@ test.describe('Spec file for free users dashboard tests', async () => {
         type: 'Also Covers',
         description: 'SAAS-T180 Verify user can view created Organization',
       },
+      {
+        type: 'Also Covers',
+        description: 'SAAS-T278 Verify user without Organization cannot see Activity log',
+      },
     );
 
     const dashboardPage = new DashboardPage(page);
@@ -107,20 +111,23 @@ test.describe('Spec file for free users dashboard tests', async () => {
         await expect(organizationPage.buttons.createOrg).toBeDisabled();
       },
     );
+    await test.step('3. Verify that user cannot see activity log menu.', async () => {
+      await expect(organizationPage.organizationTabs.elements.activityLog).not.toBeVisible();
+    });
 
-    await test.step('3. Create new org.', async () => {
+    await test.step('5. Create new org.', async () => {
       await organizationPage.fields.orgName.type(firstOrgName);
       await organizationPage.buttons.createOrg.click();
       await organizationPage.toast.checkToastMessage(organizationPage.messages.orgCreatedSuccessfully);
       await expect(organizationPage.elements.orgName).toHaveText(firstOrgName, { timeout: 60000 });
     });
 
-    await test.step('4. Verify user is automatically assigned as org admin.', async () => {
+    await test.step('6. Verify user is automatically assigned as org admin.', async () => {
       await organizationPage.organizationTabs.elements.members.click();
       await membersPage.membersTable.verifyMembersTableUserRole(firstUserWithoutOrg.email, UserRoles.admin);
     });
 
-    await test.step('5. Verify org creation on getting started component on the dasboard.', async () => {
+    await test.step('7. Verify org creation on getting started component on the dasboard.', async () => {
       await membersPage.sideMenu.mainMenu.dashboard.click();
 
       await dashboardPage.gettingStarted.doneImageOrganizationSection.waitFor({ state: 'visible' });
@@ -137,7 +144,7 @@ test.describe('Spec file for free users dashboard tests', async () => {
     });
 
     await test.step(
-      '6. Logout and login as the new user and navigate to the organization page.',
+      '8. Logout and login as the new user and navigate to the organization page.',
       async () => {
         await organizationPage.userDropdown.logoutUser();
 
@@ -148,7 +155,8 @@ test.describe('Spec file for free users dashboard tests', async () => {
         await dashboardPage.sideMenu.mainMenu.organization.click();
       },
     );
-    await test.step('7 . Verify that user can create org with the same name.', async () => {
+
+    await test.step('9 . Verify that user can create org with the same name.', async () => {
       await page.waitForTimeout(2000);
       await organizationPage.fields.orgName.type(firstOrgName);
       await organizationPage.buttons.createOrg.click();
