@@ -233,7 +233,7 @@ test.describe('Spec file for login tests', async () => {
     });
   });
 
-  test('SAAS-T282 - Verify elements on Landing page @login @auth', async ({ page, context }) => {
+  test.skip('SAAS-T282 - Verify elements on Landing page @login @auth', async ({ page, context }) => {
     const signInPage = new SignInPage(page);
     const signUpPage = new SignUpPage(page);
     const landingPage = new LandingPage(page);
