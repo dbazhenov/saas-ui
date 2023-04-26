@@ -38,6 +38,7 @@ const DEFAULT_STATE: OrgsState = {
       name: '',
       created_at: 0,
       updated_at: 0,
+      tier: '',
     },
     contacts: {
       customer_success: {

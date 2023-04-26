@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { loadState } from 'store/persistence/engine';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
+import { advisorsApi } from 'pages/Advisors/Advisors.service';
 import { authApi } from 'core/api/auth.service';
 import { eventsApi } from 'core/api/events.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
@@ -17,6 +18,7 @@ export const store = configureStore({
       membersListApi.middleware,
       kubernetesApi.middleware,
       eventsApi.middleware,
+      advisorsApi.middleware,
     ),
 });
 

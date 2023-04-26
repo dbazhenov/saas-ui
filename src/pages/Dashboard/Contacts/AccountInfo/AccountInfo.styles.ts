@@ -6,17 +6,15 @@ export const getStyles = ({ palette, spacing, typography }: Theme) => ({
     display: flex;
     flex-wrap: wrap;
     flex: 1;
+    margin: ${spacing(2)} ${spacing(2)} 0 0;
+    padding: ${spacing(3)} ${spacing(3)} 0 ${spacing(3)};
   `,
   card: css`
-    padding: ${spacing(3)};
-
     @media (max-width: 850px) {
       flex: 0 0 100%;
     }
 
     &:first-child {
-      margin-right: ${spacing(3)};
-
       @media (max-width: 850px) {
         margin: 0;
         margin-bottom: ${spacing(3)};

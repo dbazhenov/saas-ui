@@ -6,10 +6,10 @@ export const getStyles = ({ palette, spacing, typography }: Theme) => ({
     display: flex;
     flex-wrap: wrap;
     flex: 1;
-  `,
-  card: css`
-    flex: 1 1 35%;
     padding: ${spacing(3)};
+  `,
+  contactsCard: css`
+    flex: 1 1 35%;
 
     @media (max-width: 850px) {
       flex: 0 0 100%;

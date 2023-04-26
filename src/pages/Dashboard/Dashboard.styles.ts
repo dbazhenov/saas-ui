@@ -25,9 +25,14 @@ export const getStyles = ({ spacing, typography }: Theme) => ({
   `,
   cardsWrapper: css`
     display: flex;
-
+    flex-direction: column;
+    flex-grow: 1;
     & :not(:last-child) {
       margin-right: ${spacing(2)};
     }
+  `,
+  widgets: css`
+    display: flex;
+    flex-direction: row;
   `,
 });

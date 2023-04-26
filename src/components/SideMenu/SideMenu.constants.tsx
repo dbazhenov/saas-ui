@@ -9,6 +9,7 @@ import FormatQuoteOutlinedIcon from '@mui/icons-material/FormatQuoteOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import RunningWithErrorsOutlinedIcon from '@mui/icons-material/RunningWithErrorsOutlined';
 import { Messages } from './SideMenu.messages';
 
 export const resourcesLinks = {
@@ -42,6 +43,15 @@ export const mainMenu = [
       </Icon>
     ),
     to: Routes.kubernetes,
+  },
+  {
+    label: Messages.advisors,
+    icon: (
+      <Icon>
+        <RunningWithErrorsOutlinedIcon />
+      </Icon>
+    ),
+    to: Routes.advisors,
   },
 ];
 

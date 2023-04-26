@@ -26,6 +26,7 @@ export const transformOrganizations = (orgs: OrganizationResponse[]): Organizati
     name: org.name,
     createdAt: org.created_at,
     updatedAt: org.updated_at,
+    tier: org.tier,
   }));
 
 export const transformOrgMembers = (members: OrganizationMembersResponse[]): OrgMember[] =>

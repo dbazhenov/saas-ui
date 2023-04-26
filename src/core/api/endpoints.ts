@@ -37,4 +37,7 @@ export const ENDPOINTS = {
     k8sClusterGetStatus: '/v1/dbaas/cluster/civo',
     k8sClusterGetConfig: (clusterId: string) => `/v1/dbaas/cluster/civo/${clusterId}/config`,
   },
+  advisors: {
+    getAdvisors: '/v1/check/advisors',
+  },
 };

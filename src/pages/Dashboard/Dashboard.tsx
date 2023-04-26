@@ -27,6 +27,7 @@ import { Contacts } from './Contacts';
 import { TicketList } from './TicketList';
 import { Messages } from './Dashboard.messages';
 import { AccountInfo } from './Contacts/AccountInfo';
+import { AdvisorsInfo } from './AdvisorsInfo/AdvisorsInfo';
 
 export const DashboardPage: FC = () => {
   const styles = useStyles(getStyles);
@@ -89,9 +90,12 @@ export const DashboardPage: FC = () => {
           <DashBoardContentLoader />
         ) : (
           <>
-            <div className={styles.cardsWrapper}>
-              <Contacts />
-              <AccountInfo />
+            <div className={styles.widgets}>
+              <div className={styles.cardsWrapper}>
+                <Contacts />
+                <AccountInfo />
+              </div>
+              <AdvisorsInfo />
             </div>
             {showGettingStarted ? <GettingStarted /> : <></>}
             <SupportTicketOverview />

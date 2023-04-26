@@ -9,6 +9,7 @@ import { history as defaultHistory } from 'core/history';
 import { authApi } from 'core/api/auth.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
 import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
+import { advisorsApi } from 'pages/Advisors/Advisors.service';
 import { eventsApi } from 'core/api/events.service';
 import { rootReducer } from 'store/reducers';
 import { AppState } from 'store/types';
@@ -26,6 +27,7 @@ export const store = (preloadedState?: AppState) =>
         membersListApi.middleware,
         kubernetesApi.middleware,
         eventsApi.middleware,
+        advisorsApi.middleware,
       ),
   });
 

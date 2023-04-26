@@ -50,6 +50,8 @@ export const getTicketUrl = createSelector(
 
 export const getCurrentOrgName = createSelector(getCurrentOrg, (currentOrg) => currentOrg?.name ?? '');
 
+export const getCurrentOrgTier = createSelector(getCurrentOrg, (currentOrg) => currentOrg?.tier ?? '');
+
 export const getCurrentOrgCreationDate = createSelector(getCurrentOrg, (currentOrg) => {
   if (currentOrg?.created_at) {
     return new Date(currentOrg.created_at).toLocaleDateString();

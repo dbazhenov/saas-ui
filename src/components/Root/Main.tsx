@@ -11,6 +11,7 @@ import {
   K8sClusterCreationPage,
   NotFound,
   ProfilePage,
+  AdvisorsPage,
 } from 'pages';
 import { Routes } from 'core/routes';
 import Activation from 'pages/Activation/Activation';
@@ -39,6 +40,9 @@ export const Main: FC = () => (
     </SecureRoute>
     <SecureRoute exact path={Routes.kubernetes}>
       <K8sClusterCreationPage />
+    </SecureRoute>
+    <SecureRoute exact path={Routes.advisors}>
+      <AdvisorsPage />
     </SecureRoute>
     <SecureRoute path="*">
       <NotFound />

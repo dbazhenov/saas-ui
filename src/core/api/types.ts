@@ -86,6 +86,7 @@ export interface OrganizationResponse {
   name: string;
   created_at: number;
   updated_at: number;
+  tier: string;
 }
 
 export interface SearchOrg {

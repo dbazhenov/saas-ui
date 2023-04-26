@@ -13,6 +13,7 @@ export interface Organization {
   name: string;
   createdAt: number;
   updatedAt: number;
+  tier: string;
 }
 
 export interface OrgMember {

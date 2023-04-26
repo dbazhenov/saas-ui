@@ -7,3 +7,4 @@ export * from './Profile';
 export * from './Dashboard';
 export * from './Activation';
 export * from './K8sClusterCreation';
+export * from './Advisors';

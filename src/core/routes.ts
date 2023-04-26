@@ -17,6 +17,7 @@ export const Routes = {
   welcome: '/welcome',
   dashboard: '/dashboard',
   kubernetes: '/kubernetes',
+  advisors: '/advisors',
 };
 
 export const RouteNames = {
@@ -25,4 +26,5 @@ export const RouteNames = {
   [Routes.instances]: 'PMM Instances',
   [Routes.kubernetes]: 'Free Kubernetes Cluster',
   [Routes.profile]: 'Percona Account',
+  [Routes.advisors]: 'Advisors',
 };

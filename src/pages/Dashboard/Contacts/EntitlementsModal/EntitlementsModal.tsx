@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Modal, Typography } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ExpandMore } from '@mui/icons-material';
 import { useStyles } from 'core';
 import { CollapseMap, EntitlementsModalProps } from './EntitlementsModal.types';
 import { Messages } from './EntitlementsModal.messages';
@@ -46,7 +46,7 @@ export const EntitlementsModal: FC<EntitlementsModalProps> = ({ entitlements, on
                 onChange={toggleCollapse(number)}
                 data-testid="entitlement-container"
               >
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary expandIcon={<ExpandMore />}>
                   <div className={styles.accordionTitle}>
                     <Typography component="h6">{name}</Typography>
                     <Typography component="span" className={styles.expiryDate}>

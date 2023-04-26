@@ -52,7 +52,7 @@ export const Contacts: FC = () => {
 
   return (
     <Card className={styles.cardsContainer}>
-      <div className={styles.card} data-testid="contacts-section">
+      <div className={styles.contactsCard} data-testid="contacts-section">
         <Typography className={styles.cardTitle} variant="h6">
           {Messages.perconaContacts}
         </Typography>

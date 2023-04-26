@@ -46,6 +46,27 @@ export const perconaLightTheme: ThemeOptions = merge(
       },
       secondary: {
         main: '#f5cc78',
+        light: '#F0F1F4',
+      },
+      success: {
+        main: '#A0EADC',
+        dark: '#1A7362',
+        contrastText: '#0B322A',
+      },
+      error: {
+        main: '#FFCCC5',
+        dark: '#9F0000',
+        contrastText: '#522625',
+      },
+      info: {
+        main: '#B6D9FF',
+        dark: '#0B4A8C',
+        contrastText: '#0C335D',
+      },
+      warning: {
+        main: '#FAE7C1',
+        dark: '#AA7F26',
+        contrastText: '#42361D',
       },
     },
     components: {
@@ -71,6 +92,27 @@ export const perconaDarkTheme: ThemeOptions = merge(
       },
       secondary: {
         main: '#774faa',
+        light: '#121212',
+      },
+      success: {
+        main: '#2CBEA2',
+        dark: '#2CBEA2',
+        contrastText: '#000000',
+      },
+      error: {
+        main: '#CE3C3C',
+        dark: '#CE3C3C',
+        contrastText: '#FFFFFF',
+      },
+      info: {
+        main: '#127AE8',
+        dark: '#127AE8',
+        contrastText: '#FFFFFF',
+      },
+      warning: {
+        main: '#F0B336',
+        dark: '#F0B336',
+        contrastText: '#000000',
       },
     },
   },
