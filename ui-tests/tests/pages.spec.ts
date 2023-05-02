@@ -7,7 +7,7 @@ import { getUser } from '@helpers/portalHelper';
 import { SignInPage } from '@tests/pages/signIn.page';
 import LandingPage from '@tests/pages/landing.page';
 import PMMInstances from '@tests/pages/pmmInstances.page';
-import FreeKubernetes from '@tests/pages/freeKubernetes.page';
+import PerconaDBaaS from '@tests/pages/perconaDbaas.page';
 
 test.describe('Spec file for dashboard tests for customers', async () => {
   let adminUser: User;
@@ -103,9 +103,9 @@ test.describe('Spec file for dashboard tests for customers', async () => {
       await dashboardPage.sideMenu.mainMenu.pmmInstances.click();
       await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.instances}`);
 
-      await expect(dashboardPage.sideMenu.mainMenu.freeKubernetes).toBeVisible();
-      await dashboardPage.sideMenu.mainMenu.freeKubernetes.click();
-      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.kubernetes}`);
+      await expect(dashboardPage.sideMenu.mainMenu.dbaas).toBeVisible();
+      await dashboardPage.sideMenu.mainMenu.dbaas.click();
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.dbaas}`);
     });
   }
 
@@ -113,7 +113,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     const signInPage = new SignInPage(page);
     const dashboardPage = new DashboardPage(page);
     const pmmInstances = new PMMInstances(page);
-    const freeKubernetes = new FreeKubernetes(page);
+    const perconaDBaaS = new PerconaDBaaS(page);
 
     await test.step('1. Login to the portal.', async () => {
       await signInPage.uiLogin(adminUser.email, adminUser.password);
@@ -135,33 +135,22 @@ test.describe('Spec file for dashboard tests for customers', async () => {
     );
 
     await test.step(
-      '3. Navigate to the Free Kubernetes page and verify Install PMM with DBaaS link',
+      '3. Navigate to the Percona Dbaas page and verify Install PMM with DBaaS link',
       async () => {
-        await dashboardPage.sideMenu.mainMenu.freeKubernetes.click();
-        await expect(freeKubernetes.pmmWithDBaaS).toHaveAttribute('href', freeKubernetes.pmmWithDBaaSLink);
+        await dashboardPage.sideMenu.mainMenu.dbaas.click();
+        await expect(perconaDBaaS.buttons.readMore).toHaveAttribute('href', perconaDBaaS.links.readMore);
+
+        await perconaDBaaS.buttons.start.click();
+
         const [newPage] = await Promise.all([
           context.waitForEvent('page'),
-          freeKubernetes.pmmWithDBaaS.click(),
+          perconaDBaaS.buttons.readMore.click(),
         ]);
 
-        await expect(newPage).toHaveTitle(freeKubernetes.pmmWithDBaaSTitle);
+        await expect(newPage).toHaveTitle(perconaDBaaS.labels.pmmWithDBaaSTitle);
         await newPage.close();
       },
     );
-
-    await test.step('4. Verify Operators documentation Link.', async () => {
-      await expect(freeKubernetes.operatorsDocumentation).toHaveAttribute(
-        'href',
-        freeKubernetes.operatorsDocumentationLink,
-      );
-      const [newPage] = await Promise.all([
-        context.waitForEvent('page'),
-        freeKubernetes.operatorsDocumentation.click(),
-      ]);
-
-      await expect(newPage).toHaveTitle(freeKubernetes.operatorsDocumentationTitle);
-      await newPage.close();
-    });
   });
 
   test('SAAS-T285 - Verify Profile Menu @pages', async ({ page, context }) => {
@@ -183,7 +172,7 @@ test.describe('Spec file for dashboard tests for customers', async () => {
         );
 
         await dashboardPage.userDropdown.email.isVisible();
-        await expect(dashboardPage.userDropdown.email).toContainText(adminUser.email)
+        await expect(dashboardPage.userDropdown.email).toContainText(adminUser.email);
         await dashboardPage.userDropdown.themeSwitch.isVisible();
       },
     );

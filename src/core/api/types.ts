@@ -1,34 +1,46 @@
 import { MemberRole, MemberStatus } from 'pages/ManageOrganization/ManageOrganization.types';
 import { AxiosRequestConfig } from 'axios';
 
-export enum K8sClusterStatus {
-  active = 'ACTIVE',
-  available = 'AVAILABLE',
-  building = 'BUILDING',
-  upgrading = 'UPGRADING',
+export enum ClusterStatus {
+  notFound = 'NOT_FOUND',
+  connected = 'CONNECTED',
+  clusterCreated = 'CLUSTER_CREATED',
+  clusterReady = 'CLUSTER_READY',
+  pmmReady = 'PMM_READY',
+  environmentUpdated = 'ENVIRONMENT_UPDATED',
+  environmentReady = 'ENVIRONMENT_READY',
+  publicDomainSet = 'PUBLIC_DOMAIN_SET',
+  settingsUpdated = 'SETTINGS_UPDATED',
+  dailyLimitExceeded = 'DAILY_LIMIT_EXCEEDED',
 }
 
-export interface CreateK8sClusterResponse {
+export interface CreateClusterResponse {
   cluster_id: string;
 }
 
-export interface CreateK8sClusterResponseData {
+export interface CreateClusterResponseData {
   clusterId: string;
 }
 
-export interface GetK8sClusterStatusResponse {
+export interface GetClusterStatusResponse {
   cluster_id: string;
-  status: K8sClusterStatus;
+  status: ClusterStatus;
   created_at: string;
+  daily_limit_ends_at?: string;
+  pmm_demo_url?: string;
+  failed?: boolean;
 }
 
-export interface GetK8sClusterStatusResponseData {
+export interface GetClusterStatusResponseData {
   clusterId: string;
-  status: K8sClusterStatus;
+  status: ClusterStatus;
   createdAt: string;
+  dailyLimitEndsAt?: string;
+  pmmDemoUrl?: string;
+  failed?: boolean;
 }
 
-export interface GetK8sClusterConfigResponse {
+export interface GetClusterConfigResponse {
   kubeconfig: string;
 }
 

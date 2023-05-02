@@ -8,10 +8,10 @@ import {
   LandingPage,
   ManageOrganizationPage,
   ManagePmmInstancesPage,
-  K8sClusterCreationPage,
   NotFound,
   ProfilePage,
   AdvisorsPage,
+  DBaaSPage,
 } from 'pages';
 import { Routes } from 'core/routes';
 import Activation from 'pages/Activation/Activation';
@@ -38,11 +38,11 @@ export const Main: FC = () => (
     <SecureRoute exact path={Routes.instances}>
       <ManagePmmInstancesPage />
     </SecureRoute>
-    <SecureRoute exact path={Routes.kubernetes}>
-      <K8sClusterCreationPage />
-    </SecureRoute>
     <SecureRoute exact path={Routes.advisors}>
       <AdvisorsPage />
+    </SecureRoute>
+    <SecureRoute exact path={Routes.dbaas}>
+      <DBaaSPage />
     </SecureRoute>
     <SecureRoute path="*">
       <NotFound />

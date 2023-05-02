@@ -1,4 +1,4 @@
-export interface K8sClusterStatusError {
+export interface ClusterStatusError {
   status: number;
   data: {
     message: string;

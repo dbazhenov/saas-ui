@@ -16,15 +16,15 @@ export const Routes = {
   home: '/home',
   welcome: '/welcome',
   dashboard: '/dashboard',
-  kubernetes: '/kubernetes',
   advisors: '/advisors',
+  dbaas: '/pmm-demo',
 };
 
 export const RouteNames = {
   [Routes.home]: 'Home',
   [Routes.organization]: 'My Organization',
   [Routes.instances]: 'PMM Instances',
-  [Routes.kubernetes]: 'Free Kubernetes Cluster',
   [Routes.profile]: 'Percona Account',
+  [Routes.dbaas]: 'PMM Demo',
   [Routes.advisors]: 'Advisors',
 };

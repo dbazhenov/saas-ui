@@ -9,7 +9,7 @@ export const PrivateLayout: FC = ({ children }) => (
       <SideMenu />
       <Stack display="flex" flexGrow={1} position="relative">
         <AppHeader />
-        <Box display="flex" flexGrow={1} padding={5} mt={`${HEADER_HEIGHT}px`}>
+        <Box display="flex" flexGrow={1} sx={{ py: 1, px: 3 }} mt={`${HEADER_HEIGHT}px`}>
           {children}
         </Box>
       </Stack>

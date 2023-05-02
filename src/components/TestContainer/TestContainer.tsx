@@ -8,12 +8,12 @@ import { getTheme } from '@percona/platform-core';
 import { history as defaultHistory } from 'core/history';
 import { authApi } from 'core/api/auth.service';
 import { membersListApi } from 'pages/ManageOrganization/MembersList/MembersList.service';
-import { kubernetesApi } from 'pages/K8sClusterCreation/K8sClusterCreation.service';
 import { advisorsApi } from 'pages/Advisors/Advisors.service';
 import { eventsApi } from 'core/api/events.service';
 import { rootReducer } from 'store/reducers';
 import { AppState } from 'store/types';
 import { DeepPartial } from 'core';
+import { dbaasApi } from 'pages/DBaaS/DBaaSClusterCreation.service';
 
 const light = getTheme('light');
 
@@ -25,7 +25,7 @@ export const store = (preloadedState?: AppState) =>
       getDefaultMiddleware().concat(
         authApi.middleware,
         membersListApi.middleware,
-        kubernetesApi.middleware,
+        dbaasApi.middleware,
         eventsApi.middleware,
         advisorsApi.middleware,
       ),

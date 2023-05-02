@@ -1,9 +1,10 @@
 import { css } from 'emotion';
 import { Theme } from '@mui/material';
 
-export const getStyles = ({ spacing, typography, shape }: Theme) => ({
+export const getStyles = ({ spacing }: Theme) => ({
   wrapper: css`
     margin: 0 auto;
+    padding-top: ${spacing(2)};
   `,
   card: css`
     padding-right: ${spacing(4)};

@@ -6,6 +6,7 @@ export const getStyles = ({ spacing, typography }: Theme) => ({
     display: flex;
     flex-direction: column;
     width: 100%;
+    padding-top: ${spacing(2)};
   `,
   ticketSection: css`
     margin-top: ${spacing(3)};

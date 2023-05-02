@@ -32,10 +32,10 @@ export const ENDPOINTS = {
   Events: {
     search: '/v1/events:search',
   },
-  Kubernetes: {
-    k8sClusterCreate: '/v1/dbaas/cluster/civo',
-    k8sClusterGetStatus: '/v1/dbaas/cluster/civo',
-    k8sClusterGetConfig: (clusterId: string) => `/v1/dbaas/cluster/civo/${clusterId}/config`,
+  DBaaS: {
+    clusterCreate: '/v1/dbaas/cluster/civo',
+    clusterGetStatus: '/v1/dbaas/cluster/civo',
+    clusterGetConfig: (clusterId: string) => `/v1/dbaas/cluster/civo/${clusterId}/config`,
   },
   advisors: {
     getAdvisors: '/v1/check/advisors',

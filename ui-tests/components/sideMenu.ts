@@ -2,23 +2,18 @@
 import { Page } from '@playwright/test';
 
 export default class SideMenu {
-
-  constructor(readonly page: Page) { }
+  constructor(readonly page: Page) {}
 
   // Components
   menu = this.page.locator('//div[@data-testid="side-menu"]');
 
   mainMenu = {
     dashboard: this.menu.locator('//span[contains(text(), "Dashboard")]/ancestor::div[@role="button"]'),
-    organization: this.menu.locator(
-      '//span[contains(text(), "Organization")]/ancestor::div[@role="button"]',
-    ),
+    organization: this.menu.locator('//span[contains(text(), "Organization")]/ancestor::div[@role="button"]'),
     pmmInstances: this.menu.locator(
       '//span[contains(text(), "PMM Instances")]/ancestor::div[@role="button"]',
     ),
-    freeKubernetes: this.menu.locator(
-      '//span[contains(text(), "Free Kubernetes")]/ancestor::div[@role="button"]',
-    ),
+    dbaas: this.menu.locator('//span[contains(text(), "PMM Demo")]/ancestor::div[@role="button"]'),
   };
 
   resourceMenu = {

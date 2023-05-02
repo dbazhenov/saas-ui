@@ -44,7 +44,7 @@ export const LandingPage: FC = () => {
                 {Messages.description}
               </Typography>
               <Grid data-testid="landing-page-main-ctas" className={styles.ctas} container direction="row">
-                <Grid xs={8} sm="auto">
+                <Grid xs="auto">
                   <Button
                     href={Routes.signup}
                     size="large"

@@ -12,7 +12,7 @@ interface UserRoles {
 
 export class CommonPage {
   // eslint-disable-next-line no-empty-function
-  constructor(readonly page: Page) {}
+  constructor(readonly page: Page) { }
   // Components
   sideMenu = new SideMenu(this.page);
   toast = new Toast(this.page);
@@ -39,7 +39,7 @@ export class CommonPage {
     root: '/',
     welcome: '/welcome',
     dashboard: '/home',
-    kubernetes: '/kubernetes',
+    dbaas: '/pmm-demo',
   };
 
   waitForPortalLoaded = async () => {

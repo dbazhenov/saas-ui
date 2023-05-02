@@ -4,12 +4,12 @@ import { Icon } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import LanOutlinedIcon from '@mui/icons-material/LanOutlined';
 import ConnectedTvOutlinedIcon from '@mui/icons-material/ConnectedTvOutlined';
-import { ReactComponent as SidebarK8s } from 'assets/percona-sidebar-k8s.svg';
 import FormatQuoteOutlinedIcon from '@mui/icons-material/FormatQuoteOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import RunningWithErrorsOutlinedIcon from '@mui/icons-material/RunningWithErrorsOutlined';
+import { ReactComponent as Database } from 'assets/databaseDBaaS.svg';
 import { Messages } from './SideMenu.messages';
 
 export const resourcesLinks = {
@@ -36,13 +36,13 @@ export const mainMenu = [
     to: Routes.instances,
   },
   {
-    label: Messages.k8sCluster,
+    label: Messages.dbaas,
     icon: (
       <Icon>
-        <SidebarK8s />
+        <Database />
       </Icon>
     ),
-    to: Routes.kubernetes,
+    to: Routes.dbaas,
   },
   {
     label: Messages.advisors,
