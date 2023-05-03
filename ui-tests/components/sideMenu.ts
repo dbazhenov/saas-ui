@@ -16,6 +16,10 @@ export default class SideMenu {
     dbaas: this.menu.locator('//span[contains(text(), "PMM Demo")]/ancestor::div[@role="button"]'),
   };
 
+  buttons = {
+    advisors: this.menu.locator('//span[contains(text(), "Advisors")]/ancestor::div[@role="button"]'),
+  };
+
   resourceMenu = {
     documentationLink: this.menu.locator('//span[contains(text(), "Documentation")]/ancestor::a'),
     blogLink: this.menu.locator('//span[contains(text(), "Blogs")]/ancestor::a'),

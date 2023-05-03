@@ -7,6 +7,13 @@ export default class ModalWindow extends CommonPage {
     super(page);
   }
 
+  private dialog = this.page.getByRole('dialog');
+
+  elements = {
+    modalContent: this.dialog.getByTestId('modal-content'),
+    modalHeader: this.dialog.getByTestId('modal-header'),
+  };
+
   // Elements
   body = this.page.locator('//div[@data-testid="modal-body"]');
   header = this.page.locator('//h2[@data-testid="modal-header"]');

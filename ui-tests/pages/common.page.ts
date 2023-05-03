@@ -10,7 +10,7 @@ interface UserRoles {
   technical: string;
 }
 
-export class CommonPage {
+export abstract class CommonPage {
   // eslint-disable-next-line no-empty-function
   constructor(readonly page: Page) { }
   // Components
@@ -21,6 +21,10 @@ export class CommonPage {
 
   // Locators
   perconaLogo = this.page.locator('//a[@data-testid="menu-bar-home-link"]');
+
+  private commonPageElements = {
+    expandedAccordion: this.page.locator('//div[contains(@class, "Mui-expanded")]'),
+  };
 
   // Messages
   customerOrgCreated = 'We found your organization on Percona Customer Portal and used it';
@@ -39,8 +43,13 @@ export class CommonPage {
     root: '/',
     welcome: '/welcome',
     dashboard: '/home',
+    advisors: '/advisors',
     dbaas: '/pmm-demo',
   };
+
+  protected getCommonPageElements() {
+    return this.commonPageElements;
+  }
 
   waitForPortalLoaded = async () => {
     await this.perconaLogo.waitFor({ state: 'visible', timeout: 60000 });

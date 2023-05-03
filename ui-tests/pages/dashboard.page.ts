@@ -22,9 +22,9 @@ export class DashboardPage extends CommonPage {
   elements = {
     viewOrgLink: this.page.locator('span', { hasText: 'View Organization' }),
     ticketSection: this.page.getByTestId('dashboard-ticket-section'),
-
     gettingStartedContainer: this.page.getByTestId('getting-started-container'),
     addOrganizationLocator: this.page.getByText('Add Organization'),
+    advisorsWidget: this.page.getByTestId('advisors-widget'),
   };
 
   fields = {};
@@ -35,6 +35,7 @@ export class DashboardPage extends CommonPage {
 
   buttons = {
     openNewTicket: this.page.getByText('Open new ticket'),
+    advisorsButton: this.page.getByTestId('advisors-button'),
   };
 
   messages = {

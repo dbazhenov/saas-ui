@@ -11,7 +11,7 @@ export const AdvisorsInfo: FC = () => {
   const history = useHistory();
 
   return (
-    <Card className={styles.advisorsInfo}>
+    <Card className={styles.advisorsInfo} data-testid="advisors-widget">
       <div className={styles.title}>Advisors</div>
       <div className={styles.imageWrapper}>
         <AdvisorsWidget className={styles.advisorsWidgetImg} />
@@ -21,6 +21,7 @@ export const AdvisorsInfo: FC = () => {
         variant="outlined"
         onClick={() => history.push(Routes.advisors)}
         className={styles.goToAdvisors}
+        data-testid="advisors-button"
       >
         {Messages.goToAdvisors}
       </Button>

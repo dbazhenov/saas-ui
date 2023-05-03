@@ -56,6 +56,27 @@ test.describe('Spec file for free users dashboard tests', async () => {
     });
   });
 
+  test('SAAS-T290 - Verify there is Advisors widget on Home dashboard @freeUser @dashboard @advisors', async ({
+    page,
+    baseURL,
+  }) => {
+    const signInPage = new SignInPage(page);
+    const dashboardPage = new DashboardPage(page);
+
+    await test.step('1. Login to the portal', async () => {
+      await signInPage.uiLogin(admin1User.email, admin1User.password);
+    });
+
+    await test.step('2. Verify that advisors widget is displayed.', async () => {
+      await dashboardPage.elements.advisorsWidget.waitFor({ state: 'visible' });
+    });
+
+    await test.step('3. Verify navigation to the advisors using button on the widget.', async () => {
+      await dashboardPage.buttons.advisorsButton.click();
+      await expect(page).toHaveURL(`${baseURL}${dashboardPage.routes.advisors}`);
+    });
+  });
+
   test('SAAS-T225 Verify Free account user is able to view Contacts (static) @freeUser @dashboard', async ({
     page,
   }) => {

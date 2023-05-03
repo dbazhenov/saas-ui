@@ -66,6 +66,7 @@ export const AdvancedAdvisors: FC<ShowAdvancedAdvisorsProps> = ({ advisors }) =>
             className={styles.contactSalesBtn}
             variant="contained"
             href={PERCONA_SUBSCRIPTIONS}
+            data-testid="contact-sales"
           >
             {Messages.contactSalesBtn}
           </Button>
