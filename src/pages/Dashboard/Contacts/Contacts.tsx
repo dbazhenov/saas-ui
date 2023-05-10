@@ -76,15 +76,6 @@ export const Contacts: FC = () => {
             >
               {Messages.forums}
             </a>
-            <a
-              className={styles.externalLink}
-              href={LINKS.discord}
-              target="_blank"
-              rel="noreferrer noopener"
-              data-testid="discord-contact-link"
-            >
-              {Messages.discord}
-            </a>
             <p>
               <Typography component="span">{Messages.getInTouch} </Typography>
               <a

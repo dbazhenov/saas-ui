@@ -108,15 +108,6 @@ test.describe('Spec file for free users dashboard tests', async () => {
         dashboardPage.contacts.contactsHelpForumsLink,
       );
 
-      await expect(dashboardPage.contacts.discordContactLink).toHaveText(
-        dashboardPage.contacts.contactsHelpDiscord,
-      );
-      await expect(dashboardPage.contacts.discordContactLink).toHaveAttribute('target', '_blank');
-      await expect(dashboardPage.contacts.discordContactLink).toHaveAttribute(
-        'href',
-        dashboardPage.contacts.contactsHelpDiscordLink,
-      );
-
       await expect(dashboardPage.contacts.contactPageLink).toHaveText(
         dashboardPage.contacts.contactPageLabel,
       );

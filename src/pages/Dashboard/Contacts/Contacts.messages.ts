@@ -11,7 +11,6 @@ export const Messages = {
   contactUs: 'Contact Us',
   findUs: 'You can also find us on our Community spaces:',
   forums: 'Forums',
-  discord: 'Discord',
   getInTouch: 'Or get in touch via our',
   contactsPage: 'Contacts page',
   fetchContactsError: 'Could not fetch your contacts.',

@@ -7,14 +7,12 @@ export default class Contacts {
   readonly contactsHelpEmail: string;
   readonly contactsHelpEmailCustomer: string;
   readonly contactsHelpForums: string;
-  readonly contactsHelpDiscord: string;
   readonly contactPageLabel: string;
 
   readonly emailClipboardMessage: string;
 
   readonly mailtoPerconaHelpEmail: string;
   readonly contactsHelpForumsLink: string;
-  readonly contactsHelpDiscordLink: string;
   readonly contactPageLinkAddress: string;
 
   readonly accountLoadingSpinner: Locator;
@@ -22,7 +20,6 @@ export default class Contacts {
   readonly perconaContactsHeader: Locator;
   readonly emailContactLink: Locator;
   readonly forumContactLink: Locator;
-  readonly discordContactLink: Locator;
   readonly contactPageLink: Locator;
   readonly customerContactIcon: Locator;
   readonly customerContactName: Locator;
@@ -33,14 +30,12 @@ export default class Contacts {
     this.contactsHelpEmail = 'portal-help@percona.com';
     this.contactsHelpEmailCustomer = 'customercare@percona.com';
     this.contactsHelpForums = 'Forums';
-    this.contactsHelpDiscord = 'Discord';
     this.contactPageLabel = 'Contacts page';
 
     this.emailClipboardMessage = 'Email copied to clipboard';
 
     this.mailtoPerconaHelpEmail = 'mailto:portal-help@percona.com';
     this.contactsHelpForumsLink = 'https://forums.percona.com';
-    this.contactsHelpDiscordLink = 'http://per.co.na/discord';
     this.contactPageLinkAddress = 'https://www.percona.com/about-percona/contact';
 
     this.accountLoadingSpinner = page.locator(
@@ -52,7 +47,6 @@ export default class Contacts {
     this.perconaContactsHeader = page.locator('h6', { hasText: 'Percona Contacts' });
     this.emailContactLink = page.locator('//a[@data-testid="email-contact-link"]');
     this.forumContactLink = page.locator('//a[@data-testid="forum-contact-link"]');
-    this.discordContactLink = page.locator('//a[@data-testid="discord-contact-link"]');
     this.contactPageLink = page.locator('//a[@data-testid="contact-page-link"]');
     this.customerContactIcon = page.locator('//button[@data-testid="customer-contact-email-icon"]');
     this.customerContactName = page.locator('//p[@data-testid="customer-contact-name"]');
